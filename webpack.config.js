@@ -9,7 +9,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'index.[contenthash].js',
-    assetModuleFilename: path.join('assets', '[name].[contenthash][ext]'),
+    assetModuleFilename: 'images/[name].[contenthash][ext]'
   },
   resolve: {
     extensions: ['.ts', '.js']
@@ -33,7 +33,10 @@ module.exports = {
       },
       {
         test: /\.(woff2?|eot|ttf|otf)$/i,
-        type: 'asset/inline',
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext]'
+        }
       },
     ],
   },
