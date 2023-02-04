@@ -3,13 +3,14 @@ const path = require('path');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const EslingPlugin = require('eslint-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: path.join(__dirname, 'src', 'index'),
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'index.[contenthash].js',
-    assetModuleFilename: 'images/[name].[contenthash][ext]'
+    assetModuleFilename: 'assets/[name].[contenthash][ext]'
   },
   resolve: {
     extensions: ['.ts', '.js']
@@ -29,7 +30,16 @@ module.exports = {
       {
         test: /\.(png|jpg|jpeg|gif|svg)$/i,
         type: 'asset/resource',
-
+        generator: {
+          filename: 'images/[name][ext]'
+        }
+      },
+      {
+        test: /\.(mp3|wav)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'music/[name][ext]'
+        }
       },
       {
         test: /\.(woff2?|eot|ttf|otf)$/i,
@@ -44,6 +54,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'template.html'),
       filename: 'index.html',
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: './src/assets/', to: './assets/' },
+      ],
     }),
     new FileManagerPlugin({
       events: {
