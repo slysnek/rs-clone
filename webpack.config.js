@@ -3,13 +3,14 @@ const path = require('path');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const EslingPlugin = require('eslint-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: path.join(__dirname, 'src', 'index'),
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'index.[contenthash].js',
-    assetModuleFilename: 'images/[name].[contenthash][ext]'
+    assetModuleFilename: 'webpack-module-assets/[name].[contenthash][ext]'
   },
   resolve: {
     extensions: ['.ts', '.js']
@@ -23,20 +24,8 @@ module.exports = {
         use: [{ loader: 'babel-loader' }, { loader: 'ts-loader' }]
       },
       {
-        test: /\.(scss|css)$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
-      },
-      {
-        test: /\.(png|jpg|jpeg|gif|svg)$/i,
-        type: 'asset/resource',
-
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'fonts/[name][ext]'
-        }
+        test: /\.(scss)$/,
+        use: [{ loader: MiniCssExtractPlugin.loader }, { loader: 'css-loader', options: { url: false } }, 'postcss-loader', 'sass-loader'],
       },
     ],
   },
@@ -44,6 +33,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'template.html'),
       filename: 'index.html',
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: './src/assets/', to: './assets/' },
+      ],
     }),
     new FileManagerPlugin({
       events: {
@@ -53,7 +47,7 @@ module.exports = {
       },
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
+      filename: 'assets/styles/[name].[contenthash].css',
     }),
     new EslingPlugin({ extensions: 'ts' }),
   ],
