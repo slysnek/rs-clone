@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'index.[contenthash].js',
-    assetModuleFilename: 'assets/[name].[contenthash][ext]'
+    assetModuleFilename: 'webpack-module-assets/[name].[contenthash][ext]'
   },
   resolve: {
     extensions: ['.ts', '.js']
@@ -24,29 +24,8 @@ module.exports = {
         use: [{ loader: 'babel-loader' }, { loader: 'ts-loader' }]
       },
       {
-        test: /\.(scss|css)$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
-      },
-      {
-        test: /\.(png|jpg|jpeg|gif|svg)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'images/[name][ext]'
-        }
-      },
-      {
-        test: /\.(mp3|wav)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'music/[name][ext]'
-        }
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'fonts/[name][ext]'
-        }
+        test: /\.(scss)$/,
+        use: [{ loader: MiniCssExtractPlugin.loader }, { loader: 'css-loader', options: { url: false } }, 'postcss-loader', 'sass-loader'],
       },
     ],
   },
@@ -68,7 +47,7 @@ module.exports = {
       },
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
+      filename: 'assets/styles/[name].[contenthash].css',
     }),
     new EslingPlugin({ extensions: 'ts' }),
   ],
