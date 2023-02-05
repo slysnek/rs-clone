@@ -110,9 +110,6 @@ class Example extends Phaser.Scene {
       const gridMouseCoords = map.worldToTileXY(this.input.activePointer.worldX, this.input.activePointer.worldY);
       gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
       gridMouseCoords.y = Math.round(gridMouseCoords.y);
-      
-      console.log(this.input.activePointer.worldX, this.input.activePointer.worldY);
-      console.log(gridMouseCoords.x, gridMouseCoords.y);
 
       // Get 0-layer's tile by coords
       const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
