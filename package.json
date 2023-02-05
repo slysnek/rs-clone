@@ -38,6 +38,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "grid-engine": "^2.25.1",
     "phaser": "^3.55.2"
   }
 }
