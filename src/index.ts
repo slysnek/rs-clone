@@ -4,7 +4,6 @@ import Phaser from 'phaser';
 import { GridEngine } from 'grid-engine';
 
 let scene: Phaser.Scene;
-
 type dirObj = {
   direction: string;
 };
@@ -27,8 +26,8 @@ class Example extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON('map', 'assets/maps/isometric3.json');
-    this.load.image('tiles', 'assets/maps/grassland_tiles.png');
+    this.load.tilemapTiledJSON('map', 'assets/maps/gas-map v1.json');
+    this.load.image('tiles', 'assets/spritesheets/gas-spritesheet.png');
     this.load.spritesheet('player', 'assets/spritesheets/woman-01.png', { frameWidth: 75, frameHeight: 133 });
   }
 
@@ -36,12 +35,11 @@ class Example extends Phaser.Scene {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     scene = this;
     const map = this.make.tilemap({ key: 'map' });
-    const tilesets = map.addTilesetImage('grassland_tiles', 'tiles');
+    const tilesets = map.addTilesetImage('gas-spritesheet', 'tiles');
 
     // Can be deleted?
     const mapWidth = map.width * map.tileWidth;
     const mapHeight = map.height * map.tileHeight;
-    console.log(mapWidth, mapHeight);
 
     // Layers creation based on tilemap's layers
     for (let i = 0; i < map.layers.length; i++) {
@@ -49,12 +47,19 @@ class Example extends Phaser.Scene {
     }
 
     this.hero = this.physics.add.sprite(0, 0, 'player');
-    this.hero.scale = 0.75;
+    this.hero.scale = 0.5;
 
     this.cameras.main.setSize(windowWidth, windowHeight);
-    this.cameras.main.startFollow(this.hero, true);
+    //values below should be changed for different maps
+    this.cameras.main.setBounds(-1600, 1200, 3600, 2000);
 
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.input.on("pointermove", (currPointer: { x: number; prevPosition: { x: number; y: number; }; y: number; }) => {
+      if (!this.input.activePointer.isDown) return
+      this.cameras.main.scrollX -= (currPointer.x - currPointer.prevPosition.x) / this.cameras.main.zoom;
+      this.cameras.main.scrollY -= (currPointer.y - currPointer.prevPosition.y) / this.cameras.main.zoom;
+    });
+
+    this.cursors = this.input.keyboard.createCursorKeys()
 
     // Hero animations
     this.createPlayerAnimation.call(this, "up-right", 0, 7);
@@ -77,7 +82,7 @@ class Example extends Phaser.Scene {
         {
           id: "player",
           sprite: this.hero,
-          startPosition: { x: 35, y: 28 },
+          startPosition: { x: 70, y: 90 },
           offsetX: 5,
           offsetY: -10,
           walkingAnimationEnabled: false,
@@ -105,7 +110,10 @@ class Example extends Phaser.Scene {
     });
 
     // Moving on mouse click
-    this.input.on('pointerdown', () => {
+    this.input.on('pointerup', () => {
+      //check if time since last down click was larger than 130ms
+      const timeNow = performance.now()
+      if (timeNow - this.input.activePointer.downTime > 130) return
       // Converting world coords into tile coords
       const gridMouseCoords = map.worldToTileXY(this.input.activePointer.worldX, this.input.activePointer.worldY);
       gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
