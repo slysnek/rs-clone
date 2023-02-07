@@ -13,14 +13,14 @@ class Game extends Phaser.Scene {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  gridEngine: any;
+  gridEngine: GridEngine;
 
-  constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
-    super('game'); // why and how this works?
+  constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
+    super(config); // why and how this works?
     this.hero = hero;
     this.cursors = cursors;
     this.target = new Phaser.Math.Vector2();
-    this.gridEngine = GridEngine;
+    this.gridEngine = gridEngine;
   }
 
   preload() {
