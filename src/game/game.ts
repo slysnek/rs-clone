@@ -2,10 +2,6 @@ import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
 import windowSize from './constants';
 
-type dirObj = {
-  direction: string;
-};
-
 const startPositionsForEnemy: { [key: string]: { x: number, y: number } } = { 
   enemy1: { x: 20, y: 34 },
   enemy2: { x: 23, y: 36 }
@@ -13,7 +9,7 @@ const startPositionsForEnemy: { [key: string]: { x: number, y: number } } = {
 
 class Game extends Phaser.Scene {
   hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  enemiesMap: Map<string, Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
+  entitiesMap: Map<string, Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
@@ -21,7 +17,7 @@ class Game extends Phaser.Scene {
   constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
     super('game'); // why and how this works?
     this.hero = hero;
-    this.enemiesMap = new Map();
+    this.entitiesMap = new Map();
     this.cursors = cursors;
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
@@ -41,12 +37,11 @@ class Game extends Phaser.Scene {
     this.createCamera();
     this.createEnemy('enemy1');
     this.createEnemy('enemy2', 0.7);
-    this.setFramesForHeroAnimations();
-    this.setFramesForEnemiesAnimations();
+    this.setFramesForEntitiesAnimations();
     this.cursors = this.input.keyboard.createCursorKeys();
     this.gridEngineInit(map);
     this.tintTiles(map);
-    this.subscribeCharacterToChangeMoving(this.hero);
+    this.subscribeCharacterToChangeMoving();
     this.setPointerDownListener(map);
   }
 
@@ -68,11 +63,12 @@ class Game extends Phaser.Scene {
   createHero(){
     this.hero = this.physics.add.sprite(0, 0, 'player');
     this.hero.scale = 0.75;
+    this.entitiesMap.set('player', this.hero);
   }
 
   createEnemy(key: string, scaleValue = 1){
     const enemy = this.physics.add.sprite(0, 0, `${key}`);
-    this.enemiesMap.set(`${key}`, enemy);
+    this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
   }
 
@@ -96,36 +92,40 @@ class Game extends Phaser.Scene {
       ],
       numberOfDirections: 4
     };
-    this.enemiesMap.forEach((enemyValue, enemyKey) => {
-      console.log(enemyKey)
-      gridEngineConfig.characters.push(
-        {
-          id: enemyKey,
-          sprite: enemyValue,
-          startPosition: { x: startPositionsForEnemy[enemyKey].x, y: startPositionsForEnemy[enemyKey].y },
-          offsetX: 5,
-          offsetY: -10,
-          walkingAnimationEnabled: false,
-          speed: 7,
-        }
-      )
+    this.entitiesMap.forEach((enemyValue, enemyKey) => {
+      if(enemyKey !== 'player'){
+        gridEngineConfig.characters.push(
+          {
+            id: enemyKey,
+            sprite: enemyValue,
+            startPosition: { x: startPositionsForEnemy[enemyKey].x, y: startPositionsForEnemy[enemyKey].y },
+            offsetX: 5,
+            offsetY: -10,
+            walkingAnimationEnabled: false,
+            speed: 7,
+          }
+        )
+      }
     })
     this.gridEngine.create(map, gridEngineConfig);
   }
 
-  subscribeCharacterToChangeMoving(character: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody){
+  subscribeCharacterToChangeMoving(){
     // Hero movements subscribers
-    this.gridEngine.movementStarted().subscribe(({ direction }: dirObj) => {
-      character.anims.play(direction);
+    this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
+      const entity = this.entitiesMap.get(charId) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+      entity.anims.play(direction);
     });
 
-    this.gridEngine.movementStopped().subscribe(({ direction }: dirObj) => {
-      character.anims.stop();
-      character.setFrame(this.getStopFrame(direction));
+    this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
+      const entity = this.entitiesMap.get(charId) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+      entity.anims.stop();
+      entity.setFrame(this.getStopFrame(direction));
     });
 
-    this.gridEngine.directionChanged().subscribe(({ direction }: dirObj) => {
-      character.setFrame(this.getStopFrame(direction));
+    this.gridEngine.directionChanged().subscribe(({ charId, direction }) => {
+      const entity = this.entitiesMap.get(charId) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+      entity.setFrame(this.getStopFrame(direction));
     });
   }
 
@@ -159,39 +159,20 @@ class Game extends Phaser.Scene {
     }
   }
 
-  setFramesForHeroAnimations(){
-    this.createPlayerAnimation.call(this.hero, "up-right", 0, 7);
-    this.createPlayerAnimation.call(this.hero, "down-right", 16, 23);
-    this.createPlayerAnimation.call(this.hero, "down-left", 24, 31);
-    this.createPlayerAnimation.call(this.hero, "up-left", 40, 47);
-  }
-
-  setFramesForEnemiesAnimations(){
-    this.enemiesMap.forEach((enemyValue, enemyKey) => {
-      this.createEnemyAnimation.call(enemyValue, enemyKey, "up-right", 0, 7);
-      this.createEnemyAnimation.call(enemyValue, enemyKey, "down-right", 16, 23);
-      this.createEnemyAnimation.call(enemyValue, enemyKey, "down-left", 24, 31);
-      this.createEnemyAnimation.call(enemyValue, enemyKey, "up-left", 40, 47);
+  setFramesForEntitiesAnimations(){
+    console.log(this.entitiesMap)
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      this.createEntityAnimation.call(entityValue, "up-right", entityKey, 0, 7);
+      this.createEntityAnimation.call(entityValue, "down-right", entityKey, 16, 23);
+      this.createEntityAnimation.call(entityValue, "down-left", entityKey, 24, 31);
+      this.createEntityAnimation.call(entityValue, "up-left", entityKey, 40, 47);
     })
   }
 
-  createPlayerAnimation(name: string, startFrame: number, endFrame: number) {
-    this.anims.create({
-      key: name,
-      frames: this.anims.generateFrameNumbers("player", {
-        start: startFrame,
-        end: endFrame,
-      }),
-      frameRate: 9,
-      repeat: -1,
-      yoyo: false,
-    });
-  }
-
-  createEnemyAnimation(direction: string, enemyName: string, startFrame: number, endFrame: number) {
+  createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number) {
     this.anims.create({
       key: direction,
-      frames: this.anims.generateFrameNumbers(`${enemyName}`, {
+      frames: this.anims.generateFrameNumbers(`${entityName}`, {
         start: startFrame,
         end: endFrame,
       }),
