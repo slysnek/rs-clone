@@ -12,8 +12,10 @@ function getRandomXYDelta(){
   return {xDelta: deltaValue(), yDelta: deltaValue()};
 }
 
+const timeModifier = 5;
+
 function getRandomTimeInterval(){
-  return (Math.ceil(Math.random() * 10 / 2) * 1000);
+  return (Math.ceil(Math.random() * timeModifier) * 1000);
 }
 
 class Game extends Phaser.Scene {
@@ -52,9 +54,9 @@ class Game extends Phaser.Scene {
     this.setFramesForEntitiesAnimations();
     this.cursors = this.input.keyboard.createCursorKeys();
     this.gridEngineInit(map);
-    this.entitiesMap.forEach((enemyValue, enemyKey) => {
-      if(enemyKey !== 'player'){
-        this.setEnemyWalkBehavior(enemyKey, map);
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      if(entityKey !== 'player'){
+        this.setEnemyWalkBehavior(entityKey, map);
       }
     })
     this.subscribeCharacterToChangeMoving();
