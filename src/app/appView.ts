@@ -1,17 +1,14 @@
 import AppController from "./appController";
-import AppModel from "./appModel";
 import Phaser from 'phaser';
-import config from '../game/game';
+import config from '../game/config';
 
 class AppView{
     controller: AppController;
-    view: AppModel;
     startGameButton: HTMLButtonElement;
     body: HTMLElement;
 
     constructor(){
         this.controller = new AppController();
-        this.view = new AppModel();
         this.body = document.querySelector('.body') as HTMLElement;
         this.startGameButton = document.createElement('button');
     }
