@@ -10,7 +10,6 @@ class Game extends Phaser.Scene {
   hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   gridEngine: GridEngine;
 
   constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
