@@ -1,12 +1,10 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
+import windowSize from './constants';
 
 type dirObj = {
   direction: string;
 };
-
-const windowWidth = window.innerWidth;
-const windowHeight = window.innerHeight;
 
 class Game extends Phaser.Scene {
   hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -16,7 +14,7 @@ class Game extends Phaser.Scene {
   gridEngine: GridEngine;
 
   constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
-    super(config); // why and how this works?
+    super('game'); // why and how this works?
     this.hero = hero;
     this.cursors = cursors;
     this.target = new Phaser.Math.Vector2();
@@ -62,7 +60,7 @@ class Game extends Phaser.Scene {
   }
 
   createCamera(){
-    this.cameras.main.setSize(windowWidth, windowHeight);
+    this.cameras.main.setSize(windowSize.windowWidth, windowSize.windowHeight);
     this.cameras.main.startFollow(this.hero, true);
   }
 
@@ -183,28 +181,4 @@ class Game extends Phaser.Scene {
   }
 }
 
-const config = {
-  type: Phaser.WEBGL,
-  width: windowWidth,
-  height: windowHeight,
-  backgroundColor: '#ababab',
-  parent: 'phaser-example',
-  scene: [Game],
-  physics: {
-    default: 'arcade'
-  },
-  arcade: {
-    debug: true
-  },
-  plugins: {
-    scene: [
-      {
-        key: "gridEngine",
-        plugin: GridEngine,
-        mapping: "gridEngine",
-      },
-    ],
-  },
-};
-
-export default config;
+export default Game;
