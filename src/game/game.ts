@@ -7,12 +7,22 @@ const startPositionsForEnemy: { [key: string]: { x: number, y: number } } = {
   enemy2: { x: 23, y: 36 }
 };
 
+function getRandomXYDelta(){
+  const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
+  return {xDelta: deltaValue(), yDelta: deltaValue()};
+}
+
+function getRandomTimeInterval(){
+  return (Math.ceil(Math.random() * 10 / 2) * 1000);
+}
+
 class Game extends Phaser.Scene {
   hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
   entitiesMap: Map<string, Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
+  enemiesMovesTimers: { [enemyId: string]: NodeJS.Timer }
 
   constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
     super('game'); // why and how this works?
@@ -21,6 +31,7 @@ class Game extends Phaser.Scene {
     this.cursors = cursors;
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
+    this.enemiesMovesTimers = {};
   }
 
   preload() {
@@ -33,6 +44,7 @@ class Game extends Phaser.Scene {
 
   create() {
     const map = this.buildMap();
+    this.tintTiles(map);
     this.createHero();
     this.createCamera();
     this.createEnemy('enemy1');
@@ -40,7 +52,11 @@ class Game extends Phaser.Scene {
     this.setFramesForEntitiesAnimations();
     this.cursors = this.input.keyboard.createCursorKeys();
     this.gridEngineInit(map);
-    this.tintTiles(map);
+    this.entitiesMap.forEach((enemyValue, enemyKey) => {
+      if(enemyKey !== 'player'){
+        this.setEnemyWalkBehavior(enemyKey, map);
+      }
+    })
     this.subscribeCharacterToChangeMoving();
     this.setPointerDownListener(map);
   }
@@ -99,8 +115,8 @@ class Game extends Phaser.Scene {
             id: enemyKey,
             sprite: enemyValue,
             startPosition: { x: startPositionsForEnemy[enemyKey].x, y: startPositionsForEnemy[enemyKey].y },
-            offsetX: 5,
-            offsetY: -10,
+            offsetX: 0,
+            offsetY: 15,
             walkingAnimationEnabled: false,
             speed: 7,
           }
@@ -144,6 +160,17 @@ class Game extends Phaser.Scene {
       // MoveTo provides "player" move to grid coords
       this.gridEngine.moveTo("player", { x: gridMouseCoords.x, y: gridMouseCoords.y });
     }, this);
+  }
+
+  // позже надо удалить из аргументов карту и функцию покраски тайлов
+
+  setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap){
+    this.enemiesMovesTimers.charId = setInterval(() => {
+      const deltaXY = getRandomXYDelta();
+      this.gridEngine.moveTo(`${charId}`, { x: startPositionsForEnemy[charId].x + deltaXY.xDelta, y: startPositionsForEnemy[charId].y + deltaXY.yDelta } );
+      this.tintTile(map, startPositionsForEnemy[charId].x + deltaXY.xDelta, startPositionsForEnemy[charId].y + deltaXY.yDelta, 0xff7a4a);
+
+    }, getRandomTimeInterval())
   }
 
   moveHeroByArrows(){
