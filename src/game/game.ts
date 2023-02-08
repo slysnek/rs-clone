@@ -6,8 +6,14 @@ type dirObj = {
   direction: string;
 };
 
+const startPositionsForEnemy: { [key: string]: { x: number, y: number } } = { 
+  enemy1: { x: 20, y: 34 },
+  enemy2: { x: 23, y: 36 }
+};
+
 class Game extends Phaser.Scene {
   hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+  enemiesMap: Map<string, Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
@@ -15,6 +21,7 @@ class Game extends Phaser.Scene {
   constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
     super('game'); // why and how this works?
     this.hero = hero;
+    this.enemiesMap = new Map();
     this.cursors = cursors;
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
@@ -24,12 +31,17 @@ class Game extends Phaser.Scene {
     this.load.tilemapTiledJSON('map', 'assets/maps/isometric3.json');
     this.load.image('tiles', 'assets/maps/grassland_tiles.png');
     this.load.spritesheet('player', 'assets/spritesheets/woman-01.png', { frameWidth: 75, frameHeight: 133 });
+    this.load.spritesheet('enemy1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('enemy2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
   }
 
   create() {
     const map = this.buildMap();
     this.createHero();
     this.createCamera();
+    this.createEnemy('enemy1');
+    this.createEnemy('enemy2', 0.7);
+    console.log(this.enemiesMap);
     this.setFramesForHeroAnimations();
     this.cursors = this.input.keyboard.createCursorKeys();
     this.gridEngineInit(map);
@@ -58,6 +70,12 @@ class Game extends Phaser.Scene {
     this.hero.scale = 0.75;
   }
 
+  createEnemy(key: string, scaleValue = 1){
+    const enemy = this.physics.add.sprite(0, 0, `${key}`);
+    this.enemiesMap.set(`${key}`, enemy);
+    enemy.scale = scaleValue;
+  }
+
   createCamera(){
     this.cameras.main.setSize(windowSize.windowWidth, windowSize.windowHeight);
     this.cameras.main.startFollow(this.hero, true);
@@ -78,6 +96,20 @@ class Game extends Phaser.Scene {
       ],
       numberOfDirections: 4
     };
+    this.enemiesMap.forEach((enemyValue, enemyKey) => {
+      console.log(enemyKey)
+      gridEngineConfig.characters.push(
+        {
+          id: enemyKey,
+          sprite: enemyValue,
+          startPosition: { x: startPositionsForEnemy[enemyKey].x, y: startPositionsForEnemy[enemyKey].y },
+          offsetX: 5,
+          offsetY: -10,
+          walkingAnimationEnabled: false,
+          speed: 7,
+        }
+      )
+    })
     this.gridEngine.create(map, gridEngineConfig);
   }
 
