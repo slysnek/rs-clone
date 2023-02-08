@@ -41,8 +41,8 @@ class Game extends Phaser.Scene {
     this.createCamera();
     this.createEnemy('enemy1');
     this.createEnemy('enemy2', 0.7);
-    console.log(this.enemiesMap);
     this.setFramesForHeroAnimations();
+    this.setFramesForEnemiesAnimations();
     this.cursors = this.input.keyboard.createCursorKeys();
     this.gridEngineInit(map);
     this.tintTiles(map);
@@ -166,10 +166,32 @@ class Game extends Phaser.Scene {
     this.createPlayerAnimation.call(this.hero, "up-left", 40, 47);
   }
 
+  setFramesForEnemiesAnimations(){
+    this.enemiesMap.forEach((enemyValue, enemyKey) => {
+      this.createEnemyAnimation.call(enemyValue, enemyKey, "up-right", 0, 7);
+      this.createEnemyAnimation.call(enemyValue, enemyKey, "down-right", 16, 23);
+      this.createEnemyAnimation.call(enemyValue, enemyKey, "down-left", 24, 31);
+      this.createEnemyAnimation.call(enemyValue, enemyKey, "up-left", 40, 47);
+    })
+  }
+
   createPlayerAnimation(name: string, startFrame: number, endFrame: number) {
     this.anims.create({
       key: name,
       frames: this.anims.generateFrameNumbers("player", {
+        start: startFrame,
+        end: endFrame,
+      }),
+      frameRate: 9,
+      repeat: -1,
+      yoyo: false,
+    });
+  }
+
+  createEnemyAnimation(direction: string, enemyName: string, startFrame: number, endFrame: number) {
+    this.anims.create({
+      key: direction,
+      frames: this.anims.generateFrameNumbers(`${enemyName}`, {
         start: startFrame,
         end: endFrame,
       }),
