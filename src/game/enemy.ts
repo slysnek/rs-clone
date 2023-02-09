@@ -27,6 +27,11 @@ class Enemy extends Entity {
         this.map = map;
     }
 
+    clearTimer(){
+        clearInterval(this.movesTimerId as NodeJS.Timer);
+        this.movesTimerId = null;
+    }
+
     // позже надо удалить из аргументов карту и функцию покраски тайлов
 
     setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap) {
