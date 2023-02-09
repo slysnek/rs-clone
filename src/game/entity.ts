@@ -3,12 +3,16 @@ import { heroAnims, scorpionAnims, Animations } from "./constants";
 
 class Entity extends Phaser.GameObjects.Sprite {
     key: string;
+    healthPoints: number;
+    attack: number;
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture)
         this.scene = scene;
         this.x = x;
         this.y = y;
         this.key = '';
+        this.healthPoints = 1;
+        this.attack = 0;
     }
 
     createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number) {
