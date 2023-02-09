@@ -6,16 +6,16 @@ import Hero from './hero';
 
 type gridEngineType = {
   characters: {
-      id: string;
-      sprite: Hero | Enemy;
-      startPosition: {
-          x: number;
-          y: number;
-      };
-      offsetX: number;
-      offsetY: number;
-      walkingAnimationEnabled: boolean;
-      speed: number;
+    id: string;
+    sprite: Hero | Enemy;
+    startPosition: {
+      x: number;
+      y: number;
+    };
+    offsetX: number;
+    offsetY: number;
+    walkingAnimationEnabled: boolean;
+    speed: number;
   }[];
   numberOfDirections: number;
 }
@@ -40,7 +40,7 @@ class Game extends Phaser.Scene {
   preload() {
     this.load.tilemapTiledJSON('map', 'assets/maps/isometric3.json');
     this.load.image('tiles', 'assets/maps/grassland_tiles.png');
-    this.load.spritesheet('hero', 'assets/spritesheets/woman-01.png', { frameWidth: 75, frameHeight: 133 });
+    this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
     this.load.spritesheet('scorpion1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
     this.load.spritesheet('scorpion2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
   }
@@ -56,7 +56,7 @@ class Game extends Phaser.Scene {
     this.createEnemy('scorpion2', map, 0.75);
     this.gridEngineInit(map);
     this.entitiesMap.forEach((entityValue, entityKey) => {
-      if(entityKey !== 'hero'){
+      if (entityKey !== 'hero') {
         entityValue.setAnimsFrames(entityKey);
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
@@ -66,10 +66,10 @@ class Game extends Phaser.Scene {
   }
 
   update() {
-   this.hero.moveHeroByArrows();
+    this.hero.moveHeroByArrows();
   }
 
-  buildMap(){
+  buildMap() {
     const map = this.make.tilemap({ key: 'map' });
     const tilesets = map.addTilesetImage('grassland_tiles', 'tiles');
 
@@ -80,32 +80,32 @@ class Game extends Phaser.Scene {
     return map;
   }
 
-  createHero(map: Tilemaps.Tilemap){
-    this.hero = this.add.existing( new Hero(this, 20, 34, 'hero', this.gridEngine, map, this.cursors) );
-    this.hero.scale = 0.75;
+  createHero(map: Tilemaps.Tilemap) {
+    this.hero = this.add.existing(new Hero(this, 20, 34, 'hero', this.gridEngine, map, this.cursors));
+    this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
 
-  createEnemy(key: string, map: Tilemaps.Tilemap, scaleValue = 1){
-    const enemy = this.add.existing( new Enemy(this, 0, 0, key, this.gridEngine, map) );
+  createEnemy(key: string, map: Tilemaps.Tilemap, scaleValue = 1) {
+    const enemy = this.add.existing(new Enemy(this, 0, 0, key, this.gridEngine, map));
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
   }
 
-  createCamera(){
+  createCamera() {
     this.cameras.main.setSize(windowSize.windowWidth, windowSize.windowHeight);
     this.cameras.main.startFollow(this.hero, true);
   }
 
-  gridEngineInit(map: Tilemaps.Tilemap){
+  gridEngineInit(map: Tilemaps.Tilemap) {
     const gridEngineConfig: gridEngineType = {
       characters: [
         {
           id: 'hero',
           sprite: this.hero,
           startPosition: { x: 35, y: 28 },
-          offsetX: 5,
-          offsetY: -10,
+          offsetX: 0,
+          offsetY: 42,
           walkingAnimationEnabled: false,
           speed: 7,
         },
@@ -113,7 +113,7 @@ class Game extends Phaser.Scene {
       numberOfDirections: 4
     };
     this.entitiesMap.forEach((enemyValue, enemyKey) => {
-      if(enemyKey !== 'hero'){
+      if (enemyKey !== 'hero') {
         gridEngineConfig.characters.push(
           {
             id: enemyKey,
@@ -130,7 +130,7 @@ class Game extends Phaser.Scene {
     this.gridEngine.create(map, gridEngineConfig);
   }
 
-  subscribeCharacterToChangeMoving(){
+  subscribeCharacterToChangeMoving() {
     // Hero movements subscribers
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
@@ -155,7 +155,7 @@ class Game extends Phaser.Scene {
     }
   }
 
-  tintTiles(map: Tilemaps.Tilemap){
+  tintTiles(map: Tilemaps.Tilemap) {
     this.tintTile(map, 30, 35, 0xff7a4a); // orange
     this.tintTile(map, 35, 28, 0xffff0a); // yellow
     this.tintTile(map, 30, 22, 0x4a4aff); // blue
