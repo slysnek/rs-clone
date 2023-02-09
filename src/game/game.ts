@@ -1,32 +1,33 @@
 import Phaser, { Tilemaps } from 'phaser';
-import { Direction, GridEngine } from 'grid-engine';
-import windowSize from './constants';
+import { GridEngine } from 'grid-engine';
+import { windowSize, startPositionsForScorpions } from './constants';
+import Enemy from './enemy';
+import Hero from './hero';
 
-const startPositionsForEnemy: { [key: string]: { x: number, y: number } } = { 
-  enemy1: { x: 20, y: 34 },
-  enemy2: { x: 23, y: 36 }
-};
-
-function getRandomXYDelta(){
-  const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
-  return {xDelta: deltaValue(), yDelta: deltaValue()};
+type gridEngineType = {
+  characters: {
+      id: string;
+      sprite: Hero | Enemy;
+      startPosition: {
+          x: number;
+          y: number;
+      };
+      offsetX: number;
+      offsetY: number;
+      walkingAnimationEnabled: boolean;
+      speed: number;
+  }[];
+  numberOfDirections: number;
 }
-
-const timeModifier = 5;
-
-function getRandomTimeInterval(){
-  return (Math.ceil(Math.random() * timeModifier) * 1000);
-}
-
 class Game extends Phaser.Scene {
-  hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-  entitiesMap: Map<string, Phaser.Types.Physics.Arcade.SpriteWithDynamicBody>;
+  hero: Hero;
+  entitiesMap: Map<string, Hero | Enemy>;
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
   enemiesMovesTimers: { [enemyId: string]: NodeJS.Timer }
 
-  constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
+  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
     super('game'); // why and how this works?
     this.hero = hero;
     this.entitiesMap = new Map();
@@ -39,32 +40,33 @@ class Game extends Phaser.Scene {
   preload() {
     this.load.tilemapTiledJSON('map', 'assets/maps/isometric3.json');
     this.load.image('tiles', 'assets/maps/grassland_tiles.png');
-    this.load.spritesheet('player', 'assets/spritesheets/woman-01.png', { frameWidth: 75, frameHeight: 133 });
-    this.load.spritesheet('enemy1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('enemy2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('hero', 'assets/spritesheets/woman-01.png', { frameWidth: 75, frameHeight: 133 });
+    this.load.spritesheet('scorpion1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('scorpion2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
   }
 
   create() {
     const map = this.buildMap();
     this.tintTiles(map);
-    this.createHero();
-    this.createCamera();
-    this.createEnemy('enemy1');
-    this.createEnemy('enemy2', 0.7);
-    this.setFramesForEntitiesAnimations();
     this.cursors = this.input.keyboard.createCursorKeys();
+    this.createHero(map);
+    this.createCamera();
+    this.hero.setAnimsFrames();
+    this.createEnemy('scorpion1', map);
+    this.createEnemy('scorpion2', map, 0.75);
     this.gridEngineInit(map);
     this.entitiesMap.forEach((entityValue, entityKey) => {
-      if(entityKey !== 'player'){
-        this.setEnemyWalkBehavior(entityKey, map);
+      if(entityKey !== 'hero'){
+        entityValue.setAnimsFrames(entityKey);
+        (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
     })
+    this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    this.setPointerDownListener(map);
   }
 
   update() {
-   this.moveHeroByArrows();
+   this.hero.moveHeroByArrows();
   }
 
   buildMap(){
@@ -78,14 +80,14 @@ class Game extends Phaser.Scene {
     return map;
   }
 
-  createHero(){
-    this.hero = this.physics.add.sprite(0, 0, 'player');
+  createHero(map: Tilemaps.Tilemap){
+    this.hero = this.add.existing( new Hero(this, 20, 34, 'hero', this.gridEngine, map, this.cursors) );
     this.hero.scale = 0.75;
-    this.entitiesMap.set('player', this.hero);
+    this.entitiesMap.set('hero', this.hero);
   }
 
-  createEnemy(key: string, scaleValue = 1){
-    const enemy = this.physics.add.sprite(0, 0, `${key}`);
+  createEnemy(key: string, map: Tilemaps.Tilemap, scaleValue = 1){
+    const enemy = this.add.existing( new Enemy(this, 0, 0, key, this.gridEngine, map) );
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
   }
@@ -96,10 +98,10 @@ class Game extends Phaser.Scene {
   }
 
   gridEngineInit(map: Tilemaps.Tilemap){
-    const gridEngineConfig = {
+    const gridEngineConfig: gridEngineType = {
       characters: [
         {
-          id: "player",
+          id: 'hero',
           sprite: this.hero,
           startPosition: { x: 35, y: 28 },
           offsetX: 5,
@@ -111,12 +113,12 @@ class Game extends Phaser.Scene {
       numberOfDirections: 4
     };
     this.entitiesMap.forEach((enemyValue, enemyKey) => {
-      if(enemyKey !== 'player'){
+      if(enemyKey !== 'hero'){
         gridEngineConfig.characters.push(
           {
             id: enemyKey,
             sprite: enemyValue,
-            startPosition: { x: startPositionsForEnemy[enemyKey].x, y: startPositionsForEnemy[enemyKey].y },
+            startPosition: { x: startPositionsForScorpions[enemyKey].x, y: startPositionsForScorpions[enemyKey].y },
             offsetX: 0,
             offsetY: 15,
             walkingAnimationEnabled: false,
@@ -131,99 +133,20 @@ class Game extends Phaser.Scene {
   subscribeCharacterToChangeMoving(){
     // Hero movements subscribers
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
-      const entity = this.entitiesMap.get(charId) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+      const entity = this.entitiesMap.get(charId) as Hero | Enemy;
       entity.anims.play(direction);
     });
 
     this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
-      const entity = this.entitiesMap.get(charId) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+      const entity = this.entitiesMap.get(charId) as Hero | Enemy;
       entity.anims.stop();
-      entity.setFrame(this.getStopFrame(direction));
+      entity.setFrame(entity.getStopFrame(direction));
     });
 
     this.gridEngine.directionChanged().subscribe(({ charId, direction }) => {
-      const entity = this.entitiesMap.get(charId) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-      entity.setFrame(this.getStopFrame(direction));
+      const entity = this.entitiesMap.get(charId) as Hero | Enemy;
+      entity.setFrame(entity.getStopFrame(direction));
     });
-  }
-
-  setPointerDownListener(map: Tilemaps.Tilemap){
-    // Moving on mouse click
-    this.input.on('pointerdown', () => {
-      // Converting world coords into tile coords
-      const gridMouseCoords = map.worldToTileXY(this.input.activePointer.worldX, this.input.activePointer.worldY);
-      gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
-      gridMouseCoords.y = Math.round(gridMouseCoords.y);
-
-      // Get 0-layer's tile by coords
-      const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
-      clickedTile.tint = 0xff7a4a;
-
-      // MoveTo provides "player" move to grid coords
-      this.gridEngine.moveTo("player", { x: gridMouseCoords.x, y: gridMouseCoords.y });
-    }, this);
-  }
-
-  // позже надо удалить из аргументов карту и функцию покраски тайлов
-
-  setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap){
-    this.enemiesMovesTimers.charId = setInterval(() => {
-      const deltaXY = getRandomXYDelta();
-      this.gridEngine.moveTo(`${charId}`, { x: startPositionsForEnemy[charId].x + deltaXY.xDelta, y: startPositionsForEnemy[charId].y + deltaXY.yDelta } );
-      this.tintTile(map, startPositionsForEnemy[charId].x + deltaXY.xDelta, startPositionsForEnemy[charId].y + deltaXY.yDelta, 0xff7a4a);
-
-    }, getRandomTimeInterval())
-  }
-
-  moveHeroByArrows(){
- // Move hero by arrows (can be deleted?)
-    if (this.cursors.left.isDown) {
-      this.gridEngine.move("player", Direction.UP_LEFT);
-    } else if (this.cursors.right.isDown) {
-      this.gridEngine.move("player", Direction.DOWN_RIGHT);
-    } else if (this.cursors.up.isDown) {
-      this.gridEngine.move("player", Direction.UP_RIGHT);
-    } else if (this.cursors.down.isDown) {
-      this.gridEngine.move("player", Direction.DOWN_LEFT);
-    }
-  }
-
-  setFramesForEntitiesAnimations(){
-    console.log(this.entitiesMap)
-    this.entitiesMap.forEach((entityValue, entityKey) => {
-      this.createEntityAnimation.call(entityValue, "up-right", entityKey, 0, 7);
-      this.createEntityAnimation.call(entityValue, "down-right", entityKey, 16, 23);
-      this.createEntityAnimation.call(entityValue, "down-left", entityKey, 24, 31);
-      this.createEntityAnimation.call(entityValue, "up-left", entityKey, 40, 47);
-    })
-  }
-
-  createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number) {
-    this.anims.create({
-      key: direction,
-      frames: this.anims.generateFrameNumbers(`${entityName}`, {
-        start: startFrame,
-        end: endFrame,
-      }),
-      frameRate: 9,
-      repeat: -1,
-      yoyo: false,
-    });
-  }
-
-  getStopFrame(direction: string): number {
-    switch (direction) {
-      case "up-right":
-        return 0;
-      case "down-right":
-        return 16;
-      case "down-left":
-        return 24;
-      case "up-left":
-        return 40;
-      default:
-        return -1;
-    }
   }
 
   tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {

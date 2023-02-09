@@ -1,4 +1,4 @@
-import windowSize from './constants';
+import { windowSize } from './constants';
 import GridEngine from 'grid-engine';
 import Game from './game';
 
