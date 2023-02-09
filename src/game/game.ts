@@ -1,6 +1,7 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
 import windowSize from './constants';
+import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin'
 
 const startPositionsForEnemy: { [key: string]: { x: number, y: number } } = { 
   enemy1: { x: 20, y: 34 },
@@ -24,9 +25,10 @@ class Game extends Phaser.Scene {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
+  rexUI: RexUIPlugin;
   enemiesMovesTimers: { [enemyId: string]: NodeJS.Timer }
 
-  constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
+  constructor(hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine, rexUI: RexUIPlugin) {
     super('game'); // why and how this works?
     this.hero = hero;
     this.entitiesMap = new Map();
@@ -34,6 +36,7 @@ class Game extends Phaser.Scene {
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
     this.enemiesMovesTimers = {};
+    this.rexUI = rexUI;
   }
 
   preload() {
@@ -42,6 +45,7 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('player', 'assets/spritesheets/woman-01.png', { frameWidth: 75, frameHeight: 133 });
     this.load.spritesheet('enemy1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
     this.load.spritesheet('enemy2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.html('ui', 'assets/html/test.html')
   }
 
   create() {
@@ -61,6 +65,13 @@ class Game extends Phaser.Scene {
     })
     this.subscribeCharacterToChangeMoving();
     this.setPointerDownListener(map);
+    this.createUI()
+  }
+
+  createUI(){
+    const testUI = this.add.dom(640, 670).createFromCache('ui')
+    testUI.scrollFactorX = 0;
+    testUI.scrollFactorY = 0;
   }
 
   update() {
@@ -91,7 +102,7 @@ class Game extends Phaser.Scene {
   }
 
   createCamera(){
-    this.cameras.main.setSize(windowSize.windowWidth, windowSize.windowHeight);
+    this.cameras.main.setSize(1280, 720);
     this.cameras.main.startFollow(this.hero, true);
   }
 

@@ -1,0 +1,73 @@
+  <div class="ui-container">
+    <div class="left-pan"></div>
+    <div class="weapon-slot">
+        <span class="weapon-name">Nothing</span>
+    </div>
+    <div class="hp-element">
+        <span class="hp">20</span>
+    </div>
+    <div class="right-pan"></div>
+  </div>
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    html{
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .ui-container{
+      display: flex;
+      justify-content: center;
+      background-color: rgb(117, 94, 51);
+      width: 100%;
+      height: 100px;
+    }
+    
+    .left-pan{
+      height: 100%;
+      width: 229px;
+      background-image: url(../assets/ui-elements/left-pan.png);
+      background-size: cover;
+    }
+    
+    .weapon-slot{
+      position: relative;
+      height: 100%;
+      width: 211px;
+      background-image: url(../assets/ui-elements/weapon-slot.png);
+      background-size: cover;
+    }
+
+    .weapon-name{
+      top: 68px;
+      left: 90px;
+      color: white;
+      position: absolute;
+    }
+    
+    .hp-element{
+      position: relative;
+      height: 100%;
+      width: 52px;
+      background-image: url(../assets/ui-elements/hp-armor.png);
+      background-size: cover;
+    }
+    
+    .hp{
+      position: absolute;
+      color: white;
+      left: 20px;
+      top: 39px;
+    }
+    
+    .right-pan{
+      height: 100%;
+      width: 229px;
+      background-image: url(../assets/ui-elements/right-pan.png);
+      background-size: cover;
+    }
+  </style>
