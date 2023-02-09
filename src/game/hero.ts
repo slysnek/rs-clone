@@ -1,7 +1,6 @@
 import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
-import { heroAnims } from './constants';
 
 class Hero extends Entity {
 
@@ -15,13 +14,6 @@ class Hero extends Entity {
         this.gridEngine = gridEngine;
         this.map = map;
         this.cursor = cursor;
-    }
-
-    setAnimsFrames() {
-        this.setFramesForEntitiesAnimations('up-right', 'hero', heroAnims.walk.upRight.startFrame, heroAnims.walk.upRight.endFrame);
-        this.setFramesForEntitiesAnimations('down-right', 'hero', heroAnims.walk.downRight.startFrame, heroAnims.walk.downRight.endFrame);
-        this.setFramesForEntitiesAnimations('down-left', 'hero', heroAnims.walk.downLeft.startFrame, heroAnims.walk.downRight.endFrame);
-        this.setFramesForEntitiesAnimations('up-left', 'hero', heroAnims.walk.upLeft.startFrame, heroAnims.walk.downRight.endFrame);
     }
 
     setPointerDownListener(map: Tilemaps.Tilemap) {

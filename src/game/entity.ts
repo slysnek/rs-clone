@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import { heroAnims, scorpionAnims, Animations } from "./constants";
 
 class Entity extends Phaser.GameObjects.Sprite {
     key: string;
@@ -8,10 +9,6 @@ class Entity extends Phaser.GameObjects.Sprite {
         this.x = x;
         this.y = y;
         this.key = '';
-    }
-
-    setFramesForEntitiesAnimations(direction: string, entityName: string, startFrame: number, endFrame: number) {
-        this.createEntityAnimation.call(this, direction, entityName, startFrame, endFrame);
     }
 
     createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number) {
@@ -26,22 +23,54 @@ class Entity extends Phaser.GameObjects.Sprite {
             yoyo: false,
         });
     }
+   
+    setFramesForEntityAnimations(entityValue: Phaser.GameObjects.Sprite, entityKey: string, entityAnims: Animations) {
+        this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims.walk.upRight.startFrame, entityAnims.walk.upRight.endFrame);
+        this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims.walk.downRight.startFrame, entityAnims.walk.downRight.endFrame);
+        this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims.walk.downLeft.startFrame, entityAnims.walk.downLeft.endFrame);
+        this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims.walk.upLeft.startFrame, entityAnims.walk.upLeft.endFrame);
+      }
+    
+     getStopFrame(direction: string, entityKey: string): number {
+    const heroRegex = /^player/i;
+    const scorpionRegex = /^scorpion/i;
 
-    getStopFrame(direction: string): number {
-        switch (direction) {
-            case "up-right":
-                return 0;
-            case "down-right":
-                return 16;
-            case "down-left":
-                return 24;
-            case "up-left":
-                return 40;
-            default:
-                return -1;
-        }
+    let entityAnims = {
+      walk: {
+        upRight: {
+          stopFrame: -1,
+        },
+        downRight: {
+          stopFrame: -1,
+        },
+        downLeft: {
+          stopFrame: -1,
+        },
+        upLeft: {
+          stopFrame: -1,
+        },
+      },
+    };
+    if (entityKey.match(heroRegex)) {
+      entityAnims = heroAnims;
+    }
+    if (entityKey.match(scorpionRegex)) {
+      entityAnims = scorpionAnims;
     }
 
+    switch (direction) {
+      case "up-right":
+        return entityAnims.walk.upRight.stopFrame;
+      case "down-right":
+        return entityAnims.walk.downRight.stopFrame;
+      case "down-left":
+        return entityAnims.walk.downLeft.stopFrame;
+      case "up-left":
+        return entityAnims.walk.upLeft.stopFrame;
+      default:
+        return -1;
+    }
+  }
 }
 
 export default Entity;

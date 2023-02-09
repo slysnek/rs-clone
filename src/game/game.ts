@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
-import { windowSize, startPositionsForScorpions } from './constants';
+import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
 
@@ -51,13 +51,13 @@ class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.createHero(map);
     this.createCamera();
-    this.hero.setAnimsFrames();
+    this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims);
     this.createEnemy('scorpion1', map);
     this.createEnemy('scorpion2', map, 0.75);
     this.gridEngineInit(map);
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (entityKey !== 'hero') {
-        entityValue.setAnimsFrames(entityKey);
+        entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
     })
@@ -140,12 +140,12 @@ class Game extends Phaser.Scene {
     this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
       entity.anims.stop();
-      entity.setFrame(entity.getStopFrame(direction));
+      entity.setFrame(entity.getStopFrame(direction, charId));
     });
 
     this.gridEngine.directionChanged().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
-      entity.setFrame(entity.getStopFrame(direction));
+      entity.setFrame(entity.getStopFrame(direction, charId));
     });
   }
 

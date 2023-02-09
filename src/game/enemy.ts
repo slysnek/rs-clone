@@ -1,7 +1,7 @@
 import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
-import { startPositionsForScorpions, scorpionAnims } from './constants';
+import { startPositionsForScorpions } from './constants';
 
 function getRandomXYDelta() {
     const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
@@ -25,13 +25,6 @@ class Enemy extends Entity {
         this.gridEngine = gridEngine;
         this.movesTimerId = null;
         this.map = map;
-    }
-
-    setAnimsFrames(enemyKey: string) {
-        this.setFramesForEntitiesAnimations('up-right', enemyKey, scorpionAnims.walk.upRight.startFrame, scorpionAnims.walk.upRight.endFrame);
-        this.setFramesForEntitiesAnimations('down-right', enemyKey, scorpionAnims.walk.downRight.startFrame, scorpionAnims.walk.downRight.endFrame);
-        this.setFramesForEntitiesAnimations('down-left', enemyKey, scorpionAnims.walk.downLeft.startFrame, scorpionAnims.walk.downRight.endFrame);
-        this.setFramesForEntitiesAnimations('up-left', enemyKey, scorpionAnims.walk.upLeft.startFrame, scorpionAnims.walk.downRight.endFrame);
     }
 
     // позже надо удалить из аргументов карту и функцию покраски тайлов
