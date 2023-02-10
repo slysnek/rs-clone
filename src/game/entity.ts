@@ -6,6 +6,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     key: string;
     healthPoints: number;
     attack: number;
+    actionPoints: number;
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture)
         this.scene = scene;
@@ -14,6 +15,7 @@ class Entity extends Phaser.GameObjects.Sprite {
         this.key = '';
         this.healthPoints = 1;
         this.attack = 0;
+        this.actionPoints = 12;
     }
 
     createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number) {
