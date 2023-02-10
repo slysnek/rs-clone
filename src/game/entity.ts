@@ -37,7 +37,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     }
 
     getStopFrame(direction: string, entityKey: string): number {
-        const heroRegex = /^player/i;
+        const heroRegex = /^hero/i;
         const scorpionRegex = /^scorpion/i;
 
         let entityAnims = {
