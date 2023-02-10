@@ -45,27 +45,43 @@ type Animations = {
 
 const heroAnims = {
   walk: {
-    upRight: {
-      startFrame: 0,
-      endFrame: 7,
-      stopFrame: 10,
-    },
-    downRight: {
-      startFrame: 11,
-      endFrame: 18,
-      stopFrame: 21,
-    },
-    downLeft: {
-      startFrame: 22,
-      endFrame: 29,
-      stopFrame: 32,
-    },
-    upLeft: {
-      startFrame: 33,
-      endFrame: 40,
-      stopFrame: 43,
-    },
+  //   upRight: {
+  //     startFrame: 0,
+  //     endFrame: 7,
+  //     stopFrame: 10,
+  //   },
+  // downRight: {
+  //   startFrame: 11,
+  //   endFrame: 18,
+  //   stopFrame: 21,
+  // },
+  // downLeft: {
+  //   startFrame: 22,
+  //   endFrame: 29,
+  //   stopFrame: 32,
+  // },
+
+  upRight: {
+    startFrame: 176,
+    endFrame: 183,
+    stopFrame: 176,
   },
+  downRight: {
+    startFrame: 187,
+    endFrame: 194,
+    stopFrame: 197,
+  },
+  downLeft: {
+    startFrame: 198,
+    endFrame: 205,
+    stopFrame: 208,
+  },
+  upLeft: {
+    startFrame: 33,
+    endFrame: 40,
+    stopFrame: 43,
+  },
+},
 };
 
 const scorpionAnims = {
