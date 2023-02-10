@@ -5,8 +5,9 @@ import { Animations } from "./types";
 class Entity extends Phaser.GameObjects.Sprite {
     key: string;
     healthPoints: number;
-    attack: number;
+    fightMode: boolean;
     actionPoints: number;
+    attackMode: boolean;
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture)
         this.scene = scene;
@@ -14,8 +15,17 @@ class Entity extends Phaser.GameObjects.Sprite {
         this.y = y;
         this.key = '';
         this.healthPoints = 1;
-        this.attack = 0;
+        this.fightMode = false;
         this.actionPoints = 12;
+        this.attackMode = false;
+    }
+
+    updateActionPoints(lostPoints: number){
+        this.actionPoints =- lostPoints;
+    }
+
+    turnOnFightMode(){
+        this.fightMode = true;
     }
 
     createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number) {

@@ -1,10 +1,10 @@
-const pointsForScorpion = {
+export const pointsForScorpion = {
     step: 1,
     hit: 3,
     tailPunch: 5
 } 
 
-const pointsForHero = {
+export const pointsForHero = {
     step: 1,
     fistPunch: 3,
     shot: 4
