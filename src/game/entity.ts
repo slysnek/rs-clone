@@ -8,20 +8,24 @@ class Entity extends Phaser.GameObjects.Sprite {
     fightMode: boolean;
     actionPoints: number;
     attackMode: boolean;
-    constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, healthPoints: number) {
         super(scene, x, y, texture)
         this.scene = scene;
         this.x = x;
         this.y = y;
         this.key = '';
-        this.healthPoints = 1;
+        this.healthPoints = healthPoints;
         this.fightMode = false;
         this.actionPoints = 12;
         this.attackMode = false;
     }
 
+    updateHealthPoints(damage: number){
+        this.healthPoints -= damage;
+    }
+
     updateActionPoints(lostPoints: number){
-        this.actionPoints =- lostPoints;
+        this.actionPoints -= lostPoints;
     }
 
     turnOnFightMode(){

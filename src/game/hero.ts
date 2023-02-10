@@ -2,19 +2,29 @@ import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
 import Enemy from "./enemy";
+import { lostActionPointsForHero, damageFromHero } from './battlePoints';
 
 class Hero extends Entity {
 
     gridEngine: GridEngine;
     map: Tilemaps.Tilemap;
     cursor: Phaser.Types.Input.Keyboard.CursorKeys;
+    weapon: string;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, gridEngine: GridEngine, map: Tilemaps.Tilemap, cursor: Phaser.Types.Input.Keyboard.CursorKeys) {
-        super(scene, x, y, texture)
+    constructor(scene: Phaser.Scene,
+        x: number,
+        y: number, 
+        texture: string,
+        gridEngine: GridEngine,
+        map: Tilemaps.Tilemap,
+        cursor: Phaser.Types.Input.Keyboard.CursorKeys,
+        healthPoints: number,) {
+        super(scene, x, y, texture, healthPoints)
         this.scene = scene;
         this.gridEngine = gridEngine;
         this.map = map;
         this.cursor = cursor;
+        this.weapon = 'fistPunch';
     }
 
     setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -36,8 +46,22 @@ class Hero extends Entity {
 
     setPointerOnEnemyListener(gameObject: Enemy){
         gameObject.setInteractive().on('pointerdown', () => {
-           console.log(gameObject.id)
+           this.attackEnemy(gameObject);
+           console.log(`enemyHealth ${gameObject.healthPoints}`);
+           console.log(`heroActionPoints ${this.actionPoints}`);
         }, this);
+    }
+
+    attackEnemy(enemy: Enemy){
+        const lostPoints = lostActionPointsForHero[this.weapon];
+        const damage = damageFromHero[this.weapon];
+        this.updateActionPoints(lostPoints);
+        enemy.updateHealthPoints(damage);
+    }
+
+    makeStep(){
+        const lostPoints = lostActionPointsForHero.step;
+        this.updateActionPoints(lostPoints);
     }
 
     moveHeroByArrows() {
