@@ -45,6 +45,7 @@ class Game extends Phaser.Scene {
       if (entityKey !== 'hero') {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
+        this.hero.setPointerOnEnemyListener(entityValue as Enemy);
       }
     })
     this.hero.setPointerDownListener(map);
@@ -73,7 +74,7 @@ class Game extends Phaser.Scene {
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, 0, 0, key, this.gridEngine, map));
+    const enemy = this.add.existing(new Enemy(this, 0, 0, key, this.gridEngine, map, key));
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
   }
@@ -115,6 +116,8 @@ class Game extends Phaser.Scene {
     })
     this.gridEngine.create(map, gridEngineConfig);
   }
+
+  // Герой вошел в радиус врагов, у всех должен измениться статус this.fightMode. Чекать тут.
 
   subscribeCharacterToChangeMoving() {
     // Hero movements subscribers

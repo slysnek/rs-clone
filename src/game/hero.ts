@@ -1,6 +1,7 @@
 import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
+import Enemy from "./enemy";
 
 class Hero extends Entity {
 
@@ -30,6 +31,12 @@ class Hero extends Entity {
 
             // MoveTo provides "player" move to grid coords
             this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+        }, this);
+    }
+
+    setPointerOnEnemyListener(gameObject: Enemy){
+        gameObject.setInteractive().on('pointerdown', () => {
+           console.log(gameObject.id)
         }, this);
     }
 

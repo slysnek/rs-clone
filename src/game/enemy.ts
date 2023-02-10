@@ -19,12 +19,14 @@ class Enemy extends Entity {
     gridEngine: GridEngine;
     map: Tilemaps.Tilemap
     movesTimerId: NodeJS.Timer | null;
+    id: string;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, gridEngine: GridEngine, map: Tilemaps.Tilemap) {
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, gridEngine: GridEngine, map: Tilemaps.Tilemap, id: string) {
         super(scene, x, y, texture)
         this.gridEngine = gridEngine;
         this.movesTimerId = null;
         this.map = map;
+        this.id = id;
     }
 
     clearTimer(){
