@@ -3,31 +3,6 @@ export const windowSize = {
     windowHeight: window.innerHeight
 }
 
-export type Animations = {
-    walk: {
-        upRight: {
-            startFrame: number;
-            endFrame: number;
-            stopFrame: number;
-        },
-        downRight: {
-            startFrame: number;
-            endFrame: number;
-            stopFrame: number;
-        },
-        downLeft: {
-            startFrame: number;
-            endFrame: number;
-            stopFrame: number;
-        },
-        upLeft: {
-            startFrame: number;
-            endFrame: number;
-            stopFrame: number;
-        }
-    }
-}
-
 export const heroAnims = {
     walk: {
         upRight: {

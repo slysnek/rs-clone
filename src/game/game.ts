@@ -3,22 +3,8 @@ import { GridEngine } from 'grid-engine';
 import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
+import { gridEngineType } from './types';
 
-type gridEngineType = {
-  characters: {
-    id: string;
-    sprite: Hero | Enemy;
-    startPosition: {
-      x: number;
-      y: number;
-    };
-    offsetX: number;
-    offsetY: number;
-    walkingAnimationEnabled: boolean;
-    speed: number;
-  }[];
-  numberOfDirections: number;
-}
 class Game extends Phaser.Scene {
   hero: Hero;
   entitiesMap: Map<string, Hero | Enemy>;

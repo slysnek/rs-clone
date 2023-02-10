@@ -1,5 +1,6 @@
 import Phaser from "phaser";
-import { heroAnims, scorpionAnims, Animations } from "./constants";
+import { heroAnims, scorpionAnims } from "./constants";
+import { Animations } from "./types"; 
 
 class Entity extends Phaser.GameObjects.Sprite {
     key: string;
