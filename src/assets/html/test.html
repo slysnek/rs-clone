@@ -1,73 +1,125 @@
-  <div class="ui-container">
-    <div class="left-pan"></div>
-    <div class="weapon-slot">
-        <span class="weapon-name">Nothing</span>
-    </div>
-    <div class="hp-element">
-        <span class="hp">20</span>
-    </div>
-    <div class="right-pan"></div>
+<div class="ui-container">
+  <div class="left-pan"></div>
+  <div class="console">
+    <ul class="console-messages-list">
+      <li class="console-message">Test message</li>
+      <li class="console-message">Test message 2</li>
+      <li class="console-message">Test message 3</li>
+      <li class="console-message">Test message 4</li>
+      <li class="console-message">Test message 5</li>
+      <li class="console-message">Test message 6</li>
+      <li class="console-message">Test message 7</li>
+      <li class="console-message">Test message 8</li>
+    </ul>
   </div>
-  <style>
-    *{
-      padding: 0;
-      margin: 0;
-      box-sizing: border-box;
-    }
+  <div class="weapon-slot">
+    <span class="weapon-name">Nothing</span>
+  </div>
+  <div class="hp-element">
+    <span class="hp">20</span>
+  </div>
+  <div class="right-pan"></div>
+</div>
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
 
-    html{
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  @font-face {
+    font-family: 'Fallout Font';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../assets/fonts/fallout-font.ttf');
+    /* IE9 Compat Modes */
+  }
 
-    .ui-container{
-      display: flex;
-      justify-content: center;
-      background-color: rgb(117, 94, 51);
-      width: 100%;
-      height: 100px;
-    }
-    
-    .left-pan{
-      height: 100%;
-      width: 229px;
-      background-image: url(../assets/ui-elements/left-pan.png);
-      background-size: cover;
-    }
-    
-    .weapon-slot{
-      position: relative;
-      height: 100%;
-      width: 211px;
-      background-image: url(../assets/ui-elements/weapon-slot.png);
-      background-size: cover;
-    }
+  html {
+    font-family: 'Fallout Font';
+    font-weight: 100;
+  }
 
-    .weapon-name{
-      top: 68px;
-      left: 90px;
-      color: white;
-      position: absolute;
-    }
-    
-    .hp-element{
-      position: relative;
-      height: 100%;
-      width: 52px;
-      background-image: url(../assets/ui-elements/hp-armor.png);
-      background-size: cover;
-    }
-    
-    .hp{
-      position: absolute;
-      color: white;
-      left: 20px;
-      top: 39px;
-    }
-    
-    .right-pan{
-      height: 100%;
-      width: 229px;
-      background-image: url(../assets/ui-elements/right-pan.png);
-      background-size: cover;
-    }
-  </style>
+  .ui-container {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(79, 73, 61);
+    width: 100%;
+    height: 100px;
+  }
+
+  .left-pan {
+    height: 100%;
+    width: 229px;
+    background-image: url(../assets/ui-elements/left-pan.png);
+    background-size: cover;
+  }
+
+  .weapon-slot {
+    position: relative;
+    height: 100%;
+    width: 211px;
+    background-image: url(../assets/ui-elements/weapon-slot.png);
+    background-size: cover;
+  }
+
+  .console {
+    position: relative;
+    height: 100%;
+    padding-left: 27px;
+    padding-top: 21px;
+    width: 373px;
+    background-image: url(../assets/ui-elements/console.png);
+    background-size: cover;
+  }
+
+  .console-messages-list {
+    list-style-position: inside;
+    color: #3cf800;
+    margin-right: 15px;
+    overflow-y: scroll;
+    height: 80%;
+    font-size: 12px;
+  }
+
+  .console-messages-list::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .console-messages-list::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  .console-messages-list::-webkit-scrollbar-thumb {
+    background-color: #3cf800;
+  }
+
+  .weapon-name {
+    top: 68px;
+    left: 90px;
+    color: white;
+    position: absolute;
+  }
+
+  .hp-element {
+    position: relative;
+    height: 100%;
+    width: 52px;
+    background-image: url(../assets/ui-elements/hp-armor.png);
+    background-size: cover;
+  }
+
+  .hp {
+    position: absolute;
+    color: white;
+    left: 20px;
+    top: 39px;
+  }
+
+  .right-pan {
+    height: 100%;
+    width: 229px;
+    background-image: url(../assets/ui-elements/right-pan.png);
+    background-size: cover;
+  }
+</style>

@@ -3,19 +3,19 @@ import { Direction, GridEngine } from 'grid-engine';
 import windowSize from './constants';
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin'
 
-const startPositionsForEnemy: { [key: string]: { x: number, y: number } } = { 
+const startPositionsForEnemy: { [key: string]: { x: number, y: number } } = {
   enemy1: { x: 20, y: 34 },
   enemy2: { x: 23, y: 36 }
 };
 
-function getRandomXYDelta(){
+function getRandomXYDelta() {
   const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
-  return {xDelta: deltaValue(), yDelta: deltaValue()};
+  return { xDelta: deltaValue(), yDelta: deltaValue() };
 }
 
 const timeModifier = 5;
 
-function getRandomTimeInterval(){
+function getRandomTimeInterval() {
   return (Math.ceil(Math.random() * timeModifier) * 1000);
 }
 
@@ -59,26 +59,44 @@ class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.gridEngineInit(map);
     this.entitiesMap.forEach((entityValue, entityKey) => {
-      if(entityKey !== 'player'){
+      if (entityKey !== 'player') {
         this.setEnemyWalkBehavior(entityKey, map);
       }
     })
     this.subscribeCharacterToChangeMoving();
     this.setPointerDownListener(map);
     this.createUI()
+    this.putMessageToConsole(map)
   }
 
-  createUI(){
+  createUI() {
     const testUI = this.add.dom(640, 670).createFromCache('ui')
     testUI.scrollFactorX = 0;
     testUI.scrollFactorY = 0;
   }
 
-  update() {
-   this.moveHeroByArrows();
+  putMessageToConsole(map: Tilemaps.Tilemap) {
+    this.input.on('pointerdown', () => {
+      const gridMouseCoords = map.worldToTileXY(this.input.activePointer.worldX, this.input.activePointer.worldY);
+      const heroCoords = map.worldToTileXY(this.hero.x, this.hero.y);
+      gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
+      gridMouseCoords.y = Math.round(gridMouseCoords.y);
+      heroCoords.x = Math.round(heroCoords.x) - 1 + 3;
+      heroCoords.y = Math.round(heroCoords.y) + 3;
+      
+      const coordMessage = document.createElement('li')
+      coordMessage.classList.add('console-message')
+      coordMessage.textContent = (`You moved ${Math.abs((gridMouseCoords.x + gridMouseCoords.y) - (heroCoords.x + heroCoords.y))} tile(s)`);
+      const consoleList = document.querySelector('.console-messages-list') as HTMLElement;
+      consoleList.prepend(coordMessage)
+    })
   }
 
-  buildMap(){
+  update() {
+    this.moveHeroByArrows();
+  }
+
+  buildMap() {
     const map = this.make.tilemap({ key: 'map' });
     const tilesets = map.addTilesetImage('grassland_tiles', 'tiles');
 
@@ -89,24 +107,24 @@ class Game extends Phaser.Scene {
     return map;
   }
 
-  createHero(){
+  createHero() {
     this.hero = this.physics.add.sprite(0, 0, 'player');
     this.hero.scale = 0.75;
     this.entitiesMap.set('player', this.hero);
   }
 
-  createEnemy(key: string, scaleValue = 1){
+  createEnemy(key: string, scaleValue = 1) {
     const enemy = this.physics.add.sprite(0, 0, `${key}`);
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
   }
 
-  createCamera(){
+  createCamera() {
     this.cameras.main.setSize(1280, 720);
     this.cameras.main.startFollow(this.hero, true);
   }
 
-  gridEngineInit(map: Tilemaps.Tilemap){
+  gridEngineInit(map: Tilemaps.Tilemap) {
     const gridEngineConfig = {
       characters: [
         {
@@ -122,7 +140,7 @@ class Game extends Phaser.Scene {
       numberOfDirections: 4
     };
     this.entitiesMap.forEach((enemyValue, enemyKey) => {
-      if(enemyKey !== 'player'){
+      if (enemyKey !== 'player') {
         gridEngineConfig.characters.push(
           {
             id: enemyKey,
@@ -139,7 +157,7 @@ class Game extends Phaser.Scene {
     this.gridEngine.create(map, gridEngineConfig);
   }
 
-  subscribeCharacterToChangeMoving(){
+  subscribeCharacterToChangeMoving() {
     // Hero movements subscribers
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
@@ -158,7 +176,7 @@ class Game extends Phaser.Scene {
     });
   }
 
-  setPointerDownListener(map: Tilemaps.Tilemap){
+  setPointerDownListener(map: Tilemaps.Tilemap) {
     // Moving on mouse click
     this.input.on('pointerdown', () => {
       // Converting world coords into tile coords
@@ -177,17 +195,17 @@ class Game extends Phaser.Scene {
 
   // позже надо удалить из аргументов карту и функцию покраски тайлов
 
-  setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap){
+  setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap) {
     this.enemiesMovesTimers.charId = setInterval(() => {
       const deltaXY = getRandomXYDelta();
-      this.gridEngine.moveTo(`${charId}`, { x: startPositionsForEnemy[charId].x + deltaXY.xDelta, y: startPositionsForEnemy[charId].y + deltaXY.yDelta } );
+      this.gridEngine.moveTo(`${charId}`, { x: startPositionsForEnemy[charId].x + deltaXY.xDelta, y: startPositionsForEnemy[charId].y + deltaXY.yDelta });
       this.tintTile(map, startPositionsForEnemy[charId].x + deltaXY.xDelta, startPositionsForEnemy[charId].y + deltaXY.yDelta, 0xff7a4a);
 
     }, getRandomTimeInterval())
   }
 
-  moveHeroByArrows(){
- // Move hero by arrows (can be deleted?)
+  moveHeroByArrows() {
+    // Move hero by arrows (can be deleted?)
     if (this.cursors.left.isDown) {
       this.gridEngine.move("player", Direction.UP_LEFT);
     } else if (this.cursors.right.isDown) {
@@ -199,7 +217,7 @@ class Game extends Phaser.Scene {
     }
   }
 
-  setFramesForEntitiesAnimations(){
+  setFramesForEntitiesAnimations() {
     console.log(this.entitiesMap)
     this.entitiesMap.forEach((entityValue, entityKey) => {
       this.createEntityAnimation.call(entityValue, "up-right", entityKey, 0, 7);
@@ -243,7 +261,7 @@ class Game extends Phaser.Scene {
     }
   }
 
-  tintTiles(map: Tilemaps.Tilemap){
+  tintTiles(map: Tilemaps.Tilemap) {
     this.tintTile(map, 30, 35, 0xff7a4a); // orange
     this.tintTile(map, 35, 28, 0xffff0a); // yellow
     this.tintTile(map, 30, 22, 0x4a4aff); // blue
