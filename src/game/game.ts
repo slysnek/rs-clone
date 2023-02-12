@@ -53,8 +53,24 @@ class Game extends Phaser.Scene {
     }) */
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
+    //ui section
     this.ui.createUI(this)
-    this.ui.putMessageToConsole(this)
+    this.ui.putMessageToConsole('Game loaded')
+    this.ui.setHP(this.hero)
+    this.createDamageButton()
+  }
+
+  createDamageButton(){
+    const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 200)
+    .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
+    damageButton.scrollFactorX = 0;
+    damageButton.scrollFactorY = 0;
+    damageButton.addListener('click')
+    damageButton.on('click', () => {
+      this.hero.healthPoints -=1;
+      this.ui.setHP(this.hero)
+      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage')
+    })
   }
 
   update() {
