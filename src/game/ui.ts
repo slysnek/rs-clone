@@ -2,7 +2,7 @@ import { Tilemaps } from "phaser";
 import { windowSize } from "./constants";
 import Game from "./game";
 
-export default class scene {
+export default class UI {
   createUI(scene: Game) {
     const testUI = scene.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 45).createFromCache('ui')
     testUI.scrollFactorX = 0;
