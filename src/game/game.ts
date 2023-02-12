@@ -4,6 +4,7 @@ import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims } from
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
+import UI from './ui'
 
 class Game extends Phaser.Scene {
   hero: Hero;
@@ -12,6 +13,7 @@ class Game extends Phaser.Scene {
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
   enemiesMovesTimers: { [enemyId: string]: NodeJS.Timer }
+  ui: UI;
 
   constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
     super('game'); // why and how this works?
@@ -21,14 +23,16 @@ class Game extends Phaser.Scene {
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
     this.enemiesMovesTimers = {};
+    this.ui = new UI();
   }
 
   preload() {
-    this.load.tilemapTiledJSON('map', 'assets/maps/currentMap.json');
-    this.load.image('tiles', 'assets/maps/tiles-02.png');
-    this.load.spritesheet('player', 'assets/spritesheets/woman-01.png', { frameWidth: 75, frameHeight: 133 });
+    this.load.tilemapTiledJSON('map', 'assets/maps/map1.json');
+    this.load.image('tiles', 'assets/maps/maptiles2-01-01.png');
+    this.load.spritesheet('player', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
     this.load.spritesheet('enemy1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
     this.load.spritesheet('enemy2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.html('ui', '/assets/html/test.html')
   }
 
   create() {
@@ -37,18 +41,20 @@ class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.createHero(map);
     this.createCamera();
-    this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims);
+    /* this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims); */
     this.createEnemy('scorpion1', map);
     this.createEnemy('scorpion2', map, 0.75);
     this.gridEngineInit(map);
-    this.entitiesMap.forEach((entityValue, entityKey) => {
+/*     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (entityKey !== 'hero') {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
-    })
+    }) */
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
+    this.ui.createUI(this)
+    this.ui.putMessageToConsole(this)
   }
 
   update() {
@@ -57,7 +63,7 @@ class Game extends Phaser.Scene {
 
   buildMap() {
     const map = this.make.tilemap({ key: 'map' });
-    const tilesets = map.addTilesetImage('tiles-02', 'tiles');
+    const tilesets = map.addTilesetImage('maptiles2-01-01', 'tiles');
 
     // Layers creation based on tilemap's layers
     for (let i = 0; i < map.layers.length; i++) {
@@ -91,7 +97,7 @@ class Game extends Phaser.Scene {
           sprite: this.hero,
           startPosition: { x: 35, y: 28 },
           offsetX: 0,
-          offsetY: 42,
+          offsetY: 0,
           walkingAnimationEnabled: false,
           speed: 7,
         },
