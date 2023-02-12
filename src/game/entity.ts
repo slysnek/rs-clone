@@ -29,12 +29,12 @@ class Entity extends Phaser.GameObjects.Sprite {
         });
     }
 
-/*     setFramesForEntityAnimations(entityValue: Phaser.GameObjects.Sprite, entityKey: string, entityAnims: Animations) {
+    setFramesForEntityAnimations(entityValue: Phaser.GameObjects.Sprite, entityKey: string, entityAnims: Animations) {
         this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims.walk.upRight.startFrame, entityAnims.walk.upRight.endFrame);
         this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims.walk.downRight.startFrame, entityAnims.walk.downRight.endFrame);
         this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims.walk.downLeft.startFrame, entityAnims.walk.downLeft.endFrame);
         this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims.walk.upLeft.startFrame, entityAnims.walk.upLeft.endFrame);
-    } */
+    }
 
     getStopFrame(direction: string, entityKey: string): number {
         const heroRegex = /^player/i;
