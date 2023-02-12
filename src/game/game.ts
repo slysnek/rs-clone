@@ -69,8 +69,17 @@ class Game extends Phaser.Scene {
     damageButton.scrollFactorY = 0;
     damageButton.addListener('click')
     damageButton.on('click', () => {
-      this.hero.healthPoints -=1;
       this.ui.updateHP(this.hero)
+      if(this.hero.healthPoints === 0){
+        this.ui.putMessageToConsole('I am already dead. Stop mocking me.')
+        return
+      }
+      
+      this.hero.healthPoints -=1;
+      if(this.hero.healthPoints === 0){
+        this.ui.putMessageToConsole('You killed me.')
+        return
+      }
       this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage')
     })
   }
