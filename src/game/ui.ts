@@ -1,6 +1,7 @@
 import { Tilemaps } from "phaser";
 import { windowSize } from "./constants";
 import Game from "./game";
+import Hero from "./hero";
 
 export default class UI {
   createUI(scene: Game) {
@@ -9,14 +10,18 @@ export default class UI {
     testUI.scrollFactorY = 0;
   }
 
-  putMessageToConsole(scene: Game, message = 'debug message') {
-    scene.input.on('pointerdown', () => {
+  setHP(hero: Hero){
+    const HP = document.querySelector('.hp') as HTMLElement
+    HP.textContent = hero.healthPoints.toString();
+  }
+
+  putMessageToConsole(message = 'debug message') {
       const coordMessage = document.createElement('li')
       coordMessage.classList.add('console-message')
       coordMessage.textContent = message;
       const consoleList = document.querySelector('.console-messages-list') as HTMLElement;
       consoleList.prepend(coordMessage)
-    })
+      this.deleteLastMessage()
   }
 
   deleteLastMessage() {
