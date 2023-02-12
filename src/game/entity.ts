@@ -1,11 +1,13 @@
 import Phaser from "phaser";
 import { heroAnims, scorpionAnims } from "./constants";
 import { Animations } from "./types"; 
+import MeleeWeapon from './meleeweapon'
 
 class Entity extends Phaser.GameObjects.Sprite {
     key: string;
     healthPoints: number;
     attack: number;
+    weapon: MeleeWeapon; // will need to change it
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture)
         this.scene = scene;
@@ -14,6 +16,7 @@ class Entity extends Phaser.GameObjects.Sprite {
         this.key = '';
         this.healthPoints = 10;
         this.attack = 0;
+        this.weapon = new MeleeWeapon('nothing', '', 0, 0);
     }
 
     createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number) {
