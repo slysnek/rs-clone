@@ -10,9 +10,13 @@ export default class UI {
     testUI.scrollFactorY = 0;
   }
 
-  setHP(hero: Hero){
+  updateHP(hero: Hero){
     const HP = document.querySelector('.hp') as HTMLElement
-    HP.textContent = hero.healthPoints.toString();
+    if(hero.healthPoints < 10){
+      HP.textContent = '0' + hero.healthPoints.toString();
+    } else{
+      HP.textContent = hero.healthPoints.toString();
+    }
   }
 
   putMessageToConsole(message = 'debug message') {
