@@ -1,6 +1,7 @@
 import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
+import MeleeWeapon from './meleeweapon'
 
 class Hero extends Entity {
 
@@ -14,6 +15,7 @@ class Hero extends Entity {
         this.gridEngine = gridEngine;
         this.map = map;
         this.cursor = cursor;
+        this.weapon = new MeleeWeapon('fists','./assets/weapons/fist.png', 5, 0.7)
     }
 
     setPointerDownListener(map: Tilemaps.Tilemap) {

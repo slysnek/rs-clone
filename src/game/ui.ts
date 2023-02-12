@@ -19,6 +19,13 @@ export default class UI {
     }
   }
 
+  updateWeapon(hero: Hero){
+    const weapon = document.querySelector('.weapon') as HTMLElement
+    const weaponName = document.querySelector('.weapon-name') as HTMLElement
+    weapon.style.background = `url(${hero.weapon.image})`
+    weaponName.textContent = hero.weapon.name;
+  }
+
   putMessageToConsole(message = 'debug message') {
       const coordMessage = document.createElement('li')
       coordMessage.classList.add('console-message')
