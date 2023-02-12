@@ -56,7 +56,7 @@ class Game extends Phaser.Scene {
     //ui section
     this.ui.createUI(this)
     this.ui.putMessageToConsole('Game loaded')
-    this.ui.setHP(this.hero)
+    this.ui.updateHP(this.hero)
     this.createDamageButton()
   }
 
@@ -68,7 +68,7 @@ class Game extends Phaser.Scene {
     damageButton.addListener('click')
     damageButton.on('click', () => {
       this.hero.healthPoints -=1;
-      this.ui.setHP(this.hero)
+      this.ui.updateHP(this.hero)
       this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage')
     })
   }
