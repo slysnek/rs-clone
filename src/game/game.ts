@@ -59,6 +59,7 @@ class Game extends Phaser.Scene {
     this.ui.updateHP(this.hero)
     this.ui.updateWeapon(this.hero)
     this.createDamageButton()
+    this.ui.setChangeWeaponListener(this.hero)
   }
 
   createDamageButton(){

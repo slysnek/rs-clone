@@ -8,6 +8,8 @@ class Hero extends Entity {
     gridEngine: GridEngine;
     map: Tilemaps.Tilemap;
     cursor: Phaser.Types.Input.Keyboard.CursorKeys;
+    secondaryWeapon: MeleeWeapon;
+    currentWeapon: MeleeWeapon;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, gridEngine: GridEngine, map: Tilemaps.Tilemap, cursor: Phaser.Types.Input.Keyboard.CursorKeys) {
         super(scene, x, y, texture)
@@ -15,7 +17,14 @@ class Hero extends Entity {
         this.gridEngine = gridEngine;
         this.map = map;
         this.cursor = cursor;
-        this.weapon = new MeleeWeapon('fists','./assets/weapons/fist.png', 5, 0.7)
+        this.mainWeapon = new MeleeWeapon('Fists', './assets/weapons/fist.png', 5, 0.8)
+        this.secondaryWeapon = new MeleeWeapon('Blade', './assets/weapons/blade.png', 12, 0.6)
+        this.currentWeapon = this.mainWeapon;
+    }
+
+    changeWeapon() {
+        if (this.currentWeapon.name === this.mainWeapon.name) this.currentWeapon = this.secondaryWeapon
+        else this.currentWeapon = this.mainWeapon
     }
 
     setPointerDownListener(map: Tilemaps.Tilemap) {

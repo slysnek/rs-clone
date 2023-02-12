@@ -22,8 +22,17 @@ export default class UI {
   updateWeapon(hero: Hero){
     const weapon = document.querySelector('.weapon') as HTMLElement
     const weaponName = document.querySelector('.weapon-name') as HTMLElement
-    weapon.style.background = `url(${hero.weapon.image})`
-    weaponName.textContent = hero.weapon.name;
+    weapon.style.background = `url(${hero.currentWeapon.image}) no-repeat`
+    weaponName.textContent = hero.currentWeapon.name;
+  }
+
+  setChangeWeaponListener(hero: Hero){
+    const changeWeaponButton = document.querySelector('.cycle-weapons') as HTMLElement;
+    changeWeaponButton.addEventListener('click', () => {
+      hero.changeWeapon();
+      this.updateWeapon(hero)
+      this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`)
+    })
   }
 
   putMessageToConsole(message = 'debug message') {
