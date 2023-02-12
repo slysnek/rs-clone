@@ -12,6 +12,7 @@ export default class UI {
 
   updateHP(hero: Hero){
     const HP = document.querySelector('.hp') as HTMLElement
+    if(hero.healthPoints < 0) return
     if(hero.healthPoints < 10){
       HP.textContent = '0' + hero.healthPoints.toString();
     } else{
