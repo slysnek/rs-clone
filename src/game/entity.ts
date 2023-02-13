@@ -32,7 +32,7 @@ class Entity extends Phaser.GameObjects.Sprite {
         this.fightMode = true;
     }
 
-    createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number) {
+    createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number, repeat: number) {
         this.anims.create({
             key: direction,
             frames: this.anims.generateFrameNumbers(`${entityName}`, {
@@ -40,16 +40,16 @@ class Entity extends Phaser.GameObjects.Sprite {
                 end: endFrame,
             }),
             frameRate: 9,
-            repeat: -1,
+            repeat: repeat,
             yoyo: false,
         });
     }
 
     setFramesForEntityAnimations(entityValue: Phaser.GameObjects.Sprite, entityKey: string, entityAnims: Animations) {
-        this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims.walk.upRight.startFrame, entityAnims.walk.upRight.endFrame);
-        this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims.walk.downRight.startFrame, entityAnims.walk.downRight.endFrame);
-        this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims.walk.downLeft.startFrame, entityAnims.walk.downLeft.endFrame);
-        this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims.walk.upLeft.startFrame, entityAnims.walk.upLeft.endFrame);
+        this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims.walk.upRight.startFrame, entityAnims.walk.upRight.endFrame, -1);
+        this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims.walk.downRight.startFrame, entityAnims.walk.downRight.endFrame, -1);
+        this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims.walk.downLeft.startFrame, entityAnims.walk.downLeft.endFrame, -1);
+        this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims.walk.upLeft.startFrame, entityAnims.walk.upLeft.endFrame, -1);
     }
 
     getStopFrame(direction: string, entityKey: string): number {

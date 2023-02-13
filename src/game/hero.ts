@@ -46,10 +46,10 @@ class Hero extends Entity {
     }
 
     setPunchAnimation(){
-        this.createEntityAnimation('punch__up-right', 'hero', heroAnims.punch.upRight.startFrame, heroAnims.punch.upRight.endFrame);
-        this.createEntityAnimation('punch__down-right', 'hero', heroAnims.punch.downRight.startFrame, heroAnims.punch.downRight.endFrame);
-        this.createEntityAnimation('punch__down-left', 'hero', heroAnims.punch.downLeft.startFrame, heroAnims.punch.downLeft.endFrame);
-        this.createEntityAnimation('punch__up-left', 'hero', heroAnims.punch.upLeft.startFrame, heroAnims.punch.upLeft.endFrame);
+        this.createEntityAnimation('punch__up-right', 'hero', heroAnims.punch.upRight.startFrame, heroAnims.punch.upRight.endFrame, 0);
+        this.createEntityAnimation('punch__down-right', 'hero', heroAnims.punch.downRight.startFrame, heroAnims.punch.downRight.endFrame, 0);
+        this.createEntityAnimation('punch__down-left', 'hero', heroAnims.punch.downLeft.startFrame, heroAnims.punch.downLeft.endFrame, 0);
+        this.createEntityAnimation('punch__up-left', 'hero', heroAnims.punch.upLeft.startFrame, heroAnims.punch.upLeft.endFrame, 0);
     }
 
     setPointerOnEnemyListener(gameObject: Enemy){
@@ -70,8 +70,7 @@ class Hero extends Entity {
             } else {
                 currentAnimation = 'down-left';
             }
-        }
-        if(heroPosition.y === enemyPosition.y){
+        } else if(heroPosition.y === enemyPosition.y){
             if(heroPosition.x > enemyPosition.x){
                 currentAnimation = 'up-left';
             } else {
