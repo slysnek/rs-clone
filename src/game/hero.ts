@@ -30,7 +30,7 @@ class Hero extends Entity {
 
     updateAP(distance: number) {
         this.actionPoints -= distance;
-        if (this.actionPoints < 0) this.actionPoints += 10
+        while (this.actionPoints < 0) this.actionPoints += 10
     }
 
     moveHeroByArrows() {
