@@ -20,6 +20,16 @@ export default class UI {
     }
   }
 
+  updateAP(hero: Hero){
+    const APlights = document.querySelectorAll('.light');
+    for (let i = 0; i < hero.actionPoints; i++) {
+      APlights[i].classList.add('on')
+    }
+    for (let i = hero.actionPoints; i < 10; i++) {
+      APlights[i].classList.remove('on')
+    }
+  }
+
   updateWeapon(hero: Hero){
     const weapon = document.querySelector('.weapon') as HTMLElement
     const weaponName = document.querySelector('.weapon-name') as HTMLElement

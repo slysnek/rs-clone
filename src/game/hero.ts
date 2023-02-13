@@ -20,6 +20,7 @@ class Hero extends Entity {
         this.mainWeapon = new MeleeWeapon('Fists', './assets/weapons/fist.png', 5, 0.8)
         this.secondaryWeapon = new MeleeWeapon('Blade', './assets/weapons/blade.png', 12, 0.6)
         this.currentWeapon = this.mainWeapon;
+        this.actionPoints = 10;
     }
 
     changeWeapon() {
@@ -27,21 +28,9 @@ class Hero extends Entity {
         else this.currentWeapon = this.mainWeapon
     }
 
-    setPointerDownListener(map: Tilemaps.Tilemap) {
-        // Moving on mouse click
-        this.scene.input.on('pointerdown', () => {
-            // Converting world coords into tile coords
-            const gridMouseCoords = map.worldToTileXY(this.scene.input.activePointer.worldX, this.scene.input.activePointer.worldY);
-            gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
-            gridMouseCoords.y = Math.round(gridMouseCoords.y);
-
-            // Get 0-layer's tile by coords
-            const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
-            clickedTile.tint = 0xff7a4a;
-
-            // MoveTo provides "player" move to grid coords
-            this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
-        }, this);
+    updateAP(distance: number) {
+        this.actionPoints -= distance;
+        if (this.actionPoints < 0) this.actionPoints += 10
     }
 
     moveHeroByArrows() {

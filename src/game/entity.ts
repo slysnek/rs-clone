@@ -6,6 +6,7 @@ import MeleeWeapon from './meleeweapon'
 class Entity extends Phaser.GameObjects.Sprite {
     key: string;
     healthPoints: number;
+    actionPoints: number;
     attack: number;
     mainWeapon: MeleeWeapon; // will need to change it
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
@@ -15,6 +16,7 @@ class Entity extends Phaser.GameObjects.Sprite {
         this.y = y;
         this.key = '';
         this.healthPoints = 10;
+        this.actionPoints = 0;
         this.attack = 0;
         this.mainWeapon = new MeleeWeapon('nothing', '', 0, 0);
     }
