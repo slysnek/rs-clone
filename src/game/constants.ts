@@ -58,21 +58,65 @@ export const scorpionAnims = {
             stopFrame: 0,
         },
         downRight: {
-            startFrame: 16,
-            endFrame: 23,
-            stopFrame: 16,
+            startFrame: 11,
+            endFrame: 18,
+            stopFrame: 11,
         },
         downLeft: {
-            startFrame: 24,
-            endFrame: 31,
-            stopFrame: 24,
+            startFrame: 22,
+            endFrame: 29,
+            stopFrame: 22,
         },
         upLeft: {
-            startFrame: 40,
-            endFrame: 47,
-            stopFrame: 40,
+            startFrame: 33,
+            endFrame: 40,
+            stopFrame: 33,
         },
     },
+    punch: {
+        upRight: {
+            startFrame: 83,
+            endFrame: 93,
+            stopFrame: 83,
+        },
+        downRight: {
+            startFrame: 94,
+            endFrame: 104,
+            stopFrame: 94,
+        },
+        downLeft: {
+            startFrame: 105,
+            endFrame: 115,
+            stopFrame: 105,
+        },
+        upLeft: {
+            startFrame: 116,
+            endFrame: 126,
+            stopFrame: 116,
+        },
+    },
+    hit: {
+        upRight: {
+            startFrame: 44,
+            endFrame: 49,
+            stopFrame: 44,
+        },
+        downRight: {
+            startFrame: 55,
+            endFrame: 60,
+            stopFrame: 55,
+        },
+        downLeft: {
+            startFrame: 66,
+            endFrame: 71,
+            stopFrame: 66,
+        },
+        upLeft: {
+            startFrame: 77,
+            endFrame: 82,
+            stopFrame: 77,
+        },
+    }
 };
 
 export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: number } } = {
