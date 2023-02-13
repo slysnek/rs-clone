@@ -4,10 +4,24 @@
     <ul class="console-messages-list">
     </ul>
   </div>
-  <div class="weapon-slot">
-    <div class="weapon"></div>
-    <div class="cycle-weapons"></div>
-    <span class="weapon-name">Nothing</span>
+  <div class="weapon-lights-wrapper">
+    <div class="lights">
+      <div class="light on"></div>
+      <div class="light on"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+    </div>
+    <div class="weapon-slot">
+      <div class="weapon"></div>
+      <div class="cycle-weapons"></div>
+      <span class="weapon-name">Nothing</span>
+    </div>
   </div>
   <div class="hp-element">
     <span class="hp">?</span>
@@ -49,18 +63,65 @@
     background-size: cover;
   }
 
+  .lights{
+    display: flex;
+    flex-direction: row;
+    padding-left: 56px;
+    padding-top: 12px;
+    gap: 3px;
+  }
+  
+  .light{
+    width: 8px;
+    height: 8px;
+    background-image: url(../assets/ui-elements/light-off.png);
+  }
+
+  .on{
+    background-image: url(../assets/ui-elements/light-on.png);
+  }
+
+  .weapon-lights-wrapper{
+    display: flex;
+    flex-direction: column;
+  }
+
   .weapon-slot {
     position: relative;
-    height: 100%;
+    height: 75px;
     width: 211px;
-    background-image: url(../assets/ui-elements/weapon-slot.png);
+    background-image: url(../assets/ui-elements/weapon.png);
     background-size: cover;
+  }
+
+  .lights{
+    position: relative;
+    height: 23px;
+    width: 211px;
+    background-image: url(../assets/ui-elements/move-points.png);
+    background-size: cover;
+  }
+  
+  .weapon{
+    top: 13px;
+    left: 70px;
+    width: 100px;
+    height: 50px;
+    background: black;
+    position: absolute;
+  }
+
+  .weapon-name {
+    top: 44px;
+    left: 90px;
+    color: white;
+    position: absolute;
   }
 
   .cycle-weapons{
     width: 16px;
     height: 16px;
-    top: 33px;
+    top: 7px;
     background-image: url(../assets/ui-elements/cycle.svg);
     background-size: cover;
     left: 186px;
@@ -97,22 +158,6 @@
 
   .console-messages-list::-webkit-scrollbar-thumb {
     background-color: #3cf800;
-  }
-
-  .weapon{
-    top: 35px;
-    left: 70px;
-    width: 100px;
-    height: 50px;
-    background: black;
-    position: absolute;
-  }
-
-  .weapon-name {
-    top: 68px;
-    left: 90px;
-    color: white;
-    position: absolute;
   }
 
   .hp-element {

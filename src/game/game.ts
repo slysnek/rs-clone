@@ -51,12 +51,13 @@ class Game extends Phaser.Scene {
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
     }) */
-    this.hero.setPointerDownListener(map);
+    this.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
     //ui section
     this.ui.createUI(this)
     this.ui.putMessageToConsole('Game loaded')
     this.ui.updateHP(this.hero)
+    this.ui.updateAP(this.hero)
     this.ui.updateWeapon(this.hero)
     this.createDamageButton()
     this.ui.setChangeWeaponListener(this.hero)
@@ -148,6 +149,31 @@ class Game extends Phaser.Scene {
     })
     this.gridEngine.create(map, gridEngineConfig);
   }
+
+  setPointerDownListener(map: Tilemaps.Tilemap) {
+    // Moving on mouse click
+    this.input.on('pointerdown', () => {
+        // Converting world coords into tile coords
+        const gridMouseCoords = map.worldToTileXY(this.input.activePointer.worldX, this.input.activePointer.worldY);
+        const heroCoords = map.worldToTileXY(this.hero.x, this.hero.y);
+        gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
+        gridMouseCoords.y = Math.round(gridMouseCoords.y);
+        heroCoords.x = Math.round(heroCoords.x)
+        heroCoords.y = Math.round(heroCoords.y) + 1;
+        //updating AP
+        const distance = Math.abs(Math.abs(gridMouseCoords.x - heroCoords.x) + Math.abs(gridMouseCoords.y - heroCoords.y))
+        this.hero.updateAP(distance)
+        this.ui.updateAP(this.hero)
+        console.log(this.hero.actionPoints);
+
+        // Get 0-layer's tile by coords
+        const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
+        clickedTile.tint = 0xff7a4a;
+
+        // MoveTo provides "player" move to grid coords
+        this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+    }, this);
+}
 
   subscribeCharacterToChangeMoving() {
     // Hero movements subscribers
