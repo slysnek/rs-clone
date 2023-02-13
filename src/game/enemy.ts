@@ -21,7 +21,7 @@ class Enemy extends Entity {
   battleRadius: number;
 
   constructor(scene: Phaser.Scene, texture: string, gridEngine: GridEngine, map: Tilemaps.Tilemap, battleRadius: number) {
-    super(scene, texture)
+    super(scene, texture);
     this.gridEngine = gridEngine;
     this.movesTimerId = null;
     this.map = map;
@@ -34,7 +34,6 @@ class Enemy extends Entity {
   }
 
   // позже надо удалить из аргументов карту и функцию покраски тайлов
-
   setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap) {
     this.movesTimerId = setInterval(() => {
       const deltaXY = getRandomXYDelta();
@@ -43,7 +42,7 @@ class Enemy extends Entity {
     }, getRandomTimeInterval())
   }
 
-  //повтор функции, удалить
+  // повтор функции, удалить
   tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
     for (const element of tilemap.layers) {
       element.tilemapLayer.layer.data[row][col].tint = color;

@@ -1,5 +1,5 @@
 import Phaser, { Tilemaps } from 'phaser';
-import { GridEngine } from 'grid-engine';
+import { GridEngine, Position } from 'grid-engine';
 import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
@@ -43,7 +43,9 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
     this.load.spritesheet('scorpion1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
     this.load.spritesheet('scorpion2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('dummy', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('dummy1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('dummy2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('dummy3', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
   }
 
   create() {
@@ -59,12 +61,14 @@ class Game extends Phaser.Scene {
 
     this.createEnemy('scorpion1', map, 3);
     this.createEnemy('scorpion2', map, 3, 0.75);
-    this.createEnemy('dummy', map, 3, 0.75); // dummy to test fight system
+    this.createEnemy('dummy1', map, 6, 0.75); // dummy to test fight system
+    this.createEnemy('dummy2', map, 6, 0.75); // dummy to test fight system
+    this.createEnemy('dummy3', map, 6, 0.75); // dummy to test fight system
 
     this.gridEngineInit(map);
 
-    this.enemyRadiusSteppedOnHero(map, 30, 30, 3, 0xdd1111); // -
-    this.gridEngine.moveTo('dummy', { x: 37, y: 29 }); // -
+    this.gridEngine.moveTo('dummy1', { x: 37, y: 29 }); // -
+    // console.log(this.gridEngine.getCharactersAt(this.gridEngine.getPosition('hero'), '1'));
 
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (entityKey.match(/^scorpion/i)) {
@@ -73,7 +77,7 @@ class Game extends Phaser.Scene {
       }
     });
     this.hero.setPointerDownListener(map);
-    this.subscribeCharacterToChangeMoving(map);
+    this.subscribeCharacterToChangeMoving();
   }
 
   update() {
@@ -142,7 +146,7 @@ class Game extends Phaser.Scene {
   }
 
   // Entities movements subscribers
-  subscribeCharacterToChangeMoving(map: Tilemaps.Tilemap) {
+  subscribeCharacterToChangeMoving() {
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
       entity.anims.play(direction);
@@ -188,16 +192,88 @@ class Game extends Phaser.Scene {
             `positionChangeFinished:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
-          this.heroSteppedOnEnemyRadius();
-        }
-        if (!charId.match(/^hero/i)) {
-          const currentEnemy = this.entitiesMap.get(charId) as Enemy;
-          // clear previous zone
-          this.enemyRadiusSteppedOnHero(map, exitTile.x, exitTile.y, currentEnemy.battleRadius, 0xffffff);
-          // create new zone
-          this.enemyRadiusSteppedOnHero(map, enterTile.x, enterTile.y, currentEnemy.battleRadius, 0xdd1111);
+          if (this.isHeroSteppedOnEnemyRadius()) {
+            // Start fight
+            this.moveClosestEnemiesToHero(enterTile, 15);
+          }
         }
       });
+  }
+
+  moveClosestEnemiesToHero(heroPos: Position, enemyTriggerRadius: number) {
+    // Получаем массив свободных ячеек вокруг героя
+    const emptyTilesAroundHero: Array<Position> = [];
+    if (!this.gridEngine.isBlocked({ x: heroPos.x - 1, y: heroPos.y })) {
+      emptyTilesAroundHero.push({ x: heroPos.x - 1, y: heroPos.y });
+    }
+    if (!this.gridEngine.isBlocked({ x: heroPos.x, y: heroPos.y - 1 })) {
+      emptyTilesAroundHero.push({ x: heroPos.x, y: heroPos.y - 1 });
+    }
+    if (!this.gridEngine.isBlocked({ x: heroPos.x + 1, y: heroPos.y })) {
+      emptyTilesAroundHero.push({ x: heroPos.x + 1, y: heroPos.y });
+    }
+    if (!this.gridEngine.isBlocked({ x: heroPos.x, y: heroPos.y + 1 })) {
+      emptyTilesAroundHero.push({ x: heroPos.x, y: heroPos.y + 1 });
+    }
+    // Получаем массив ближайших врагов относительно героя
+    let closestEnemiesAroundHero: Array<[string, number]> = [];
+    this.entitiesMap.forEach((_entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        const enemyPos = this.gridEngine.getPosition(entityKey);
+        const distanceToHero = this.manhattanDist(heroPos.x, heroPos.y, enemyPos.x, enemyPos.y);
+        closestEnemiesAroundHero.push([entityKey, distanceToHero]);
+      }
+    });
+    closestEnemiesAroundHero = closestEnemiesAroundHero.sort((a, b) => {
+      if (a[1] > b[1]) {
+        return 1;
+      }
+      if (a[1] < b[1]) {
+        return -1;
+      }
+      return 0;
+    });
+    // Не больше 4 врагов, не дальше чем 20 клеток (манхэттенская дистанция)
+    closestEnemiesAroundHero = closestEnemiesAroundHero.slice(0, emptyTilesAroundHero.length);
+    closestEnemiesAroundHero = closestEnemiesAroundHero.filter((enemy) => enemy[1] < enemyTriggerRadius);
+
+    // Двигаем каждого врага к позиции героя
+    closestEnemiesAroundHero.forEach((enemy, index) => {
+      (this.entitiesMap.get(enemy[0]) as Enemy).clearTimer();
+      this.gridEngine.moveTo(enemy[0], emptyTilesAroundHero[index]);
+    });
+  }
+
+  isHeroSteppedOnEnemyRadius() {
+    const heroPos = this.gridEngine.getPosition('hero');
+    let isStepped = false;
+
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        const enemyPos = this.gridEngine.getPosition(entityKey);
+        if (this.manhattanDist(enemyPos.x, enemyPos.y, heroPos.x, heroPos.y) <= (entityValue as Enemy).battleRadius) {
+          // console.log(`Hero stepped on enemy radius: (${heroPos.x},${heroPos.y})`);
+          isStepped = true;
+        }
+      }
+    });
+    return isStepped;
+  }
+
+  isEnemyRadiusSteppedOnHero(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
+    const heroPos = this.gridEngine.getPosition('hero');
+    let isStepped = false;
+
+    if (this.manhattanDist(posX, posY, heroPos.x, heroPos.y) <= radius) {
+      // console.log(`Enemy radius stepped on hero: (${heroPos.x},${heroPos.y})`);
+      isStepped = true;
+    }
+    this.tintRadius(tilemap, posX, posY, radius, color);
+    return isStepped;
+  }
+
+  manhattanDist(x1: number, y1: number, x2: number, y2: number) {
+    return Math.abs(x1 - x2) + Math.abs(y1 - y2);
   }
 
   tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
@@ -217,30 +293,9 @@ class Game extends Phaser.Scene {
     this.tintTile(map, 48, 53, 0xaf2462); // red (unreachable)
   }
 
-  heroSteppedOnEnemyRadius() {
-    // console.log('heroGridPos (hero on radius): ', this.gridEngine.getPosition('hero'));
-    const heroPos = this.gridEngine.getPosition('hero');
-
-    this.entitiesMap.forEach((entityValue, entityKey) => {
-      if (!entityKey.match(/^hero/i)) {
-        const enemyPos = this.gridEngine.getPosition(entityKey);
-        if (this.manhattanDist(enemyPos.x, enemyPos.y, heroPos.x, heroPos.y) <= (entityValue as Enemy).battleRadius) {
-          console.log(`Hero stepped on enemy radius: (${heroPos.x},${heroPos.y})`);
-        }
-      }
-    });
-  }
-
-  enemyRadiusSteppedOnHero(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
-    // console.log('heroGridPos (radius on hero): ', this.gridEngine.getPosition('hero'));
-    // console.log('whateverEnemy (radius on hero): ', { x: posX, y: posY });
-    const heroPos = this.gridEngine.getPosition('hero');
-
+  tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
     for (let x = 0; x <= radius; x++) {
       for (let y = 0; y <= radius; y++) {
-        if (this.manhattanDist(posX, posY, heroPos.x, heroPos.y) <= radius) {
-          console.log(`Enemy radius stepped on hero: (${heroPos.x},${heroPos.y})`);
-        }
         if (this.manhattanDist(posX, posY, posX + x, posY + y) <= radius) {
           this.tintTile(tilemap, posX + x, posY + y, color);
         }
@@ -255,10 +310,6 @@ class Game extends Phaser.Scene {
         }
       }
     }
-  }
-
-  manhattanDist(x1: number, y1: number, x2: number, y2: number) {
-    return Math.abs(x1 - x2) + Math.abs(y1 - y2);
   }
 }
 
