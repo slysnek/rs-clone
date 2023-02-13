@@ -38,13 +38,14 @@ class Game extends Phaser.Scene {
     this.createHero(map);
     this.createCamera();
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims);
+    this.hero.setPunchAnimation();
     this.createEnemy('scorpion1', map);
     this.createEnemy('scorpion2', map, 0.75);
     this.gridEngineInit(map);
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (entityKey !== 'hero') {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
-        (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
+        // (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
         this.hero.setPointerOnEnemyListener(entityValue as Enemy);
       }
     })

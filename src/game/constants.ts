@@ -26,6 +26,28 @@ export const heroAnims = {
             stopFrame: 43,
         },
     },
+    punch: {
+        upRight: {
+            startFrame: 88,
+            endFrame: 96,
+            stopFrame: 10,
+        },
+        downRight: {
+            startFrame: 99,
+            endFrame: 107,
+            stopFrame: 21,
+        },
+        downLeft: {
+            startFrame: 110,
+            endFrame: 118,
+            stopFrame: 32,
+        },
+        upLeft: {
+            startFrame: 121,
+            endFrame: 129,
+            stopFrame: 43,
+        },
+    }
 };
 
 export const scorpionAnims = {

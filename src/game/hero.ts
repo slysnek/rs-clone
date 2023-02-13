@@ -3,6 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
 import Enemy from "./enemy";
 import { lostActionPointsForHero, damageFromHero } from './battlePoints';
+import { heroAnims } from "./constants";
 
 class Hero extends Entity {
 
@@ -44,6 +45,13 @@ class Hero extends Entity {
         }, this);
     }
 
+    setPunchAnimation(){
+        this.createEntityAnimation('punch__up-right', 'hero', heroAnims.punch.upRight.startFrame, heroAnims.punch.upRight.endFrame);
+        this.createEntityAnimation('punch__down-right', 'hero', heroAnims.punch.downRight.startFrame, heroAnims.punch.downRight.endFrame);
+        this.createEntityAnimation('punch__down-left', 'hero', heroAnims.punch.downLeft.startFrame, heroAnims.punch.downLeft.endFrame);
+        this.createEntityAnimation('punch__up-left', 'hero', heroAnims.punch.upLeft.startFrame, heroAnims.punch.upLeft.endFrame);
+    }
+
     setPointerOnEnemyListener(gameObject: Enemy){
         gameObject.setInteractive().on('pointerdown', () => {
            this.attackEnemy(gameObject);
@@ -53,6 +61,24 @@ class Hero extends Entity {
     }
 
     attackEnemy(enemy: Enemy){
+        const heroPosition = this.gridEngine.getPosition('hero');
+        const enemyPosition = this.gridEngine.getPosition(enemy.id); 
+        let currentAnimation = '';
+        if(heroPosition.x === enemyPosition.x){
+            if(heroPosition.y > enemyPosition.y){
+                currentAnimation = 'up-right';
+            } else {
+                currentAnimation = 'down-left';
+            }
+        }
+        if(heroPosition.y === enemyPosition.y){
+            if(heroPosition.x > enemyPosition.x){
+                currentAnimation = 'up-left';
+            } else {
+                currentAnimation = 'down-right';
+            }
+        }
+        this.anims.play(`punch__${currentAnimation}`);
         const lostPoints = lostActionPointsForHero[this.weapon];
         const damage = damageFromHero[this.weapon];
         this.updateActionPoints(lostPoints);
