@@ -63,6 +63,14 @@ class Enemy extends Entity {
         this.createEntityAnimation('hit-left', this.id, scorpionAnims.hit.upLeft.startFrame, scorpionAnims.hit.upLeft.endFrame, 0);
     }
 
+    setDamageAnimation(){
+        this.createEntityAnimation('damage__up-right', this.id, scorpionAnims.damage.upRight.startFrame, scorpionAnims.damage.upRight.endFrame, 0);
+        this.createEntityAnimation('damage__down-right', this.id, scorpionAnims.damage.downRight.startFrame, scorpionAnims.damage.downRight.endFrame, 0);
+        this.createEntityAnimation('damage__down-left', this.id, scorpionAnims.damage.downLeft.startFrame, scorpionAnims.damage.downLeft.endFrame, 0);
+        this.createEntityAnimation('damage__up-left', this.id, scorpionAnims.damage.upLeft.startFrame, scorpionAnims.damage.upLeft.endFrame, 0);
+        this.createEntityAnimation('death', this.id, scorpionAnims.death.startFrame, scorpionAnims.death.endFrame, 0);
+    }
+
     //повтор функции, удалить
     tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
         for (const element of tilemap.layers) {

@@ -63,21 +63,28 @@ class Hero extends Entity {
     attackEnemy(enemy: Enemy){
         const heroPosition = this.gridEngine.getPosition('hero');
         const enemyPosition = this.gridEngine.getPosition(enemy.id); 
-        let currentAnimation = '';
+        let currentHeroAnimation = '';
+        let currentEnemyAnimation = '';
         if(heroPosition.x === enemyPosition.x){
             if(heroPosition.y > enemyPosition.y){
-                currentAnimation = 'up-right';
+                currentHeroAnimation = 'up-right';
+                currentEnemyAnimation = 'down-left';
             } else {
-                currentAnimation = 'down-left';
+                currentHeroAnimation = 'down-left';
+                currentEnemyAnimation = 'up-right';
             }
         } else if(heroPosition.y === enemyPosition.y){
             if(heroPosition.x > enemyPosition.x){
-                currentAnimation = 'up-left';
+                currentHeroAnimation = 'up-left';
+                currentEnemyAnimation = 'down-right';
             } else {
-                currentAnimation = 'down-right';
+                currentHeroAnimation = 'down-right';
+                currentEnemyAnimation = 'up-left';
             }
         }
-        this.anims.play(`punch__${currentAnimation}`);
+        this.anims.play(`punch__${currentHeroAnimation}`);
+        console.log(enemy)
+        enemy.play(`damage__${currentEnemyAnimation}`);
         const lostPoints = lostActionPointsForHero[this.weapon];
         const damage = damageFromHero[this.weapon];
         this.updateActionPoints(lostPoints);

@@ -73,6 +73,28 @@ export const scorpionAnims = {
             stopFrame: 33,
         },
     },
+    hit: {
+        upRight: {
+            startFrame: 44,
+            endFrame: 49,
+            stopFrame: 44,
+        },
+        downRight: {
+            startFrame: 55,
+            endFrame: 60,
+            stopFrame: 55,
+        },
+        downLeft: {
+            startFrame: 66,
+            endFrame: 71,
+            stopFrame: 66,
+        },
+        upLeft: {
+            startFrame: 77,
+            endFrame: 82,
+            stopFrame: 77,
+        },
+    },
     punch: {
         upRight: {
             startFrame: 83,
@@ -95,26 +117,31 @@ export const scorpionAnims = {
             stopFrame: 116,
         },
     },
-    hit: {
+    death: {
+        startFrame: 127,
+        endFrame: 130,
+        stopFrame: 120,
+    },
+    damage: {
         upRight: {
-            startFrame: 44,
-            endFrame: 49,
-            stopFrame: 44,
+            startFrame: 138,
+            endFrame: 139,
+            stopFrame: 138,
         },
         downRight: {
-            startFrame: 55,
-            endFrame: 60,
-            stopFrame: 55,
+            startFrame: 149,
+            endFrame: 151,
+            stopFrame: 149,
         },
         downLeft: {
-            startFrame: 66,
-            endFrame: 71,
-            stopFrame: 66,
+            startFrame: 160,
+            endFrame: 162,
+            stopFrame: 160,
         },
         upLeft: {
-            startFrame: 77,
-            endFrame: 82,
-            stopFrame: 77,
+            startFrame: 171,
+            endFrame: 173,
+            stopFrame: 171,
         },
     }
 };
