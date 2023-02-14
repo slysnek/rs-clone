@@ -82,8 +82,11 @@ class Hero extends Entity {
                 currentEnemyAnimation = 'up-left';
             }
         }
+        if(currentHeroAnimation === ''){
+            return;
+        }
         this.anims.play(`punch__${currentHeroAnimation}`);
-        console.log(enemy)
+        console.log(enemy.anims)
         enemy.play(`damage__${currentEnemyAnimation}`);
         const lostPoints = lostActionPointsForHero[this.weapon];
         const damage = damageFromHero[this.weapon];

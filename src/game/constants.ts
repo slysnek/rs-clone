@@ -73,7 +73,7 @@ export const scorpionAnims = {
             stopFrame: 33,
         },
     },
-    hit: {
+    damage: {
         upRight: {
             startFrame: 44,
             endFrame: 49,
@@ -122,28 +122,28 @@ export const scorpionAnims = {
         endFrame: 130,
         stopFrame: 120,
     },
-    damage: {
-        upRight: {
-            startFrame: 138,
-            endFrame: 139,
-            stopFrame: 138,
-        },
-        downRight: {
-            startFrame: 149,
-            endFrame: 151,
-            stopFrame: 149,
-        },
-        downLeft: {
-            startFrame: 160,
-            endFrame: 162,
-            stopFrame: 160,
-        },
-        upLeft: {
-            startFrame: 171,
-            endFrame: 173,
-            stopFrame: 171,
-        },
-    }
+    // damage: {
+    //     upRight: {
+    //         startFrame: 138,
+    //         endFrame: 139,
+    //         stopFrame: 138,
+    //     },
+    //     downRight: {
+    //         startFrame: 149,
+    //         endFrame: 151,
+    //         stopFrame: 149,
+    //     },
+    //     downLeft: {
+    //         startFrame: 160,
+    //         endFrame: 162,
+    //         stopFrame: 160,
+    //     },
+    //     upLeft: {
+    //         startFrame: 171,
+    //         endFrame: 173,
+    //         stopFrame: 171,
+    //     },
+    // }
 };
 
 export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: number } } = {

@@ -57,10 +57,10 @@ class Enemy extends Entity {
         this.createEntityAnimation('punch__down-right', this.id, scorpionAnims.punch.downRight.startFrame, scorpionAnims.punch.downRight.endFrame, 0);
         this.createEntityAnimation('punch__down-left', this.id, scorpionAnims.punch.downLeft.startFrame, scorpionAnims.punch.downLeft.endFrame, 0);
         this.createEntityAnimation('punch__up-left', this.id, scorpionAnims.punch.upLeft.startFrame, scorpionAnims.punch.upLeft.endFrame, 0);
-        this.createEntityAnimation('hit__up-right', this.id, scorpionAnims.hit.upRight.startFrame, scorpionAnims.hit.upRight.endFrame, 0);
-        this.createEntityAnimation('hit-right', this.id, scorpionAnims.hit.downRight.startFrame, scorpionAnims.hit.downRight.endFrame, 0);
-        this.createEntityAnimation('hit-left', this.id, scorpionAnims.hit.downLeft.startFrame, scorpionAnims.hit.downLeft.endFrame, 0);
-        this.createEntityAnimation('hit-left', this.id, scorpionAnims.hit.upLeft.startFrame, scorpionAnims.hit.upLeft.endFrame, 0);
+        // this.createEntityAnimation('hit__up-right', this.id, scorpionAnims.hit.upRight.startFrame, scorpionAnims.hit.upRight.endFrame, 0);
+        // this.createEntityAnimation('hit-right', this.id, scorpionAnims.hit.downRight.startFrame, scorpionAnims.hit.downRight.endFrame, 0);
+        // this.createEntityAnimation('hit-left', this.id, scorpionAnims.hit.downLeft.startFrame, scorpionAnims.hit.downLeft.endFrame, 0);
+        // this.createEntityAnimation('hit-left', this.id, scorpionAnims.hit.upLeft.startFrame, scorpionAnims.hit.upLeft.endFrame, 0);
     }
 
     setDamageAnimation(){

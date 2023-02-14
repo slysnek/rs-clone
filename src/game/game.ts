@@ -50,6 +50,7 @@ class Game extends Phaser.Scene {
         // (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
         this.hero.setPointerOnEnemyListener(entityValue as Enemy);
       }
+      console.log(entityValue)
     })
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
@@ -93,7 +94,7 @@ class Game extends Phaser.Scene {
         {
           id: 'hero',
           sprite: this.hero,
-          startPosition: { x: 60, y: 49 },
+          startPosition: { x: 68, y: 68},
           offsetX: 0,
           offsetY: 42,
           walkingAnimationEnabled: false,
@@ -109,8 +110,8 @@ class Game extends Phaser.Scene {
             id: enemyKey,
             sprite: enemyValue,
             startPosition: { x: startPositionsForScorpionsMap1[enemyKey].x, y: startPositionsForScorpionsMap1[enemyKey].y },
-            offsetX: 0,
-            offsetY: 15,
+            offsetX: 10,
+            offsetY: 37,
             walkingAnimationEnabled: false,
             speed: 7,
           }
@@ -156,6 +157,8 @@ class Game extends Phaser.Scene {
     this.tintTile(map, 40, 48, 0xaf22ff); // magenta (unreachable)
     this.tintTile(map, 0, 0, 0xaf2462); // red (unreachable)
     this.tintTile(map, 48, 53, 0xaf2462); // red (unreachable)
+    this.tintTile(map, startPositionsForScorpionsMap1.scorpion1.x, startPositionsForScorpionsMap1.scorpion1.y, 0xaf2462); // red (unreachable)
+    this.tintTile(map, startPositionsForScorpionsMap1.scorpion2.x, startPositionsForScorpionsMap1.scorpion2.y, 0xaf2462);
   }
 }
 
