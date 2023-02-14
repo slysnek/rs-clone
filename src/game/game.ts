@@ -29,9 +29,9 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
     this.load.spritesheet('scorpion1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
     this.load.spritesheet('scorpion2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('dummy1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('dummy2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('dummy3', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('scorpion3', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('scorpion4', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('scorpion5', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
   }
 
   create() {
@@ -45,19 +45,16 @@ class Game extends Phaser.Scene {
 
     this.createCamera();
 
-    this.createEnemy('scorpion1', map, 3);
-    this.createEnemy('scorpion2', map, 3, 0.75);
-    this.createEnemy('dummy1', map, 6, 0.75); // dummy to test fight system
-    this.createEnemy('dummy2', map, 6, 0.75); // dummy to test fight system
-    this.createEnemy('dummy3', map, 6, 0.75); // dummy to test fight system
+    this.createEnemy('scorpion1', map, 6, 0.75);
+    this.createEnemy('scorpion2', map, 6, 0.75);
+    this.createEnemy('scorpion3', map, 6, 0.75);
+    this.createEnemy('scorpion4', map, 6, 0.75);
+    this.createEnemy('scorpion5', map, 6, 0.75);
 
     this.gridEngineInit(map);
 
-    this.gridEngine.moveTo('dummy1', { x: 37, y: 29 }); // -
-    // console.log(this.gridEngine.getCharactersAt(this.gridEngine.getPosition('hero'), '1'));
-
     this.entitiesMap.forEach((entityValue, entityKey) => {
-      if (entityKey.match(/^scorpion/i)) {
+      if (!entityKey.match(/^hero/i)) {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
@@ -219,7 +216,7 @@ class Game extends Phaser.Scene {
       }
       return 0;
     });
-    // Не больше 4 врагов, не дальше чем 20 клеток (манхэттенская дистанция)
+    // Не больше 4 врагов, не дальше чем 15 клеток (манхэттенская дистанция)
     closestEnemiesAroundHero = closestEnemiesAroundHero.slice(0, emptyTilesAroundHero.length);
     closestEnemiesAroundHero = closestEnemiesAroundHero.filter((enemy) => enemy[1] < enemyTriggerRadius);
 

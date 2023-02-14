@@ -81,7 +81,7 @@ export const scorpionAnims = {
 export const startPositionsForScorpions: { [key: string]: { x: number, y: number } } = {
   scorpion1: { x: 20, y: 34 },
   scorpion2: { x: 23, y: 36 },
-  dummy1: { x: 30, y: 30 },
-  dummy2: { x: 25, y: 25 },
-  dummy3: { x: 20, y: 20 },
+  scorpion3: { x: 30, y: 30 },
+  scorpion4: { x: 25, y: 25 },
+  scorpion5: { x: 20, y: 20 },
 };
