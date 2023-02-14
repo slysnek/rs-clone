@@ -1,39 +1,64 @@
 export const windowSize = {
-    windowWidth: window.innerWidth,
-    windowHeight: window.innerHeight
+  windowWidth: window.innerWidth,
+  windowHeight: window.innerHeight
+}
+
+export type Animations = {
+  walk: {
+    upRight: {
+      startFrame: number;
+      endFrame: number;
+      stopFrame: number;
+    },
+    downRight: {
+      startFrame: number;
+      endFrame: number;
+      stopFrame: number;
+    },
+    downLeft: {
+      startFrame: number;
+      endFrame: number;
+      stopFrame: number;
+    },
+    upLeft: {
+      startFrame: number;
+      endFrame: number;
+      stopFrame: number;
+    }
+  }
 }
 
 export const heroAnims = {
-    walk: {
-        upRight: {
-            startFrame: 0,
-            endFrame: 7,
-            stopFrame: 10,
-        },
-        downRight: {
-            startFrame: 11,
-            endFrame: 18,
-            stopFrame: 21,
-        },
-        downLeft: {
-            startFrame: 22,
-            endFrame: 29,
-            stopFrame: 32,
-        },
-        upLeft: {
-            startFrame: 33,
-            endFrame: 40,
-            stopFrame: 43,
-        },
+  walk: {
+    upRight: {
+      startFrame: 0,
+      endFrame: 7,
+      stopFrame: 10,
     },
-    punch: {
-        upRight: {
-            startFrame: 88,
-            endFrame: 96,
-            stopFrame: 10,
-        },
-        downRight: {
-            startFrame: 99,
+    downRight: {
+      startFrame: 11,
+      endFrame: 18,
+      stopFrame: 21,
+    },
+    downLeft: {
+      startFrame: 22,
+      endFrame: 29,
+      stopFrame: 32,
+    },
+    upLeft: {
+      startFrame: 33,
+      endFrame: 40,
+      stopFrame: 43,
+    },
+  },
+  punch: {
+    upRight: {
+        startFrame: 88,
+        endFrame: 96,
+        stopFrame: 10,
+    },
+    downRight: {
+        startFrame: 99,
             endFrame: 107,
             stopFrame: 21,
         },
@@ -146,7 +171,8 @@ export const scorpionAnims = {
     }
 };
 
-export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: number } } = {
-    scorpion1: { x: 70, y: 70 },
-    scorpion2: { x: 73, y: 74 }
-};
+export const startPositionsForScorpions: { [key: string]: { x: number, y: number } } = {
+  scorpion1: { x: 70, y: 70 },
+  scorpion2: { x: 73, y: 74 }
+  scorpion3: { x: 60, y: 60 },
+  };
