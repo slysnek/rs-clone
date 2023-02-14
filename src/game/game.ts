@@ -41,16 +41,16 @@ class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.createHero(map);
     this.createCamera();
-    /* this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims); */
+    this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims);
     this.createEnemy('scorpion1', map);
     this.createEnemy('scorpion2', map, 0.75);
     this.gridEngineInit(map);
-/*     this.entitiesMap.forEach((entityValue, entityKey) => {
+    this.entitiesMap.forEach((entityValue, entityKey) => {
       if (entityKey !== 'hero') {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
-    }) */
+    })
     this.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
     //ui section
@@ -91,7 +91,7 @@ class Game extends Phaser.Scene {
 
   buildMap() {
     const map = this.make.tilemap({ key: 'map' });
-    const tilesets = map.addTilesetImage('maptiles2-01-01', 'tiles');
+    const tilesets = map.addTilesetImage('tiles-02', 'tiles');
 
     // Layers creation based on tilemap's layers
     for (let i = 0; i < map.layers.length; i++) {
@@ -125,7 +125,7 @@ class Game extends Phaser.Scene {
           sprite: this.hero,
           startPosition: { x: 65, y: 48 },
           offsetX: 0,
-          offsetY: 0,
+          offsetY: 42,
           walkingAnimationEnabled: false,
           speed: 7,
         },
@@ -161,10 +161,10 @@ class Game extends Phaser.Scene {
         heroCoords.x = Math.round(heroCoords.x)
         heroCoords.y = Math.round(heroCoords.y) + 1;
         //updating AP
-        const distance = Math.abs(Math.abs(gridMouseCoords.x - heroCoords.x) + Math.abs(gridMouseCoords.y - heroCoords.y))
+/*         const distance = Math.abs(Math.abs(gridMouseCoords.x - heroCoords.x) + Math.abs(gridMouseCoords.y - heroCoords.y))
         this.hero.updateAP(distance)
         this.ui.updateAP(this.hero)
-        console.log(this.hero.actionPoints);
+        console.log(this.hero.actionPoints); */
 
         // Get 0-layer's tile by coords
         const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
