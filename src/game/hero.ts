@@ -6,21 +6,18 @@ import { lostActionPointsForHero, damageFromHero } from './battlePoints';
 import { heroAnims } from "./constants";
 
 class Hero extends Entity {
-
     gridEngine: GridEngine;
     map: Tilemaps.Tilemap;
     cursor: Phaser.Types.Input.Keyboard.CursorKeys;
     weapon: string;
 
     constructor(scene: Phaser.Scene,
-        x: number,
-        y: number, 
         texture: string,
         gridEngine: GridEngine,
         map: Tilemaps.Tilemap,
         cursor: Phaser.Types.Input.Keyboard.CursorKeys,
         healthPoints: number,) {
-        super(scene, x, y, texture, healthPoints)
+        super(scene, texture, healthPoints)
         this.scene = scene;
         this.gridEngine = gridEngine;
         this.map = map;
@@ -111,7 +108,6 @@ class Hero extends Entity {
             this.gridEngine.move("hero", Direction.DOWN_LEFT);
         }
     }
-
 }
 
 export default Hero;

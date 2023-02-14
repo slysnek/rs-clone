@@ -5,36 +5,36 @@ import { startPositionsForScorpionsMap1 } from './constants';
 import { scorpionAnims } from "./constants";
 
 function getRandomXYDelta() {
-    const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
-    return { xDelta: deltaValue(), yDelta: deltaValue() };
+  const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
+  return { xDelta: deltaValue(), yDelta: deltaValue() };
 }
 
 const timeModifier = 5;
 
 function getRandomTimeInterval() {
-    return (Math.ceil(Math.random() * timeModifier) * 1000);
+  return (Math.ceil(Math.random() * timeModifier) * 1000);
 }
 
 class Enemy extends Entity {
-
     gridEngine: GridEngine;
     map: Tilemaps.Tilemap
     movesTimerId: NodeJS.Timer | null;
     id: string;
+    battleRadius: number;
 
     constructor(scene: Phaser.Scene,
-        x: number, 
-        y: number, 
         texture: string, 
         gridEngine: GridEngine, 
         map: Tilemaps.Tilemap, 
         id: string, 
-        healthPoints: number) {
-        super(scene, x, y, texture, healthPoints)
+        healthPoints: number,
+        battleRadius: number) {
+        super(scene, texture, healthPoints);
         this.gridEngine = gridEngine;
         this.movesTimerId = null;
         this.map = map;
         this.id = id;
+        this.battleRadius = battleRadius;
     }
 
     clearTimer(){
@@ -43,7 +43,6 @@ class Enemy extends Entity {
     }
 
     // позже надо удалить из аргументов карту и функцию покраски тайлов
-
     setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap) {
         this.movesTimerId = setInterval(() => {
             const deltaXY = getRandomXYDelta();
@@ -77,7 +76,6 @@ class Enemy extends Entity {
             element.tilemapLayer.layer.data[row][col].tint = color;
         }
     }
-
-}
+  }
 
 export default Enemy;
