@@ -26,9 +26,9 @@ class Game extends Phaser.Scene {
   preload() {
     this.load.tilemapTiledJSON('map', 'assets/maps/currentMap.json');
     this.load.image('tiles', 'assets/maps/tiles-02.png');
-    this.load.spritesheet('player', 'assets/spritesheets/woman-01.png', { frameWidth: 75, frameHeight: 133 });
-    this.load.spritesheet('enemy1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('enemy2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
+    this.load.spritesheet('scorpion1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('scorpion2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
   }
 
   create() {
@@ -89,7 +89,7 @@ class Game extends Phaser.Scene {
         {
           id: 'hero',
           sprite: this.hero,
-          startPosition: { x: 35, y: 28 },
+          startPosition: { x: 65, y: 48 },
           offsetX: 0,
           offsetY: 42,
           walkingAnimationEnabled: false,
