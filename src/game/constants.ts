@@ -171,8 +171,8 @@ export const scorpionAnims = {
     }
 };
 
-export const startPositionsForScorpions: { [key: string]: { x: number, y: number } } = {
+export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: number } } = {
   scorpion1: { x: 70, y: 70 },
-  scorpion2: { x: 73, y: 74 }
+  scorpion2: { x: 73, y: 74 },
   scorpion3: { x: 60, y: 60 },
   };

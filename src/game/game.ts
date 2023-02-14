@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine, Position } from 'grid-engine';
-import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims } from './constants';
+import { windowSize, startPositionsForScorpionsMap1, heroAnims, scorpionAnims } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';

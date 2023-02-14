@@ -1,60 +1,53 @@
 import Phaser from "phaser";
 import { heroAnims, scorpionAnims } from "./constants";
-import { Animations } from "./types"; 
+import { Animations } from "./types";
 
 class Entity extends Phaser.GameObjects.Sprite {
-    key: string;
-    healthPoints: number;
-    fightMode: boolean;
-    actionPoints: number;
-    attackMode: boolean;
-    constructor(scene: Phaser.Scene, texture: string, healthPoints: number) {
-        super(scene, 0, 0, texture);
-        this.scene = scene;
-        this.key = '';
-        this.healthPoints = healthPoints;
-        this.fightMode = false;
-        this.actionPoints = 12;
-        this.attackMode = false;
-    }
+  key: string;
+  healthPoints: number;
+  fightMode: boolean;
+  actionPoints: number;
+  attackMode: boolean;
+  constructor(scene: Phaser.Scene, texture: string, healthPoints: number) {
+    super(scene, 0, 0, texture);
+    this.scene = scene;
+    this.key = '';
+    this.healthPoints = healthPoints;
+    this.fightMode = false;
+    this.actionPoints = 12;
+    this.attackMode = false;
+  }
 
-    updateHealthPoints(damage: number){
-        this.healthPoints -= damage;
-    }
+  updateHealthPoints(damage: number) {
+    this.healthPoints -= damage;
+  }
 
-    updateActionPoints(lostPoints: number){
-        this.actionPoints -= lostPoints;
-    }
+  updateActionPoints(lostPoints: number) {
+    this.actionPoints -= lostPoints;
+  }
 
-    turnOnFightMode(){
-        this.fightMode = true;
-    }
+  turnOnFightMode() {
+    this.fightMode = true;
+  }
 
-    createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number, repeat: number) {
-        this.anims.create({
-            key: direction,
-            frames: this.anims.generateFrameNumbers(`${entityName}`, {
-                start: startFrame,
-                end: endFrame,
-            }),
-            frameRate: 9,
-            repeat: repeat,
-            yoyo: false,
-        });
-    }
-
-    setFramesForEntityAnimations(entityValue: Phaser.GameObjects.Sprite, entityKey: string, entityAnims: Animations) {
-        this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims.walk.upRight.startFrame, entityAnims.walk.upRight.endFrame, -1);
-        this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims.walk.downRight.startFrame, entityAnims.walk.downRight.endFrame, -1);
-        this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims.walk.downLeft.startFrame, entityAnims.walk.downLeft.endFrame, -1);
-        this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims.walk.upLeft.startFrame, entityAnims.walk.upLeft.endFrame, -1);
-    }
+  createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number, repeat: number) {
+    this.anims.create({
+      key: direction,
+      frames: this.anims.generateFrameNumbers(`${entityName}`, {
+        start: startFrame,
+        end: endFrame,
+      }),
+      frameRate: 9,
+      repeat: repeat,
+      yoyo: false,
+    });
+  }
 
   setFramesForEntityAnimations(entityValue: Phaser.GameObjects.Sprite, entityKey: string, entityAnims: Animations) {
-    this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims.walk.upRight.startFrame, entityAnims.walk.upRight.endFrame);
-    this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims.walk.downRight.startFrame, entityAnims.walk.downRight.endFrame);
-    this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims.walk.downLeft.startFrame, entityAnims.walk.downLeft.endFrame);
-    this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims.walk.upLeft.startFrame, entityAnims.walk.upLeft.endFrame);
+    this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims.walk.upRight.startFrame, entityAnims.walk.upRight.endFrame, -1);
+    this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims.walk.downRight.startFrame, entityAnims.walk.downRight.endFrame, -1);
+    this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims.walk.downLeft.startFrame, entityAnims.walk.downLeft.endFrame, -1);
+    this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims.walk.upLeft.startFrame, entityAnims.walk.upLeft.endFrame, -1);
   }
 
   getStopFrame(direction: string, entityKey: string): number {
