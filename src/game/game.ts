@@ -24,14 +24,13 @@ class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON('map', 'assets/maps/isometric3.json');
-    this.load.image('tiles', 'assets/maps/grassland_tiles.png');
+    this.load.tilemapTiledJSON('map', 'assets/maps/currentMap.json');
+    this.load.image('tiles', 'assets/maps/tiles-02.png');
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
-    this.load.spritesheet('scorpion1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('scorpion2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('scorpion3', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('scorpion4', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
-    this.load.spritesheet('scorpion5', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
+    this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
+    this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
+
   }
 
   create() {
@@ -42,21 +41,23 @@ class Game extends Phaser.Scene {
 
     this.createHero(map);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims);
+    this.hero.setPunchAnimation();
 
     this.createCamera();
-
-    this.createEnemy('scorpion1', map, 6, 0.75);
+    
+    this.createEnemy('scorpion1', map, 6);
     this.createEnemy('scorpion2', map, 6, 0.75);
     this.createEnemy('scorpion3', map, 6, 0.75);
-    this.createEnemy('scorpion4', map, 6, 0.75);
-    this.createEnemy('scorpion5', map, 6, 0.75);
 
     this.gridEngineInit(map);
 
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
-        (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
+        (entityValue as Enemy).setAttackAnimation();
+        (entityValue as Enemy).setDamageAnimation();
+        // (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
+        this.hero.setPointerOnEnemyListener(entityValue as Enemy);
       }
     });
     this.hero.setPointerDownListener(map);
@@ -69,7 +70,7 @@ class Game extends Phaser.Scene {
 
   buildMap() {
     const map = this.make.tilemap({ key: 'map' });
-    const tilesets = map.addTilesetImage('grassland_tiles', 'tiles');
+    const tilesets = map.addTilesetImage('tiles-02', 'tiles');
 
     // Layers creation based on tilemap's layers
     for (let i = 0; i < map.layers.length; i++) {
@@ -79,13 +80,14 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, battleRadius));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius));
+
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
   }
@@ -101,7 +103,7 @@ class Game extends Phaser.Scene {
         {
           id: 'hero',
           sprite: this.hero,
-          startPosition: { x: 35, y: 28 },
+          startPosition: { x: 60, y: 49 },
           offsetX: 0,
           offsetY: 42,
           walkingAnimationEnabled: false,
@@ -116,7 +118,7 @@ class Game extends Phaser.Scene {
           {
             id: enemyKey,
             sprite: enemyValue,
-            startPosition: { x: startPositionsForScorpions[enemyKey].x, y: startPositionsForScorpions[enemyKey].y },
+            startPosition: { x: startPositionsForScorpionsMap1[enemyKey].x, y: startPositionsForScorpionsMap1[enemyKey].y },
             offsetX: 0,
             offsetY: 15,
             walkingAnimationEnabled: false,
