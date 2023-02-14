@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine, Position } from 'grid-engine';
-import { windowSize, startPositionsForScorpionsMap1, heroAnims, scorpionAnims } from './constants';
+import { windowSize, startPositionsForScorpionsMap1, heroAnims, scorpionAnims, offsetCoordForScorpions } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
@@ -45,9 +45,9 @@ class Game extends Phaser.Scene {
 
     this.createCamera();
     
-    this.createEnemy('scorpion1', map, 6);
-    this.createEnemy('scorpion2', map, 6, 0.75);
-    this.createEnemy('scorpion3', map, 6, 0.75);
+    this.createEnemy('scorpion1', map, 6, 'big');
+    this.createEnemy('scorpion2', map, 6, 'small', 0.75);
+    this.createEnemy('scorpion3', map, 6, 'small', 0.75);
 
     this.gridEngineInit(map);
 
@@ -85,8 +85,8 @@ class Game extends Phaser.Scene {
     this.entitiesMap.set('hero', this.hero);
   }
 
-  createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius));
+  createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size: string, scaleValue = 1) {
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
@@ -114,13 +114,14 @@ class Game extends Phaser.Scene {
     };
     this.entitiesMap.forEach((enemyValue, enemyKey) => {
       if (!enemyKey.match(/^hero/i)) {
+
         gridEngineConfig.characters.push(
           {
             id: enemyKey,
             sprite: enemyValue,
             startPosition: { x: startPositionsForScorpionsMap1[enemyKey].x, y: startPositionsForScorpionsMap1[enemyKey].y },
-            offsetX: 10,
-            offsetY: 37,
+            offsetX: offsetCoordForScorpions[(enemyValue as Enemy).size].x,
+            offsetY: offsetCoordForScorpions[(enemyValue as Enemy).size].y,
             walkingAnimationEnabled: false,
             speed: 2,
           }

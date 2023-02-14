@@ -21,6 +21,7 @@ class Enemy extends Entity {
     movesTimerId: NodeJS.Timer | null;
     id: string;
     battleRadius: number;
+    size: string
 
     constructor(scene: Phaser.Scene,
         texture: string, 
@@ -28,13 +29,15 @@ class Enemy extends Entity {
         map: Tilemaps.Tilemap, 
         id: string, 
         healthPoints: number,
-        battleRadius: number) {
+        battleRadius: number,
+        size: string) {
         super(scene, texture, healthPoints);
         this.gridEngine = gridEngine;
         this.movesTimerId = null;
         this.map = map;
         this.id = id;
         this.battleRadius = battleRadius;
+        this.size = size;
     }
 
     clearTimer(){
