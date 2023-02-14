@@ -1,0 +1,184 @@
+<div class="ui-container">
+  <div class="left-pan"></div>
+  <div class="console">
+    <ul class="console-messages-list">
+    </ul>
+  </div>
+  <div class="weapon-lights-wrapper">
+    <div class="lights">
+      <div class="light on"></div>
+      <div class="light on"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+    </div>
+    <div class="weapon-slot">
+      <div class="weapon"></div>
+      <div class="cycle-weapons"></div>
+      <span class="weapon-name">Nothing</span>
+    </div>
+  </div>
+  <div class="hp-element">
+    <span class="hp">?</span>
+  </div>
+  <div class="right-pan"></div>
+</div>
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  @font-face {
+    font-family: 'Fallout Font';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../assets/fonts/fallout-font.ttf');
+    /* IE9 Compat Modes */
+  }
+
+  html {
+    font-family: 'Fallout Font';
+    font-weight: 100;
+  }
+
+  .ui-container {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(79, 73, 61);
+    width: 100%;
+    height: 100px;
+  }
+
+  .left-pan {
+    height: 100%;
+    width: 229px;
+    background-image: url(../assets/ui-elements/left-pan.png);
+    background-size: cover;
+  }
+
+  .lights{
+    display: flex;
+    flex-direction: row;
+    padding-left: 56px;
+    padding-top: 12px;
+    gap: 3px;
+  }
+  
+  .light{
+    width: 8px;
+    height: 8px;
+    background-image: url(../assets/ui-elements/light-off.png);
+  }
+
+  .on{
+    background-image: url(../assets/ui-elements/light-on.png);
+  }
+
+  .weapon-lights-wrapper{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .weapon-slot {
+    position: relative;
+    height: 75px;
+    width: 211px;
+    background-image: url(../assets/ui-elements/weapon.png);
+    background-size: cover;
+  }
+
+  .lights{
+    position: relative;
+    height: 23px;
+    width: 211px;
+    background-image: url(../assets/ui-elements/move-points.png);
+    background-size: cover;
+  }
+  
+  .weapon{
+    top: 13px;
+    left: 70px;
+    width: 100px;
+    height: 50px;
+    background: black;
+    position: absolute;
+  }
+
+  .weapon-name {
+    top: 44px;
+    left: 90px;
+    color: white;
+    position: absolute;
+  }
+
+  .cycle-weapons{
+    width: 16px;
+    height: 16px;
+    top: 7px;
+    background-image: url(../assets/ui-elements/cycle.svg);
+    background-size: cover;
+    left: 186px;
+    cursor: pointer;
+    position: absolute;
+  }
+
+  .console {
+    position: relative;
+    height: 100%;
+    padding-left: 27px;
+    padding-top: 21px;
+    width: 373px;
+    background-image: url(../assets/ui-elements/console.png);
+    background-size: cover;
+  }
+
+  .console-messages-list {
+    list-style-position: inside;
+    color: #3cf800;
+    margin-right: 15px;
+    overflow-y: scroll;
+    height: 80%;
+    font-size: 12px;
+  }
+
+  .console-messages-list::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .console-messages-list::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  .console-messages-list::-webkit-scrollbar-thumb {
+    background-color: #3cf800;
+  }
+
+  .hp-element {
+    position: relative;
+    height: 100%;
+    width: 52px;
+    background-image: url(../assets/ui-elements/hp-armor.png);
+    background-size: cover;
+  }
+
+  .hp {
+    position: absolute;
+    color: white;
+    left: 20px;
+    top: 39px;
+  }
+
+  .right-pan {
+    height: 100%;
+    width: 229px;
+    background-image: url(../assets/ui-elements/right-pan.png);
+    background-size: cover;
+  }
+</style>

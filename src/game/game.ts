@@ -4,6 +4,7 @@ import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims } from
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
+import UI from './ui'
 
 class Game extends Phaser.Scene {
   hero: Hero;
@@ -12,15 +13,17 @@ class Game extends Phaser.Scene {
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
   enemiesMovesTimers: { [enemyId: string]: NodeJS.Timer }
+  ui: UI;
 
   constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
-    super('game'); // why and how this works?
+    super('game');
     this.hero = hero;
     this.entitiesMap = new Map();
     this.cursors = cursors;
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
     this.enemiesMovesTimers = {};
+    this.ui = new UI();
   }
 
   preload() {
@@ -29,6 +32,7 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
     this.load.spritesheet('scorpion1', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
     this.load.spritesheet('scorpion2', 'assets/spritesheets/rad-scorpion-walk.png', { frameWidth: 120, frameHeight: 100 });
+    this.load.html('ui', '/assets/html/test.html')
   }
 
   create() {
@@ -47,8 +51,40 @@ class Game extends Phaser.Scene {
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
     })
-    this.hero.setPointerDownListener(map);
+    this.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
+    this.setPointerDownListener(map);
+    this.subscribeCharacterToChangeMoving();
+    //ui section
+    this.ui.createUI(this)
+    this.ui.putMessageToConsole('Game loaded')
+    this.ui.updateHP(this.hero)
+    this.ui.updateAP(this.hero)
+    this.ui.updateWeapon(this.hero)
+    this.createDamageButton()
+    this.ui.setChangeWeaponListener(this.hero)
+  }
+
+  createDamageButton() {
+    const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 100)
+      .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
+    damageButton.scrollFactorX = 0;
+    damageButton.scrollFactorY = 0;
+    damageButton.addListener('click')
+    damageButton.on('click', () => {
+      if (this.hero.healthPoints === 0) {
+        this.ui.putMessageToConsole('I am already dead. Stop mocking me.')
+        return
+      }
+
+      this.hero.healthPoints -= 1;
+      this.ui.updateHP(this.hero)
+      if (this.hero.healthPoints === 0) {
+        this.ui.putMessageToConsole('You killed me.')
+        return
+      }
+      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage')
+    })
   }
 
   update() {
@@ -108,13 +144,39 @@ class Game extends Phaser.Scene {
             offsetX: 0,
             offsetY: 15,
             walkingAnimationEnabled: false,
-            speed: 7,
+            speed: 2,
           }
         )
       }
     })
     this.gridEngine.create(map, gridEngineConfig);
   }
+
+  setPointerDownListener(map: Tilemaps.Tilemap) {
+    // Moving on mouse click
+    this.input.on('pointerdown', () => {
+      // Converting world coords into tile coords
+      const gridMouseCoords = map.worldToTileXY(this.input.activePointer.worldX, this.input.activePointer.worldY);
+      const heroCoords = map.worldToTileXY(this.hero.x, this.hero.y);
+      gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
+      gridMouseCoords.y = Math.round(gridMouseCoords.y);
+      heroCoords.x = Math.round(heroCoords.x)
+      heroCoords.y = Math.round(heroCoords.y) + 1;
+      //updating AP
+      /*         const distance = Math.abs(Math.abs(gridMouseCoords.x - heroCoords.x) + Math.abs(gridMouseCoords.y - heroCoords.y))
+              this.hero.updateAP(distance)
+              this.ui.updateAP(this.hero)
+              console.log(this.hero.actionPoints); */
+
+      // Get 0-layer's tile by coords
+      const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
+      clickedTile.tint = 0xff7a4a;
+
+      // MoveTo provides "player" move to grid coords
+      this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+    }, this);
+  }
+
 
   subscribeCharacterToChangeMoving() {
     // Hero movements subscribers

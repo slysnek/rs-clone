@@ -6,6 +6,9 @@ const config = {
     type: Phaser.WEBGL,
     width: windowSize.windowWidth,
     height: windowSize.windowHeight,
+    dom: {
+      createContainer: true,
+    },
     backgroundColor: '#ababab',
     parent: 'phaser-example',
     scene: [Game],
