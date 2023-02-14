@@ -16,7 +16,7 @@ class Game extends Phaser.Scene {
   ui: UI;
 
   constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
-    super('game'); // why and how this works?
+    super('game');
     this.hero = hero;
     this.entitiesMap = new Map();
     this.cursors = cursors;
@@ -53,6 +53,8 @@ class Game extends Phaser.Scene {
     })
     this.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
+    this.setPointerDownListener(map);
+    this.subscribeCharacterToChangeMoving();
     //ui section
     this.ui.createUI(this)
     this.ui.putMessageToConsole('Game loaded')
@@ -63,21 +65,21 @@ class Game extends Phaser.Scene {
     this.ui.setChangeWeaponListener(this.hero)
   }
 
-  createDamageButton(){
-    const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 200)
-    .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
+  createDamageButton() {
+    const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 100)
+      .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
     damageButton.scrollFactorX = 0;
     damageButton.scrollFactorY = 0;
     damageButton.addListener('click')
     damageButton.on('click', () => {
-      if(this.hero.healthPoints === 0){
+      if (this.hero.healthPoints === 0) {
         this.ui.putMessageToConsole('I am already dead. Stop mocking me.')
         return
       }
-      
-      this.hero.healthPoints -=1;
+
+      this.hero.healthPoints -= 1;
       this.ui.updateHP(this.hero)
-      if(this.hero.healthPoints === 0){
+      if (this.hero.healthPoints === 0) {
         this.ui.putMessageToConsole('You killed me.')
         return
       }
@@ -142,7 +144,7 @@ class Game extends Phaser.Scene {
             offsetX: 0,
             offsetY: 15,
             walkingAnimationEnabled: false,
-            speed: 7,
+            speed: 2,
           }
         )
       }
@@ -153,27 +155,28 @@ class Game extends Phaser.Scene {
   setPointerDownListener(map: Tilemaps.Tilemap) {
     // Moving on mouse click
     this.input.on('pointerdown', () => {
-        // Converting world coords into tile coords
-        const gridMouseCoords = map.worldToTileXY(this.input.activePointer.worldX, this.input.activePointer.worldY);
-        const heroCoords = map.worldToTileXY(this.hero.x, this.hero.y);
-        gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
-        gridMouseCoords.y = Math.round(gridMouseCoords.y);
-        heroCoords.x = Math.round(heroCoords.x)
-        heroCoords.y = Math.round(heroCoords.y) + 1;
-        //updating AP
-/*         const distance = Math.abs(Math.abs(gridMouseCoords.x - heroCoords.x) + Math.abs(gridMouseCoords.y - heroCoords.y))
-        this.hero.updateAP(distance)
-        this.ui.updateAP(this.hero)
-        console.log(this.hero.actionPoints); */
+      // Converting world coords into tile coords
+      const gridMouseCoords = map.worldToTileXY(this.input.activePointer.worldX, this.input.activePointer.worldY);
+      const heroCoords = map.worldToTileXY(this.hero.x, this.hero.y);
+      gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
+      gridMouseCoords.y = Math.round(gridMouseCoords.y);
+      heroCoords.x = Math.round(heroCoords.x)
+      heroCoords.y = Math.round(heroCoords.y) + 1;
+      //updating AP
+      /*         const distance = Math.abs(Math.abs(gridMouseCoords.x - heroCoords.x) + Math.abs(gridMouseCoords.y - heroCoords.y))
+              this.hero.updateAP(distance)
+              this.ui.updateAP(this.hero)
+              console.log(this.hero.actionPoints); */
 
-        // Get 0-layer's tile by coords
-        const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
-        clickedTile.tint = 0xff7a4a;
+      // Get 0-layer's tile by coords
+      const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
+      clickedTile.tint = 0xff7a4a;
 
-        // MoveTo provides "player" move to grid coords
-        this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+      // MoveTo provides "player" move to grid coords
+      this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
     }, this);
-}
+  }
+
 
   subscribeCharacterToChangeMoving() {
     // Hero movements subscribers
