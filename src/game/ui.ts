@@ -1,4 +1,4 @@
-import { Tilemaps } from "phaser";
+// import { Tilemaps } from "phaser";
 import { windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
@@ -10,17 +10,17 @@ export default class UI {
     testUI.scrollFactorY = 0;
   }
 
-  updateHP(hero: Hero){
+  updateHP(hero: Hero) {
     const HP = document.querySelector('.hp') as HTMLElement
-    if(hero.healthPoints < 0) return
-    if(hero.healthPoints < 10){
+    if (hero.healthPoints < 0) return
+    if (hero.healthPoints < 10) {
       HP.textContent = '0' + hero.healthPoints.toString();
-    } else{
+    } else {
       HP.textContent = hero.healthPoints.toString();
     }
   }
 
-  updateAP(hero: Hero){
+  updateAP(hero: Hero) {
     const APlights = document.querySelectorAll('.light');
     for (let i = 0; i < hero.actionPoints; i++) {
       APlights[i].classList.add('on')
@@ -30,14 +30,14 @@ export default class UI {
     }
   }
 
-  updateWeapon(hero: Hero){
+  updateWeapon(hero: Hero) {
     const weapon = document.querySelector('.weapon') as HTMLElement
     const weaponName = document.querySelector('.weapon-name') as HTMLElement
     weapon.style.background = `url(${hero.currentWeapon.image}) no-repeat`
     weaponName.textContent = hero.currentWeapon.name;
   }
 
-  setChangeWeaponListener(hero: Hero){
+  setChangeWeaponListener(hero: Hero) {
     const changeWeaponButton = document.querySelector('.cycle-weapons') as HTMLElement;
     changeWeaponButton.addEventListener('click', () => {
       hero.changeWeapon();
@@ -47,12 +47,12 @@ export default class UI {
   }
 
   putMessageToConsole(message = 'debug message') {
-      const coordMessage = document.createElement('li')
-      coordMessage.classList.add('console-message')
-      coordMessage.textContent = message;
-      const consoleList = document.querySelector('.console-messages-list') as HTMLElement;
-      consoleList.prepend(coordMessage)
-      this.deleteLastMessage()
+    const coordMessage = document.createElement('li')
+    coordMessage.classList.add('console-message')
+    coordMessage.textContent = message;
+    const consoleList = document.querySelector('.console-messages-list') as HTMLElement;
+    consoleList.prepend(coordMessage)
+    this.deleteLastMessage()
   }
 
   deleteLastMessage() {

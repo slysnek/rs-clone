@@ -12,7 +12,6 @@ class Game extends Phaser.Scene {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
-  enemiesMovesTimers: { [enemyId: string]: NodeJS.Timer }
   ui: UI;
 
   constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
@@ -22,7 +21,6 @@ class Game extends Phaser.Scene {
     this.cursors = cursors;
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
-    this.enemiesMovesTimers = {};
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
     this.ui = new UI();
   }
@@ -31,10 +29,10 @@ class Game extends Phaser.Scene {
     this.load.tilemapTiledJSON('map', 'assets/maps/currentMap.json');
     this.load.image('tiles', 'assets/maps/tiles-02.png');
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
-
     this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
     this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
     this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
+    this.load.html('ui', '/assets/html/test.html');
   }
 
   create() {
@@ -65,7 +63,6 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    this.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
     //ui section
     this.ui.createUI(this)
@@ -169,7 +166,7 @@ class Game extends Phaser.Scene {
     })
     this.gridEngine.create(map, gridEngineConfig);
   }
-  
+
   subscribeCharacterToChangeMoving() {
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
