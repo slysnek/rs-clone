@@ -14,6 +14,7 @@ export type gridEngineType = {
         offsetY: number;
         walkingAnimationEnabled: boolean;
         speed: number;
+        charLayer?: string;
     }[];
     numberOfDirections: number;
 }

@@ -21,6 +21,7 @@ class Game extends Phaser.Scene {
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
     this.enemiesMovesTimers = {};
+    this.getEntitiesMap = this.getEntitiesMap.bind(this);
   }
 
   preload() {
@@ -56,12 +57,15 @@ class Game extends Phaser.Scene {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
         (entityValue as Enemy).setAttackAnimation();
         (entityValue as Enemy).setDamageAnimation();
-        // (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
-        this.hero.setPointerOnEnemyListener(entityValue as Enemy);
+        (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
+  }
+
+  getEntitiesMap(){
+    return this.entitiesMap;
   }
 
   update() {
@@ -80,7 +84,7 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, this.getEntitiesMap));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }

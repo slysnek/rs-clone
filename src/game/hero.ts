@@ -10,19 +10,22 @@ class Hero extends Entity {
     map: Tilemaps.Tilemap;
     cursor: Phaser.Types.Input.Keyboard.CursorKeys;
     weapon: string;
+    getEntitiesMap: () => Map<string, Hero | Enemy>;
 
     constructor(scene: Phaser.Scene,
         texture: string,
         gridEngine: GridEngine,
         map: Tilemaps.Tilemap,
         cursor: Phaser.Types.Input.Keyboard.CursorKeys,
-        healthPoints: number,) {
+        healthPoints: number,
+        getEntitiesMap: () => Map<string, Hero | Enemy>) {
         super(scene, texture, healthPoints)
         this.scene = scene;
         this.gridEngine = gridEngine;
         this.map = map;
         this.cursor = cursor;
         this.weapon = 'fistPunch';
+        this.getEntitiesMap = getEntitiesMap;
     }
 
     setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -36,7 +39,17 @@ class Hero extends Entity {
             // Get 0-layer's tile by coords
             const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
             clickedTile.tint = 0xff7a4a;
-
+            if(this.fightMode){
+                const entitiesMap = this.getEntitiesMap();
+                entitiesMap.forEach((entityValue, entityKey) => {
+                    if (!entityKey.match(/^hero/i)) {
+                        const enemyPosition = this.gridEngine.getPosition(entityKey);
+                        if(enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y){
+                            this.attackEnemy(entityValue as Enemy)
+                        }
+                      }
+                })
+            }
             // MoveTo provides "player" move to grid coords
             this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
         }, this);
@@ -48,15 +61,7 @@ class Hero extends Entity {
         this.createEntityAnimation('punch__down-left', 'hero', heroAnims.punch.downLeft.startFrame, heroAnims.punch.downLeft.endFrame, 0);
         this.createEntityAnimation('punch__up-left', 'hero', heroAnims.punch.upLeft.startFrame, heroAnims.punch.upLeft.endFrame, 0);
     }
-
-    setPointerOnEnemyListener(gameObject: Enemy){
-        gameObject.setInteractive().on('pointerdown', () => {
-           this.attackEnemy(gameObject);
-           console.log(`enemyHealth ${gameObject.healthPoints}`);
-           console.log(`heroActionPoints ${this.actionPoints}`);
-        }, this);
-    }
-
+    
     attackEnemy(enemy: Enemy){
         const heroPosition = this.gridEngine.getPosition('hero');
         const enemyPosition = this.gridEngine.getPosition(enemy.id); 
@@ -83,7 +88,6 @@ class Hero extends Entity {
             return;
         }
         this.anims.play(`punch__${currentHeroAnimation}`);
-        console.log(enemy.anims)
         enemy.play(`damage__${currentEnemyAnimation}`);
         const lostPoints = lostActionPointsForHero[this.weapon];
         const damage = damageFromHero[this.weapon];

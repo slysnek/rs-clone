@@ -13,7 +13,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.key = '';
     this.healthPoints = healthPoints;
-    this.fightMode = false;
+    this.fightMode = true;
     this.actionPoints = 12;
     this.attackMode = false;
   }
