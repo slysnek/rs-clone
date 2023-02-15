@@ -16,7 +16,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     this.key = '';
     this.healthPoints = healthPoints;
     this.fightMode = true;
-    this.actionPoints = 12;
+    this.actionPoints = 10;
     this.attackMode = false;
     this.mainWeapon = new MeleeWeapon('nothing', '', 0, 0);
   }

@@ -1,4 +1,4 @@
-import { Tilemaps } from "phaser";
+// import { Tilemaps } from "phaser";
 import { windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
