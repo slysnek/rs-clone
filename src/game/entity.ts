@@ -7,15 +7,18 @@ class Entity extends Phaser.GameObjects.Sprite {
   key: string;
   healthPoints: number;
   fightMode: boolean;
-  actionPoints: number;
+  currentActionPoints: number;
+  totalActionPoints: number;
   mainWeapon: Weapon;
-  constructor(scene: Phaser.Scene, texture: string, healthPoints: number) {
+  constructor(scene: Phaser.Scene, texture: string, healthPoints: number, totalActionPoints: number) {
     super(scene, 0, 0, texture);
     this.scene = scene;
     this.key = '';
     this.healthPoints = healthPoints;
+    // fight mode
     this.fightMode = true;
-    this.actionPoints = 10;
+    this.totalActionPoints = totalActionPoints;
+    this.currentActionPoints = totalActionPoints;
     this.mainWeapon = new Weapon('nothing', '', 0, 0);
   }
 
@@ -24,7 +27,11 @@ class Entity extends Phaser.GameObjects.Sprite {
   }
 
   updateActionPoints(lostPoints: number) {
-    this.actionPoints -= lostPoints;
+    this.currentActionPoints -= lostPoints;
+  }
+
+  refreshActionPoints() {
+    this.currentActionPoints = this.totalActionPoints;
   }
 
   turnOnFightMode() {
@@ -52,9 +59,6 @@ class Entity extends Phaser.GameObjects.Sprite {
   }
 
   getStopFrame(direction: string, entityKey: string): number {
-    const heroRegex = /^hero/i;
-    const scorpionRegex = /^scorpion/i;
-
     let entityAnims = {
       walk: {
         upRight: {
@@ -71,11 +75,19 @@ class Entity extends Phaser.GameObjects.Sprite {
         },
       },
     };
+
+    const heroRegex = /^hero/i;
+    const scorpionRegex = /^scorpion/i;
+    const deathClawRegex = /^deathClaw/i;
+
     if (entityKey.match(heroRegex)) {
       entityAnims = heroAnims;
     }
     if (entityKey.match(scorpionRegex)) {
       entityAnims = scorpionAnims;
+    }
+    if (entityKey.match(deathClawRegex)) {
+      // deathclaw anims
     }
 
     switch (direction) {

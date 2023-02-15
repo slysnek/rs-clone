@@ -22,17 +22,17 @@ export default class UI {
 
   updateAP(hero: Hero) {
     const APlights = document.querySelectorAll('.light');
-    for (let i = 0; i < hero.actionPoints; i++) {
-      APlights[i].classList.add('on')
+    for (let i = 0; i < hero.currentActionPoints; i++) {
+      APlights[i].classList.add('on');
     }
-    for (let i = hero.actionPoints; i < 10; i++) {
-      APlights[i].classList.remove('on')
+    for (let i = hero.currentActionPoints; i < 10; i++) {
+      APlights[i].classList.remove('on');
     }
   }
 
   updateWeapon(hero: Hero) {
-    const weapon = document.querySelector('.weapon') as HTMLElement
-    const weaponName = document.querySelector('.weapon-name') as HTMLElement
+    const weapon = document.querySelector('.weapon') as HTMLElement;
+    const weaponName = document.querySelector('.weapon-name') as HTMLElement;
     weapon.style.background = `url(${hero.currentWeapon.image}) no-repeat`
     weaponName.textContent = hero.currentWeapon.name;
   }
@@ -41,14 +41,14 @@ export default class UI {
     const changeWeaponButton = document.querySelector('.cycle-weapons') as HTMLElement;
     changeWeaponButton.addEventListener('click', () => {
       hero.changeWeapon();
-      this.updateWeapon(hero)
-      this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`)
+      this.updateWeapon(hero);
+      this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`);
     })
   }
 
   putMessageToConsole(message = 'debug message') {
-    const coordMessage = document.createElement('li')
-    coordMessage.classList.add('console-message')
+    const coordMessage = document.createElement('li');
+    coordMessage.classList.add('console-message');
     coordMessage.textContent = message;
     const consoleList = document.querySelector('.console-messages-list') as HTMLElement;
     consoleList.prepend(coordMessage)
@@ -60,7 +60,7 @@ export default class UI {
     const allMessages = document.querySelectorAll('.console-message');
     if (allMessages.length > 20) {
       const lastMessage = allMessages[allMessages.length - 1];
-      lastMessage.remove()
+      lastMessage.remove();
     }
   }
 }
