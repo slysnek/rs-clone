@@ -62,8 +62,8 @@ class Hero extends Entity {
     }
 
     changeWeapon() {
-        if (this.currentWeapon.name === this.mainWeapon.name) this.currentWeapon = this.secondaryWeapon
-        else this.currentWeapon = this.mainWeapon
+        if (this.currentWeapon.name === this.mainWeapon.name) this.currentWeapon = this.secondaryWeapon;
+        else this.currentWeapon = this.mainWeapon;
     }
 
     updateAP(distance: number) {

@@ -166,7 +166,7 @@ class Game extends Phaser.Scene {
     })
     this.gridEngine.create(map, gridEngineConfig);
   }
-  
+
   subscribeCharacterToChangeMoving() {
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
