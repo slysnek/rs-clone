@@ -5,14 +5,14 @@ import { startPositionsForScorpionsMap1 } from './constants';
 import { scorpionAnims } from "./constants";
 
 function getRandomXYDelta() {
-  const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
-  return { xDelta: deltaValue(), yDelta: deltaValue() };
+    const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
+    return { xDelta: deltaValue(), yDelta: deltaValue() };
 }
 
 const timeModifier = 5;
 
 function getRandomTimeInterval() {
-  return (Math.ceil(Math.random() * timeModifier) * 1000);
+    return (Math.ceil(Math.random() * timeModifier) * 1000);
 }
 
 class Enemy extends Entity {
@@ -24,10 +24,10 @@ class Enemy extends Entity {
     size: string
 
     constructor(scene: Phaser.Scene,
-        texture: string, 
-        gridEngine: GridEngine, 
-        map: Tilemaps.Tilemap, 
-        id: string, 
+        texture: string,
+        gridEngine: GridEngine,
+        map: Tilemaps.Tilemap,
+        id: string,
         healthPoints: number,
         battleRadius: number,
         size: string) {
@@ -40,7 +40,7 @@ class Enemy extends Entity {
         this.size = size;
     }
 
-    clearTimer(){
+    clearTimer() {
         clearInterval(this.movesTimerId as NodeJS.Timer);
         this.movesTimerId = null;
     }
@@ -54,18 +54,14 @@ class Enemy extends Entity {
         }, getRandomTimeInterval())
     }
 
-    setAttackAnimation(){
+    setAttackAnimation() {
         this.createEntityAnimation('punch__up-right', this.id, scorpionAnims.punch.upRight.startFrame, scorpionAnims.punch.upRight.endFrame, 0);
         this.createEntityAnimation('punch__down-right', this.id, scorpionAnims.punch.downRight.startFrame, scorpionAnims.punch.downRight.endFrame, 0);
         this.createEntityAnimation('punch__down-left', this.id, scorpionAnims.punch.downLeft.startFrame, scorpionAnims.punch.downLeft.endFrame, 0);
         this.createEntityAnimation('punch__up-left', this.id, scorpionAnims.punch.upLeft.startFrame, scorpionAnims.punch.upLeft.endFrame, 0);
-        // this.createEntityAnimation('hit__up-right', this.id, scorpionAnims.hit.upRight.startFrame, scorpionAnims.hit.upRight.endFrame, 0);
-        // this.createEntityAnimation('hit-right', this.id, scorpionAnims.hit.downRight.startFrame, scorpionAnims.hit.downRight.endFrame, 0);
-        // this.createEntityAnimation('hit-left', this.id, scorpionAnims.hit.downLeft.startFrame, scorpionAnims.hit.downLeft.endFrame, 0);
-        // this.createEntityAnimation('hit-left', this.id, scorpionAnims.hit.upLeft.startFrame, scorpionAnims.hit.upLeft.endFrame, 0);
     }
 
-    setDamageAnimation(){
+    setDamageAnimation() {
         this.createEntityAnimation('damage__up-right', this.id, scorpionAnims.damage.upRight.startFrame, scorpionAnims.damage.upRight.endFrame, 0);
         this.createEntityAnimation('damage__down-right', this.id, scorpionAnims.damage.downRight.startFrame, scorpionAnims.damage.downRight.endFrame, 0);
         this.createEntityAnimation('damage__down-left', this.id, scorpionAnims.damage.downLeft.startFrame, scorpionAnims.damage.downLeft.endFrame, 0);
@@ -79,6 +75,6 @@ class Enemy extends Entity {
             element.tilemapLayer.layer.data[row][col].tint = color;
         }
     }
-  }
+}
 
 export default Enemy;

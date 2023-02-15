@@ -45,7 +45,7 @@ class Game extends Phaser.Scene {
     this.hero.setPunchAnimation();
 
     this.createCamera();
-    
+
     this.createEnemy('scorpion1', map, 6, 'big');
     this.createEnemy('scorpion2', map, 6, 'small', 0.75);
     this.createEnemy('scorpion3', map, 6, 'small', 0.75);
@@ -64,7 +64,7 @@ class Game extends Phaser.Scene {
     this.subscribeCharacterToChangeMoving();
   }
 
-  getEntitiesMap(){
+  getEntitiesMap() {
     return this.entitiesMap;
   }
 
@@ -107,7 +107,7 @@ class Game extends Phaser.Scene {
         {
           id: 'hero',
           sprite: this.hero,
-          startPosition: { x: 68, y: 68},
+          startPosition: { x: 68, y: 68 },
           offsetX: 0,
           offsetY: 42,
           walkingAnimationEnabled: false,

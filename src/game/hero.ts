@@ -39,15 +39,15 @@ class Hero extends Entity {
             // Get 0-layer's tile by coords
             const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
             clickedTile.tint = 0xff7a4a;
-            if(this.fightMode){
+            if (this.fightMode) {
                 const entitiesMap = this.getEntitiesMap();
                 entitiesMap.forEach((entityValue, entityKey) => {
                     if (!entityKey.match(/^hero/i)) {
                         const enemyPosition = this.gridEngine.getPosition(entityKey);
-                        if(enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y){
+                        if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y) {
                             this.attackEnemy(entityValue as Enemy)
                         }
-                      }
+                    }
                 })
             }
             // MoveTo provides "player" move to grid coords
@@ -55,28 +55,28 @@ class Hero extends Entity {
         }, this);
     }
 
-    setPunchAnimation(){
+    setPunchAnimation() {
         this.createEntityAnimation('punch__up-right', 'hero', heroAnims.punch.upRight.startFrame, heroAnims.punch.upRight.endFrame, 0);
         this.createEntityAnimation('punch__down-right', 'hero', heroAnims.punch.downRight.startFrame, heroAnims.punch.downRight.endFrame, 0);
         this.createEntityAnimation('punch__down-left', 'hero', heroAnims.punch.downLeft.startFrame, heroAnims.punch.downLeft.endFrame, 0);
         this.createEntityAnimation('punch__up-left', 'hero', heroAnims.punch.upLeft.startFrame, heroAnims.punch.upLeft.endFrame, 0);
     }
-    
-    attackEnemy(enemy: Enemy){
+
+    attackEnemy(enemy: Enemy) {
         const heroPosition = this.gridEngine.getPosition('hero');
-        const enemyPosition = this.gridEngine.getPosition(enemy.id); 
+        const enemyPosition = this.gridEngine.getPosition(enemy.id);
         let currentHeroAnimation = '';
         let currentEnemyAnimation = '';
-        if(heroPosition.x === enemyPosition.x){
-            if(heroPosition.y > enemyPosition.y){
+        if (heroPosition.x === enemyPosition.x) {
+            if (heroPosition.y > enemyPosition.y) {
                 currentHeroAnimation = 'up-right';
                 currentEnemyAnimation = 'down-left';
             } else {
                 currentHeroAnimation = 'down-left';
                 currentEnemyAnimation = 'up-right';
             }
-        } else if(heroPosition.y === enemyPosition.y){
-            if(heroPosition.x > enemyPosition.x){
+        } else if (heroPosition.y === enemyPosition.y) {
+            if (heroPosition.x > enemyPosition.x) {
                 currentHeroAnimation = 'up-left';
                 currentEnemyAnimation = 'down-right';
             } else {
@@ -84,7 +84,7 @@ class Hero extends Entity {
                 currentEnemyAnimation = 'up-left';
             }
         }
-        if(currentHeroAnimation === ''){
+        if (currentHeroAnimation === '') {
             return;
         }
         this.anims.play(`punch__${currentHeroAnimation}`);
@@ -95,7 +95,7 @@ class Hero extends Entity {
         enemy.updateHealthPoints(damage);
     }
 
-    makeStep(){
+    makeStep() {
         const lostPoints = lostActionPointsForHero.step;
         this.updateActionPoints(lostPoints);
     }
