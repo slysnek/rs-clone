@@ -6,6 +6,8 @@ import Hero from './hero';
 import { gridEngineType } from './types';
 import UI from './ui'
 
+const defaultBehavior = 'walk';
+
 class Game extends Phaser.Scene {
   hero: Hero;
   entitiesMap: Map<string, Hero | Enemy>;
@@ -42,9 +44,10 @@ class Game extends Phaser.Scene {
     this.tintTiles(map);
 
     this.createHero(map);
-    this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims);
+    this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
     this.hero.setPunchAnimation();
-
+    this.hero.setGetHidePistolAnimation();
+    console.log(this.hero.anims)
     this.createCamera();
 
     this.createEnemy('scorpion1', map, 6, 'big');
@@ -55,7 +58,7 @@ class Game extends Phaser.Scene {
 
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
-        entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims);
+        entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims, defaultBehavior);
         (entityValue as Enemy).setAttackAnimation();
         (entityValue as Enemy).setDamageAnimation();
         (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);

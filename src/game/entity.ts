@@ -1,7 +1,9 @@
 import Phaser from "phaser";
 import { heroAnims, scorpionAnims } from "./constants";
-import { Animations } from "./types";
-import MeleeWeapon from './meleeweapon'
+import { Animations, StopAnimations } from "./types";
+import MeleeWeapon from './meleeweapon';
+
+const defaultBehavior = 'walk';
 
 class Entity extends Phaser.GameObjects.Sprite {
   key: string;
@@ -10,6 +12,7 @@ class Entity extends Phaser.GameObjects.Sprite {
   actionPoints: number;
   attackMode: boolean;
   mainWeapon: MeleeWeapon; // will need to change it
+  behavior: string;
   constructor(scene: Phaser.Scene, texture: string, healthPoints: number) {
     super(scene, 0, 0, texture);
     this.scene = scene;
@@ -19,6 +22,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     this.actionPoints = 10;
     this.attackMode = false;
     this.mainWeapon = new MeleeWeapon('nothing', '', 0, 0);
+    this.behavior = defaultBehavior;
   }
 
   updateHealthPoints(damage: number) {
@@ -46,18 +50,18 @@ class Entity extends Phaser.GameObjects.Sprite {
     });
   }
 
-  setFramesForEntityAnimations(entityValue: Phaser.GameObjects.Sprite, entityKey: string, entityAnims: Animations) {
-    this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims.walk.upRight.startFrame, entityAnims.walk.upRight.endFrame, -1);
-    this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims.walk.downRight.startFrame, entityAnims.walk.downRight.endFrame, -1);
-    this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims.walk.downLeft.startFrame, entityAnims.walk.downLeft.endFrame, -1);
-    this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims.walk.upLeft.startFrame, entityAnims.walk.upLeft.endFrame, -1);
+  setFramesForEntityAnimations(entityValue: Phaser.GameObjects.Sprite, entityKey: string, entityAnims: Animations, behavior: string) {
+    this.createEntityAnimation.call(entityValue, "up-right", entityKey, entityAnims[behavior].upRight.startFrame, entityAnims[behavior].upRight.endFrame, -1);
+    this.createEntityAnimation.call(entityValue, "down-right", entityKey, entityAnims[behavior].downRight.startFrame, entityAnims[behavior].downRight.endFrame, -1);
+    this.createEntityAnimation.call(entityValue, "down-left", entityKey, entityAnims[behavior].downLeft.startFrame, entityAnims[behavior].downLeft.endFrame, -1);
+    this.createEntityAnimation.call(entityValue, "up-left", entityKey, entityAnims[behavior].upLeft.startFrame, entityAnims[behavior].upLeft.endFrame, -1);
   }
 
   getStopFrame(direction: string, entityKey: string): number {
     const heroRegex = /^hero/i;
     const scorpionRegex = /^scorpion/i;
 
-    let entityAnims = {
+    let entityAnims: StopAnimations = {
       walk: {
         upRight: {
           stopFrame: -1,
@@ -82,13 +86,13 @@ class Entity extends Phaser.GameObjects.Sprite {
 
     switch (direction) {
       case "up-right":
-        return entityAnims.walk.upRight.stopFrame;
+        return entityAnims[this.behavior].upRight.stopFrame;
       case "down-right":
-        return entityAnims.walk.downRight.stopFrame;
+        return entityAnims[this.behavior].downRight.stopFrame;
       case "down-left":
-        return entityAnims.walk.downLeft.stopFrame;
+        return entityAnims[this.behavior].downLeft.stopFrame;
       case "up-left":
-        return entityAnims.walk.upLeft.stopFrame;
+        return entityAnims[this.behavior].upLeft.stopFrame;
       default:
         return -1;
     }
