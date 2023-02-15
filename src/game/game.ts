@@ -12,7 +12,6 @@ class Game extends Phaser.Scene {
   cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
-  enemiesMovesTimers: { [enemyId: string]: NodeJS.Timer }
   ui: UI;
 
   constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
@@ -22,7 +21,6 @@ class Game extends Phaser.Scene {
     this.cursors = cursors;
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
-    this.enemiesMovesTimers = {};
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
     this.ui = new UI();
   }
@@ -65,7 +63,6 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    this.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
     //ui section
     this.ui.createUI(this)
