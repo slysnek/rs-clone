@@ -4,6 +4,7 @@ import { windowSize, startPositionsForScorpionsMap1, heroAnims, scorpionAnims, o
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
+import UI from './ui'
 
 class Game extends Phaser.Scene {
   hero: Hero;
@@ -12,6 +13,7 @@ class Game extends Phaser.Scene {
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
   enemiesMovesTimers: { [enemyId: string]: NodeJS.Timer }
+  ui: UI;
 
   constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
     super('game');
@@ -22,16 +24,17 @@ class Game extends Phaser.Scene {
     this.gridEngine = gridEngine;
     this.enemiesMovesTimers = {};
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
+    this.ui = new UI();
   }
 
   preload() {
     this.load.tilemapTiledJSON('map', 'assets/maps/currentMap.json');
     this.load.image('tiles', 'assets/maps/tiles-02.png');
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
+
     this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
     this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
     this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
-
   }
 
   create() {
@@ -62,6 +65,38 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
+    this.setPointerDownListener(map);
+    this.subscribeCharacterToChangeMoving();
+    //ui section
+    this.ui.createUI(this)
+    this.ui.putMessageToConsole('Game loaded')
+    this.ui.updateHP(this.hero)
+    this.ui.updateAP(this.hero)
+    this.ui.updateWeapon(this.hero)
+    this.createDamageButton()
+    this.ui.setChangeWeaponListener(this.hero)
+  }
+
+  createDamageButton() {
+    const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 100)
+      .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
+    damageButton.scrollFactorX = 0;
+    damageButton.scrollFactorY = 0;
+    damageButton.addListener('click')
+    damageButton.on('click', () => {
+      if (this.hero.healthPoints === 0) {
+        this.ui.putMessageToConsole('I am already dead. Stop mocking me.')
+        return
+      }
+
+      this.hero.healthPoints -= 1;
+      this.ui.updateHP(this.hero)
+      if (this.hero.healthPoints === 0) {
+        this.ui.putMessageToConsole('You killed me.')
+        return
+      }
+      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage')
+    })
   }
 
   getEntitiesMap() {
@@ -134,8 +169,7 @@ class Game extends Phaser.Scene {
     })
     this.gridEngine.create(map, gridEngineConfig);
   }
-
-  // Entities movements subscribers
+  
   subscribeCharacterToChangeMoving() {
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;

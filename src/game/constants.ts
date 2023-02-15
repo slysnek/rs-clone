@@ -180,5 +180,4 @@ export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: nu
 export const offsetCoordForScorpions: { [key: string]: { x: number, y: number } } = {
     big: { x: 10, y: 37 },
     small: { x: 0, y: 27 },
-    };
-  
+  };
