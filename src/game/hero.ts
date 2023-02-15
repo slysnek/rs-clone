@@ -4,16 +4,15 @@ import { Direction, GridEngine } from 'grid-engine';
 import Enemy from "./enemy";
 import { lostActionPointsForHero, damageFromHero } from './battlePoints';
 import { heroAnims } from "./constants";
-import MeleeWeapon from './meleeweapon'
+import Weapon from './weapon'
 
 class Hero extends Entity {
     gridEngine: GridEngine;
     map: Tilemaps.Tilemap;
     cursor: Phaser.Types.Input.Keyboard.CursorKeys;
-    weapon: string;
     getEntitiesMap: () => Map<string, Hero | Enemy>;
-    secondaryWeapon: MeleeWeapon;
-    currentWeapon: MeleeWeapon;
+    secondaryWeapon: Weapon;
+    currentWeapon: Weapon;
 
     constructor(scene: Phaser.Scene,
         texture: string,
@@ -27,10 +26,10 @@ class Hero extends Entity {
         this.gridEngine = gridEngine;
         this.map = map;
         this.cursor = cursor;
-        this.weapon = 'fistPunch';
         this.getEntitiesMap = getEntitiesMap;
-        this.mainWeapon = new MeleeWeapon('Fists', './assets/weapons/fist.png', 5, 0.8)
-        this.secondaryWeapon = new MeleeWeapon('Blade', './assets/weapons/blade.png', 12, 0.6)
+        
+        this.mainWeapon = new Weapon('Fists', './assets/weapons/fist.png', 5, 0.8)
+        this.secondaryWeapon = new Weapon('Pistol', './assets/weapons/blade.png', 12, 0.6)
         this.currentWeapon = this.mainWeapon;
     }
 
@@ -42,9 +41,9 @@ class Hero extends Entity {
             gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
             gridMouseCoords.y = Math.round(gridMouseCoords.y);
 
-            // Get 0-layer's tile by coords
             const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
             clickedTile.tint = 0xff7a4a;
+
             if (this.fightMode) {
                 const entitiesMap = this.getEntitiesMap();
                 entitiesMap.forEach((entityValue, entityKey) => {
@@ -56,7 +55,7 @@ class Hero extends Entity {
                     }
                 })
             }
-            // MoveTo provides "player" move to grid coords
+
             this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
         }, this);
     }
@@ -68,7 +67,7 @@ class Hero extends Entity {
 
     updateAP(distance: number) {
         this.actionPoints -= distance;
-        while (this.actionPoints < 0) this.actionPoints += 10
+        while (this.actionPoints < 0) this.actionPoints += 10;
     }
 
     setPunchAnimation() {
@@ -103,12 +102,18 @@ class Hero extends Entity {
         if (currentHeroAnimation === '') {
             return;
         }
+
         this.anims.play(`punch__${currentHeroAnimation}`);
         enemy.play(`damage__${currentEnemyAnimation}`);
-        const lostPoints = lostActionPointsForHero[this.weapon];
-        const damage = damageFromHero[this.weapon];
+
+        const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
         this.updateActionPoints(lostPoints);
+
+        const damage = damageFromHero[this.currentWeapon.name];
         enemy.updateHealthPoints(damage);
+
+        console.log("Hero Weapon:", this.currentWeapon.name);
+        console.log("Hero AP:", this.actionPoints, ", Enemy HP:", enemy.healthPoints);
     }
 
     makeStep() {

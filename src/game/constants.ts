@@ -1,6 +1,6 @@
 export const windowSize = {
   windowWidth: window.innerWidth,
-  windowHeight: window.innerHeight
+  windowHeight: 650
 }
 
 export type Animations = {

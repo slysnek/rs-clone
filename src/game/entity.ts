@@ -1,15 +1,14 @@
 import Phaser from "phaser";
 import { heroAnims, scorpionAnims } from "./constants";
 import { Animations } from "./types";
-import MeleeWeapon from './meleeweapon'
+import Weapon from './weapon'
 
 class Entity extends Phaser.GameObjects.Sprite {
   key: string;
   healthPoints: number;
   fightMode: boolean;
   actionPoints: number;
-  attackMode: boolean;
-  mainWeapon: MeleeWeapon; // will need to change it
+  mainWeapon: Weapon;
   constructor(scene: Phaser.Scene, texture: string, healthPoints: number) {
     super(scene, 0, 0, texture);
     this.scene = scene;
@@ -17,8 +16,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     this.healthPoints = healthPoints;
     this.fightMode = true;
     this.actionPoints = 10;
-    this.attackMode = false;
-    this.mainWeapon = new MeleeWeapon('nothing', '', 0, 0);
+    this.mainWeapon = new Weapon('nothing', '', 0, 0);
   }
 
   updateHealthPoints(damage: number) {
