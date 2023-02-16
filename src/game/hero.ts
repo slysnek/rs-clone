@@ -2,7 +2,7 @@ import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
 import Enemy from "./enemy";
-import { lostActionPointsForHero, damageFromHero } from './battlePoints';
+import { lostActionPointsForHero } from './battlePoints';
 import { heroAnims, oppositeDirections } from "./constants";
 import MeleeWeapon from './meleeweapon'
 
@@ -166,10 +166,6 @@ class Hero extends Entity {
     } else {
       this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
       enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
-      const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
-      const damage = damageFromHero[this.currentWeapon.name];
-      this.updateActionPoints(lostPoints);
-      enemy.updateHealthPoints(damage);
     }
   }
 
