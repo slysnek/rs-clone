@@ -2,7 +2,9 @@ import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
 import { startPositionsForScorpionsMap1 } from './constants';
-import { scorpionAnims } from "./constants";
+import { scorpionAnims, oppositeDirections } from "./constants";
+import Hero from "./hero";
+import attack from "./utilsForAttackAnimations";
 
 function getRandomXYDelta() {
   const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
@@ -21,7 +23,9 @@ class Enemy extends Entity {
   movesTimerId: NodeJS.Timer | null;
   id: string;
   battleRadius: number;
-  size: string
+  size: string;
+  attackBehavior: string;
+  maxRange: number;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -38,6 +42,8 @@ class Enemy extends Entity {
     this.id = id;
     this.battleRadius = battleRadius;
     this.size = size;
+    this.attackBehavior = 'punch';
+    this.maxRange = 1;
   }
 
   clearTimer() {
@@ -67,6 +73,18 @@ class Enemy extends Entity {
     this.createEntityAnimation('damage_down-left', this.id, scorpionAnims.damage.downLeft.startFrame, scorpionAnims.damage.downLeft.endFrame, 0);
     this.createEntityAnimation('damage_up-left', this.id, scorpionAnims.damage.upLeft.startFrame, scorpionAnims.damage.upLeft.endFrame, 0);
     this.createEntityAnimation('death', this.id, scorpionAnims.death.upRight.startFrame, scorpionAnims.death.upRight.endFrame, 0);
+  }
+
+  playAttackHeroAnimation(hero: Hero) {
+    const heroCoords = this.gridEngine.getPosition(hero.id);
+    const enemyCoords = this.gridEngine.getPosition(this.id);
+    const enemyAnimationDirection = attack(enemyCoords, heroCoords, this.maxRange);
+    if(!enemyAnimationDirection){
+      return;
+    } else {
+      this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
+      hero.play(`damage_${oppositeDirections.get(enemyAnimationDirection)}`);
+    }
   }
 
   //повтор функции, удалить

@@ -185,24 +185,24 @@ export const scorpionAnims = {
   },
   punch: {
     upRight: {
-      startFrame: 83,
-      endFrame: 93,
-      stopFrame: 83,
+      startFrame: 88,
+      endFrame: 98,
+      stopFrame: 98,
     },
     downRight: {
-      startFrame: 94,
-      endFrame: 104,
-      stopFrame: 94,
+      startFrame: 99,
+      endFrame: 109,
+      stopFrame: 109,
     },
     downLeft: {
-      startFrame: 105,
-      endFrame: 115,
-      stopFrame: 105,
+      startFrame: 110,
+      endFrame: 120,
+      stopFrame: 120,
     },
     upLeft: {
-      startFrame: 116,
-      endFrame: 126,
-      stopFrame: 116,
+      startFrame: 121,
+      endFrame: 131,
+      stopFrame: 131,
     },
   },
   death: {

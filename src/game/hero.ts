@@ -52,7 +52,8 @@ class Hero extends Entity {
           if (!entityKey.match(/^hero/i)) {
             const enemyPosition = this.gridEngine.getPosition(entityKey);
             if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y) {
-              this.attackEnemy(entityValue as Enemy);
+              // this.playAttackEnemyAnimation(entityValue as Enemy);
+              (entityValue as Enemy).playAttackHeroAnimation(this);
             }
           }
         })
@@ -117,7 +118,7 @@ class Hero extends Entity {
     this.behavior === 'walk' ? this.anims.play(`hidePistol_${currentDirection}`) : this.anims.play(`getPistol_${currentDirection}`);
   }
 
-  attackEnemy(enemy: Enemy) {
+  playAttackEnemyAnimation(enemy: Enemy) {
     const heroCoords = this.gridEngine.getPosition(this.id);
     const enemyCoords = this.gridEngine.getPosition(enemy.id);
     const HeroAnimationDirection = attack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
