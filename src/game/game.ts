@@ -5,6 +5,7 @@ import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
 import UI from './ui'
+import { entitiesTotalActionPoints } from './battlePoints';
 
 const defaultBehavior = 'walk';
 
@@ -67,15 +68,14 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    this.subscribeCharacterToChangeMoving();
     //ui section
-    this.ui.createUI(this)
-    this.ui.putMessageToConsole('Game loaded')
-    this.ui.updateHP(this.hero)
-    this.ui.updateAP(this.hero)
-    this.ui.updateWeapon(this.hero)
-    this.createDamageButton()
-    this.ui.setChangeWeaponListener(this.hero)
+    this.ui.createUI(this);
+    this.ui.putMessageToConsole('Game loaded');
+    this.ui.updateHP(this.hero);
+    this.ui.updateAP(this.hero);
+    this.ui.updateWeapon(this.hero);
+    this.createDamageButton();
+    this.ui.setChangeWeaponListener(this.hero);
   }
 
   createDamageButton() {
@@ -83,20 +83,20 @@ class Game extends Phaser.Scene {
       .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
     damageButton.scrollFactorX = 0;
     damageButton.scrollFactorY = 0;
-    damageButton.addListener('click')
+    damageButton.addListener('click');
     damageButton.on('click', () => {
       if (this.hero.healthPoints === 0) {
-        this.ui.putMessageToConsole('I am already dead. Stop mocking me.')
-        return
+        this.ui.putMessageToConsole('I am already dead. Stop mocking me.');
+        return;
       }
 
       this.hero.healthPoints -= 1;
-      this.ui.updateHP(this.hero)
+      this.ui.updateHP(this.hero);
       if (this.hero.healthPoints === 0) {
         this.ui.putMessageToConsole('You killed me.')
-        return
+        return;
       }
-      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage')
+      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage');
     })
   }
 
@@ -120,13 +120,13 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, this.getEntitiesMap));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size: string, scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints.scorpion));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
@@ -200,13 +200,33 @@ class Game extends Phaser.Scene {
           positionChangeText.text =
             `positionChangeStarted:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
             `enter: (${enterTile.x}, ${enterTile.y})`;
+
+          if (this.hero.currentActionPoints) {
+            this.hero.makeStep();
+          }
+          if (this.hero.currentActionPoints <= 0) {
+            this.gridEngine.stopMovement(charId);
+            this.refreshAllEnemiesActionPoints();
+          }
+          console.log(this.hero.currentActionPoints, charId);
+        }
+        if (!charId.match(/^hero/i)) {
+          const enemy = this.entitiesMap.get(charId) as Enemy;
+          if (enemy.currentActionPoints) {
+            enemy.makeStep();
+          }
+          if (enemy.currentActionPoints <= 0) {
+            this.gridEngine.stopMovement(charId);
+          }
+          if (this.isAllEnemiesLostActionPoints()) {
+            this.hero.refreshActionPoints();
+          }
         }
       });
 
     this.gridEngine
       .positionChangeFinished()
-      .subscribe(({ charId, exitTile, enterTile }) => {
-
+      .subscribe(async ({ charId, exitTile, enterTile }) => {
         if (charId.match(/^hero/i)) {
           positionChangeText.setX(this.hero.x);
           positionChangeText.setY(this.hero.y - 50);
@@ -217,16 +237,25 @@ class Game extends Phaser.Scene {
             `positionChangeFinished:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
-          if (this.isHeroSteppedOnEnemyRadius()) {
+          if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
             // Start fight
-            this.moveClosestEnemiesToHero(enterTile, 15);
+            await this.moveClosestEnemiesToHero(enterTile/*, 15*/);
+            this.enableFightMode();
           }
+        }
+        if (!charId.match(/^hero/i)) {
+          // eslint-disable-next-line no-constant-condition
+          // if (true /*Если есть возможность ударить*/) {
+          // Если enter tile рядом с героем и ОД > 0, тогда бьем
+          //   const enemy = this.entitiesMap.get(charId) as Enemy;
+          //   enemy.attackHero(this.hero);
+          // }
         }
       });
   }
 
-  moveClosestEnemiesToHero(heroPos: Position, enemyTriggerRadius: number) {
-    // Получаем массив свободных ячеек вокруг героя
+  moveClosestEnemiesToHero(heroPos: Position/*, enemyTriggerRadius: number*/) {
+    // get an array of empty tiles around the hero
     const emptyTilesAroundHero: Array<Position> = [];
     if (!this.gridEngine.isBlocked({ x: heroPos.x - 1, y: heroPos.y })) {
       emptyTilesAroundHero.push({ x: heroPos.x - 1, y: heroPos.y });
@@ -240,8 +269,8 @@ class Game extends Phaser.Scene {
     if (!this.gridEngine.isBlocked({ x: heroPos.x, y: heroPos.y + 1 })) {
       emptyTilesAroundHero.push({ x: heroPos.x, y: heroPos.y + 1 });
     }
-    // Получаем массив ближайших врагов относительно героя
-    let closestEnemiesAroundHero: Array<[string, number]> = [];
+    // get an array of the closest enemies relative to the hero
+    const closestEnemiesAroundHero: Array<[string, number]> = [];
     this.entitiesMap.forEach((_entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         const enemyPos = this.gridEngine.getPosition(entityKey);
@@ -249,24 +278,36 @@ class Game extends Phaser.Scene {
         closestEnemiesAroundHero.push([entityKey, distanceToHero]);
       }
     });
-    closestEnemiesAroundHero = closestEnemiesAroundHero.sort((a, b) => {
-      if (a[1] > b[1]) {
-        return 1;
-      }
-      if (a[1] < b[1]) {
-        return -1;
-      }
-      return 0;
-    });
-    // Не больше 4 врагов, не дальше чем 15 клеток (манхэттенская дистанция)
-    closestEnemiesAroundHero = closestEnemiesAroundHero.slice(0, emptyTilesAroundHero.length);
-    closestEnemiesAroundHero = closestEnemiesAroundHero.filter((enemy) => enemy[1] < enemyTriggerRadius);
-
-    // Двигаем каждого врага к позиции героя
     closestEnemiesAroundHero.forEach((enemy, index) => {
       (this.entitiesMap.get(enemy[0]) as Enemy).clearTimer();
-      this.gridEngine.moveTo(enemy[0], emptyTilesAroundHero[index]);
+      if ((this.entitiesMap.get(enemy[0]) as Enemy).currentActionPoints > 0) {
+        this.gridEngine.moveTo(enemy[0], emptyTilesAroundHero[index]);
+      }
     });
+
+    // // walk
+    // if (this.currentActionPoints > 0) {
+    //   this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+    // }
+
+    // closestEnemiesAroundHero = closestEnemiesAroundHero.sort((enemy1, enemy2) => {
+    //   if (enemy1[1] > enemy2[1]) {
+    //     return 1;
+    //   }
+    //   if (enemy1[1] < enemy2[1]) {
+    //     return -1;
+    //   }
+    //   return 0;
+    // });
+    // // No more than 4 enemies, no further than 15 cells (Manhattan distance)
+    // closestEnemiesAroundHero = closestEnemiesAroundHero.slice(0, emptyTilesAroundHero.length);
+    // closestEnemiesAroundHero = closestEnemiesAroundHero.filter((enemy) => enemy[1] < enemyTriggerRadius);
+
+    // // move each enemy to the hero's position
+    // closestEnemiesAroundHero.forEach((enemy, index) => {
+    //   (this.entitiesMap.get(enemy[0]) as Enemy).clearTimer();
+    //   this.gridEngine.moveTo(enemy[0], emptyTilesAroundHero[index]);
+    // });
   }
 
   isHeroSteppedOnEnemyRadius() {
@@ -285,16 +326,40 @@ class Game extends Phaser.Scene {
     return isStepped;
   }
 
-  isEnemyRadiusSteppedOnHero(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
-    const heroPos = this.gridEngine.getPosition('hero');
-    let isStepped = false;
+  // // ?
+  // isEnemyRadiusSteppedOnHero(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
+  //   const heroPos = this.gridEngine.getPosition('hero');
+  //   let isStepped = false;
 
-    if (this.manhattanDist(posX, posY, heroPos.x, heroPos.y) <= radius) {
-      // console.log(`Enemy radius stepped on hero: (${heroPos.x},${heroPos.y})`);
-      isStepped = true;
-    }
-    this.tintRadius(tilemap, posX, posY, radius, color);
-    return isStepped;
+  //   if (this.manhattanDist(posX, posY, heroPos.x, heroPos.y) <= radius) {
+  //     // console.log(`Enemy radius stepped on hero: (${heroPos.x},${heroPos.y})`);
+  //     isStepped = true;
+  //   }
+  //   this.tintRadius(tilemap, posX, posY, radius, color);
+  //   return isStepped;
+  // }
+
+  enableFightMode() {
+    this.entitiesMap.forEach((entityValue) => {
+      entityValue.fightMode = true;
+    });
+  }
+
+  refreshAllEnemiesActionPoints() {
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        entityValue.refreshActionPoints();
+      }
+    });
+  }
+
+  isAllEnemiesLostActionPoints() {
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i) && entityValue.currentActionPoints > 0) {
+        return false;
+      }
+    });
+    return true;
   }
 
   manhattanDist(x1: number, y1: number, x2: number, y2: number) {
@@ -313,9 +378,9 @@ class Game extends Phaser.Scene {
     this.tintTile(map, 35, 25, 0x4a4aff); // blue
     this.tintTile(map, 15, 18, 0x4aff4a); // green
     this.tintTile(map, 20, 28, 0xaf2462); // red
-    this.tintTile(map, 40, 48, 0xaf22ff); // magenta (unreachable)
-    this.tintTile(map, 0, 0, 0xaf2462); // red (unreachable)
-    this.tintTile(map, 48, 53, 0xaf2462); // red (unreachable)
+    this.tintTile(map, 40, 48, 0xaf22ff); // magenta
+    this.tintTile(map, 0, 0, 0xaf2462); // red
+    this.tintTile(map, 48, 53, 0xaf2462); // red
     this.tintTile(map, startPositionsForScorpionsMap1.scorpion1.x, startPositionsForScorpionsMap1.scorpion1.y, 0xaf2462); // red (unreachable)
     this.tintTile(map, startPositionsForScorpionsMap1.scorpion2.x, startPositionsForScorpionsMap1.scorpion2.y, 0xaf2462);
   }

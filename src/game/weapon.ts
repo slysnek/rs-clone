@@ -1,8 +1,8 @@
-export default class MeleeWeapon {
+export default class Weapon {
   name: string;
   image: string;
   attack: number;
-  accuracy: number;
+  accuracy: number
   maxRange: number;
   constructor(name: string, image: string, attack: number, accuracy: number, maxRange: number) {
     this.name = name;

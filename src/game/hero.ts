@@ -2,9 +2,9 @@ import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
 import Enemy from "./enemy";
-import { lostActionPointsForHero } from './battlePoints';
+import { damageFromHero, lostActionPointsForHero } from './battlePoints';
 import { heroAnims, oppositeDirections } from "./constants";
-import MeleeWeapon from './meleeweapon'
+import Weapon from './weapon'
 import attack from './utilsForAttackAnimations';
 
 class Hero extends Entity {
@@ -12,8 +12,8 @@ class Hero extends Entity {
   map: Tilemaps.Tilemap;
   cursor: Phaser.Types.Input.Keyboard.CursorKeys;
   getEntitiesMap: () => Map<string, Hero | Enemy>;
-  secondaryWeapon: MeleeWeapon;
-  currentWeapon: MeleeWeapon;
+  secondaryWeapon: Weapon;
+  currentWeapon: Weapon;
   id: string;
 
   constructor(scene: Phaser.Scene,
@@ -22,15 +22,16 @@ class Hero extends Entity {
     map: Tilemaps.Tilemap,
     cursor: Phaser.Types.Input.Keyboard.CursorKeys,
     healthPoints: number,
+    totalActionPoints: number,
     getEntitiesMap: () => Map<string, Hero | Enemy>) {
-    super(scene, texture, healthPoints)
+    super(scene, texture, healthPoints, totalActionPoints)
     this.scene = scene;
     this.gridEngine = gridEngine;
     this.map = map;
     this.cursor = cursor;
     this.getEntitiesMap = getEntitiesMap;
-    this.mainWeapon = new MeleeWeapon('fists', './assets/weapons/fist.png', 5, 0.8, 1)
-    this.secondaryWeapon = new MeleeWeapon('pistol', './assets/weapons/pistol-03.png', 12, 0.6, 3)
+    this.mainWeapon = new Weapon('fists', './assets/weapons/fist.png', 5, 0.8, 1)
+    this.secondaryWeapon = new Weapon('pistol', './assets/weapons/pistol-03.png', 12, 0.6, 3)
     this.currentWeapon = this.mainWeapon;
     this.id = 'hero';
   }
@@ -43,24 +44,47 @@ class Hero extends Entity {
       gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
       gridMouseCoords.y = Math.round(gridMouseCoords.y);
 
-      // Get 0-layer's tile by coords
       const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
       clickedTile.tint = 0xff7a4a;
+
+      // attack if fight mode and enough AP
       if (this.fightMode) {
         const entitiesMap = this.getEntitiesMap();
         entitiesMap.forEach((entityValue, entityKey) => {
           if (!entityKey.match(/^hero/i)) {
             const enemyPosition = this.gridEngine.getPosition(entityKey);
-            if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y) {
+            if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y
+              && this.currentActionPoints >= lostActionPointsForHero[this.currentWeapon.name]) {
               // this.playAttackEnemyAnimation(entityValue as Enemy);
-              (entityValue as Enemy).playAttackHeroAnimation(this);
+              // ! заменить имя
+              this.playAttackEnemyAnimation(entityValue as Enemy);
             }
           }
-        })
+        });
+        // walk if enough AP and all enemies is not moving
+        if (this.currentActionPoints > 0 && this.isAllEnemiesIdle()) {
+          this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+        }
+        return;
       }
-      // MoveTo provides "player" move to grid coords
+
+      // walk if enough AP and all enemies is not moving
       this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+
     }, this);
+  }
+
+  isAllEnemiesIdle() {
+    let isAllIdle = true;
+    const entitiesMap = this.getEntitiesMap();
+    entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        if (this.gridEngine.isMoving(entityKey)) {
+          isAllIdle = false;
+        }
+      }
+    });
+    return isAllIdle;
   }
 
   changeWeapon() {
@@ -70,10 +94,11 @@ class Hero extends Entity {
     this.changeAnimationWithWeapon(this.behavior);
   }
 
-  updateAP(distance: number) {
-    this.actionPoints -= distance;
-    while (this.actionPoints < 0) this.actionPoints += 10
-  }
+  // // ?
+  // updateAP(distance: number) {
+  //   this.currentActionPoints -= distance;
+  //   while (this.currentActionPoints < 0) this.currentActionPoints += 10;
+  // }
 
   setPunchAnimation() {
     this.createEntityAnimation('fists_up-right', 'hero', heroAnims.fists.upRight.startFrame, heroAnims.fists.upRight.endFrame, 0);
@@ -105,7 +130,7 @@ class Hero extends Entity {
     const currentFrame = currentAnim ? currentAnim.key : 'up-right';
     const underScoreIndex = currentFrame.indexOf('_');
     let currentDirection;
-    if(underScoreIndex > 1){
+    if (underScoreIndex > 1) {
       currentDirection = currentFrame.slice(underScoreIndex + 1);
     } else {
       currentDirection = currentFrame;
@@ -122,17 +147,28 @@ class Hero extends Entity {
     const heroCoords = this.gridEngine.getPosition(this.id);
     const enemyCoords = this.gridEngine.getPosition(enemy.id);
     const HeroAnimationDirection = attack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
-    if(!HeroAnimationDirection){
+    if (!HeroAnimationDirection) {
       return;
     } else {
       this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
       enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
+      // вынести в метод
+      const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
+      this.updateActionPoints(lostPoints);
+
+      const damage = damageFromHero[this.currentWeapon.name];
+      enemy.updateHealthPoints(damage);
+
+      console.log("Hero Weapon:", this.currentWeapon.name);
+      console.log("Hero AP:", this.currentActionPoints, ", Enemy HP:", enemy.healthPoints);
     }
   }
 
   makeStep() {
-    const lostPoints = lostActionPointsForHero.step;
-    this.updateActionPoints(lostPoints);
+    if (this.fightMode) {
+      const lostPoints = lostActionPointsForHero.step;
+      this.updateActionPoints(lostPoints);
+    }
   }
 
   moveHeroByArrows() {

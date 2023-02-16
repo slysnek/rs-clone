@@ -34,8 +34,8 @@ class Enemy extends Entity {
     id: string,
     healthPoints: number,
     battleRadius: number,
-    size: string) {
-    super(scene, texture, healthPoints);
+    size: string, totalActionPoints: number) {
+    super(scene, texture, healthPoints, totalActionPoints);
     this.gridEngine = gridEngine;
     this.movesTimerId = null;
     this.map = map;
@@ -49,6 +49,18 @@ class Enemy extends Entity {
   clearTimer() {
     clearInterval(this.movesTimerId as NodeJS.Timer);
     this.movesTimerId = null;
+  }
+  
+  makeStep() {
+    if (this.fightMode) {
+      this.currentActionPoints -= 1;
+    }
+  }
+
+  // ? заглушка
+  attackHero(hero: Hero) {
+    console.log(`${this} Attacking hero ${hero}!`);
+    this.currentActionPoints = 0;
   }
 
   // позже надо удалить из аргументов карту и функцию покраски тайлов

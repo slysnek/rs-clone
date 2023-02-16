@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import { heroAnims, scorpionAnims } from "./constants";
 import { Animations, StopAnimations } from "./types";
-import MeleeWeapon from './meleeweapon';
+import Weapon from './weapon'
 
 const defaultBehavior = 'walk';
 
@@ -9,19 +9,20 @@ class Entity extends Phaser.GameObjects.Sprite {
   key: string;
   healthPoints: number;
   fightMode: boolean;
-  actionPoints: number;
-  attackMode: boolean;
-  mainWeapon: MeleeWeapon; // will need to change it
+  currentActionPoints: number;
+  totalActionPoints: number;
+  mainWeapon: Weapon;
   behavior: string;
-  constructor(scene: Phaser.Scene, texture: string, healthPoints: number) {
+  constructor(scene: Phaser.Scene, texture: string, healthPoints: number, totalActionPoints: number) {
     super(scene, 0, 0, texture);
     this.scene = scene;
     this.key = '';
     this.healthPoints = healthPoints;
-    this.fightMode = true;
-    this.actionPoints = 10;
-    this.attackMode = false;
-    this.mainWeapon = new MeleeWeapon('nothing', '', 0, 0, 0);
+    // fight mode
+    this.fightMode = false;
+    this.totalActionPoints = totalActionPoints;
+    this.currentActionPoints = totalActionPoints;
+    this.mainWeapon = new Weapon('nothing', '', 0, 0, 0);
     this.behavior = defaultBehavior;
   }
 
@@ -30,7 +31,11 @@ class Entity extends Phaser.GameObjects.Sprite {
   }
 
   updateActionPoints(lostPoints: number) {
-    this.actionPoints -= lostPoints;
+    this.currentActionPoints -= lostPoints;
+  }
+
+  refreshActionPoints() {
+    this.currentActionPoints = this.totalActionPoints;
   }
 
   turnOnFightMode() {
@@ -58,9 +63,6 @@ class Entity extends Phaser.GameObjects.Sprite {
   }
 
   getStopFrame(direction: string, entityKey: string): number {
-    const heroRegex = /^hero/i;
-    const scorpionRegex = /^scorpion/i;
-
     let entityAnims: StopAnimations = {
       walk: {
         upRight: {
@@ -77,11 +79,19 @@ class Entity extends Phaser.GameObjects.Sprite {
         },
       },
     };
+
+    const heroRegex = /^hero/i;
+    const scorpionRegex = /^scorpion/i;
+    const deathClawRegex = /^deathClaw/i;
+
     if (entityKey.match(heroRegex)) {
       entityAnims = heroAnims;
     }
     if (entityKey.match(scorpionRegex)) {
       entityAnims = scorpionAnims;
+    }
+    if (entityKey.match(deathClawRegex)) {
+      // deathclaw anims
     }
 
     switch (direction) {
