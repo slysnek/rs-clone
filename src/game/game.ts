@@ -102,17 +102,6 @@ class Game extends Phaser.Scene {
 
   update() {
     this.hero.moveHeroByArrows();
-    // если у гг нет ОД - дать ОД всем врагам.
-    // если у всех врагов нет ОД - дать ОД герою.
-    // if (this.hero.currentActionPoints <= 0) {
-    //   this.hero.refreshActionPoints();
-    // }
-    // if (this.hero.currentActionPoints <= 0) {
-    //   this.refreshAllEnemiesActionPoints();
-    // }
-    // if (this.isAllEnemiesLostActionPoints()) {
-    //   this.hero.refreshActionPoints();
-    // }
   }
 
   buildMap() {
@@ -233,8 +222,7 @@ class Game extends Phaser.Scene {
 
     this.gridEngine
       .positionChangeFinished()
-      .subscribe(({ charId, exitTile, enterTile }) => {
-
+      .subscribe(async ({ charId, exitTile, enterTile }) => {
         if (charId.match(/^hero/i)) {
           positionChangeText.setX(this.hero.x);
           positionChangeText.setY(this.hero.y - 50);
@@ -247,14 +235,22 @@ class Game extends Phaser.Scene {
 
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
             // Start fight
-            this.moveClosestEnemiesToHero(enterTile, 15);
+            await this.moveClosestEnemiesToHero(enterTile/*, 15*/);
             this.enableFightMode();
           }
+        }
+        if (!charId.match(/^hero/i)) {
+          // eslint-disable-next-line no-constant-condition
+          // if (true /*Если есть возможность ударить*/) {
+          // Если enter tile рядом с героем и ОД > 0, тогда бьем
+          //   const enemy = this.entitiesMap.get(charId) as Enemy;
+          //   enemy.attackHero(this.hero);
+          // }
         }
       });
   }
 
-  moveClosestEnemiesToHero(heroPos: Position, enemyTriggerRadius: number) {
+  moveClosestEnemiesToHero(heroPos: Position/*, enemyTriggerRadius: number*/) {
     // get an array of empty tiles around the hero
     const emptyTilesAroundHero: Array<Position> = [];
     if (!this.gridEngine.isBlocked({ x: heroPos.x - 1, y: heroPos.y })) {

@@ -52,6 +52,11 @@ class Enemy extends Entity {
     }
   }
 
+  attackHero(hero: Hero) {
+    console.log(`${this} Attacking hero ${hero}!`);
+    this.currentActionPoints = 0;
+  }
+
   // позже надо удалить из аргументов карту и функцию покраски тайлов
   setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap) {
     this.movesTimerId = setInterval(() => {
