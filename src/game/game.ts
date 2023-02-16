@@ -32,9 +32,9 @@ class Game extends Phaser.Scene {
     this.load.tilemapTiledJSON('map', 'assets/maps/currentMap.json');
     this.load.image('tiles', 'assets/maps/tiles-02.png');
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
-    this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
-    this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
-    this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-01.png', { frameWidth: 175, frameHeight: 135 });
+    this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
+    this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
+    this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
     this.load.html('ui', '/assets/html/test.html');
   }
 
@@ -63,7 +63,7 @@ class Game extends Phaser.Scene {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims, defaultBehavior);
         (entityValue as Enemy).setAttackAnimation();
         (entityValue as Enemy).setDamageAnimation();
-        (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
+        // (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
     });
     this.hero.setPointerDownListener(map);
@@ -143,7 +143,7 @@ class Game extends Phaser.Scene {
         {
           id: 'hero',
           sprite: this.hero,
-          startPosition: { x: 68, y: 68 },
+          startPosition: { x: 68, y: 58 },
           offsetX: 0,
           offsetY: 42,
           walkingAnimationEnabled: false,

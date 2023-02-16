@@ -1,6 +1,6 @@
 export const windowSize = {
   windowWidth: window.innerWidth,
-  windowHeight: 650
+  windowHeight: window.innerHeight
 }
 
 export const heroAnims = {
@@ -264,6 +264,6 @@ export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: nu
 };
 
 export const offsetCoordForScorpions: { [key: string]: { x: number, y: number } } = {
-  big: { x: 10, y: 37 },
-  small: { x: 0, y: 27 },
+  big: { x: 0, y: 10 },
+  small: { x: 0, y: 0 },
 };
