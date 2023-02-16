@@ -64,7 +64,6 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    this.subscribeCharacterToChangeMoving();
     //ui section
     this.ui.createUI(this);
     this.ui.putMessageToConsole('Game loaded');
@@ -80,20 +79,20 @@ class Game extends Phaser.Scene {
       .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
     damageButton.scrollFactorX = 0;
     damageButton.scrollFactorY = 0;
-    damageButton.addListener('click')
+    damageButton.addListener('click');
     damageButton.on('click', () => {
       if (this.hero.healthPoints === 0) {
-        this.ui.putMessageToConsole('I am already dead. Stop mocking me.')
-        return
+        this.ui.putMessageToConsole('I am already dead. Stop mocking me.');
+        return;
       }
 
       this.hero.healthPoints -= 1;
-      this.ui.updateHP(this.hero)
+      this.ui.updateHP(this.hero);
       if (this.hero.healthPoints === 0) {
         this.ui.putMessageToConsole('You killed me.')
-        return
+        return;
       }
-      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage')
+      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage');
     })
   }
 
@@ -103,6 +102,17 @@ class Game extends Phaser.Scene {
 
   update() {
     this.hero.moveHeroByArrows();
+    // если у гг нет ОД - дать ОД всем врагам.
+    // если у всех врагов нет ОД - дать ОД герою.
+    // if (this.hero.currentActionPoints <= 0) {
+    //   this.hero.refreshActionPoints();
+    // }
+    // if (this.hero.currentActionPoints <= 0) {
+    //   this.refreshAllEnemiesActionPoints();
+    // }
+    // if (this.isAllEnemiesLostActionPoints()) {
+    //   this.hero.refreshActionPoints();
+    // }
   }
 
   buildMap() {
@@ -197,6 +207,27 @@ class Game extends Phaser.Scene {
           positionChangeText.text =
             `positionChangeStarted:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
             `enter: (${enterTile.x}, ${enterTile.y})`;
+
+          if (this.hero.currentActionPoints) {
+            this.hero.makeStep();
+          }
+          if (this.hero.currentActionPoints <= 0) {
+            this.gridEngine.stopMovement(charId);
+            this.refreshAllEnemiesActionPoints();
+          }
+          console.log(this.hero.currentActionPoints, charId);
+        }
+        if (!charId.match(/^hero/i)) {
+          const enemy = this.entitiesMap.get(charId) as Enemy;
+          if (enemy.currentActionPoints) {
+            enemy.makeStep();
+          }
+          if (enemy.currentActionPoints <= 0) {
+            this.gridEngine.stopMovement(charId);
+          }
+          if (this.isAllEnemiesLostActionPoints()) {
+            this.hero.refreshActionPoints();
+          }
         }
       });
 
@@ -214,11 +245,10 @@ class Game extends Phaser.Scene {
             `positionChangeFinished:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
-          if (this.isHeroSteppedOnEnemyRadius()) {
+          if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
             // Start fight
             this.moveClosestEnemiesToHero(enterTile, 15);
-            // this.hero.refreshActionPoints();
-            // TODO: включать на true поле состояния боя у всех объектов
+            this.enableFightMode();
           }
         }
       });
@@ -240,7 +270,7 @@ class Game extends Phaser.Scene {
       emptyTilesAroundHero.push({ x: heroPos.x, y: heroPos.y + 1 });
     }
     // get an array of the closest enemies relative to the hero
-    let closestEnemiesAroundHero: Array<[string, number]> = [];
+    const closestEnemiesAroundHero: Array<[string, number]> = [];
     this.entitiesMap.forEach((_entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         const enemyPos = this.gridEngine.getPosition(entityKey);
@@ -248,24 +278,36 @@ class Game extends Phaser.Scene {
         closestEnemiesAroundHero.push([entityKey, distanceToHero]);
       }
     });
-    closestEnemiesAroundHero = closestEnemiesAroundHero.sort((enemy1, enemy2) => {
-      if (enemy1[1] > enemy2[1]) {
-        return 1;
-      }
-      if (enemy1[1] < enemy2[1]) {
-        return -1;
-      }
-      return 0;
-    });
-    // No more than 4 enemies, no further than 15 cells (Manhattan distance)
-    closestEnemiesAroundHero = closestEnemiesAroundHero.slice(0, emptyTilesAroundHero.length);
-    closestEnemiesAroundHero = closestEnemiesAroundHero.filter((enemy) => enemy[1] < enemyTriggerRadius);
-
-    // move each enemy to the hero's position
     closestEnemiesAroundHero.forEach((enemy, index) => {
       (this.entitiesMap.get(enemy[0]) as Enemy).clearTimer();
-      this.gridEngine.moveTo(enemy[0], emptyTilesAroundHero[index]);
+      if ((this.entitiesMap.get(enemy[0]) as Enemy).currentActionPoints > 0) {
+        this.gridEngine.moveTo(enemy[0], emptyTilesAroundHero[index]);
+      }
     });
+
+    // // walk
+    // if (this.currentActionPoints > 0) {
+    //   this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+    // }
+
+    // closestEnemiesAroundHero = closestEnemiesAroundHero.sort((enemy1, enemy2) => {
+    //   if (enemy1[1] > enemy2[1]) {
+    //     return 1;
+    //   }
+    //   if (enemy1[1] < enemy2[1]) {
+    //     return -1;
+    //   }
+    //   return 0;
+    // });
+    // // No more than 4 enemies, no further than 15 cells (Manhattan distance)
+    // closestEnemiesAroundHero = closestEnemiesAroundHero.slice(0, emptyTilesAroundHero.length);
+    // closestEnemiesAroundHero = closestEnemiesAroundHero.filter((enemy) => enemy[1] < enemyTriggerRadius);
+
+    // // move each enemy to the hero's position
+    // closestEnemiesAroundHero.forEach((enemy, index) => {
+    //   (this.entitiesMap.get(enemy[0]) as Enemy).clearTimer();
+    //   this.gridEngine.moveTo(enemy[0], emptyTilesAroundHero[index]);
+    // });
   }
 
   isHeroSteppedOnEnemyRadius() {
@@ -284,16 +326,40 @@ class Game extends Phaser.Scene {
     return isStepped;
   }
 
-  isEnemyRadiusSteppedOnHero(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
-    const heroPos = this.gridEngine.getPosition('hero');
-    let isStepped = false;
+  // // ?
+  // isEnemyRadiusSteppedOnHero(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
+  //   const heroPos = this.gridEngine.getPosition('hero');
+  //   let isStepped = false;
 
-    if (this.manhattanDist(posX, posY, heroPos.x, heroPos.y) <= radius) {
-      // console.log(`Enemy radius stepped on hero: (${heroPos.x},${heroPos.y})`);
-      isStepped = true;
-    }
-    this.tintRadius(tilemap, posX, posY, radius, color);
-    return isStepped;
+  //   if (this.manhattanDist(posX, posY, heroPos.x, heroPos.y) <= radius) {
+  //     // console.log(`Enemy radius stepped on hero: (${heroPos.x},${heroPos.y})`);
+  //     isStepped = true;
+  //   }
+  //   this.tintRadius(tilemap, posX, posY, radius, color);
+  //   return isStepped;
+  // }
+
+  enableFightMode() {
+    this.entitiesMap.forEach((entityValue) => {
+      entityValue.fightMode = true;
+    });
+  }
+
+  refreshAllEnemiesActionPoints() {
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        entityValue.refreshActionPoints();
+      }
+    });
+  }
+
+  isAllEnemiesLostActionPoints() {
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i) && entityValue.currentActionPoints > 0) {
+        return false;
+      }
+    });
+    return true;
   }
 
   manhattanDist(x1: number, y1: number, x2: number, y2: number) {

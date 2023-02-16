@@ -45,20 +45,42 @@ class Hero extends Entity {
       const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
       clickedTile.tint = 0xff7a4a;
 
+      // attack if fight mode and enough AP
       if (this.fightMode) {
         const entitiesMap = this.getEntitiesMap();
         entitiesMap.forEach((entityValue, entityKey) => {
           if (!entityKey.match(/^hero/i)) {
             const enemyPosition = this.gridEngine.getPosition(entityKey);
-            if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y) {
-              this.attackEnemy(entityValue as Enemy)
+            if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y
+              && this.currentActionPoints >= lostActionPointsForHero[this.currentWeapon.name]) {
+              this.attackEnemy(entityValue as Enemy);
             }
           }
-        })
+        });
+        // walk if enough AP and all enemies is not moving
+        if (this.currentActionPoints > 0 && this.isAllEnemiesIdle()) {
+          this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+        }
+        return;
       }
 
+      // walk if enough AP and all enemies is not moving
       this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
+
     }, this);
+  }
+
+  isAllEnemiesIdle() {
+    let isAllIdle = true;
+    const entitiesMap = this.getEntitiesMap();
+    entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        if (this.gridEngine.isMoving(entityKey)) {
+          isAllIdle = false;
+        }
+      }
+    });
+    return isAllIdle;
   }
 
   changeWeapon() {
@@ -66,11 +88,11 @@ class Hero extends Entity {
     else this.currentWeapon = this.mainWeapon;
   }
 
-  // ?
-  updateAP(distance: number) {
-    this.currentActionPoints -= distance;
-    while (this.currentActionPoints < 0) this.currentActionPoints += 10;
-  }
+  // // ?
+  // updateAP(distance: number) {
+  //   this.currentActionPoints -= distance;
+  //   while (this.currentActionPoints < 0) this.currentActionPoints += 10;
+  // }
 
   setPunchAnimation() {
     this.createEntityAnimation('punch__up-right', 'hero', heroAnims.punch.upRight.startFrame, heroAnims.punch.upRight.endFrame, 0);
@@ -119,8 +141,11 @@ class Hero extends Entity {
   }
 
   makeStep() {
-    const lostPoints = lostActionPointsForHero.step;
-    this.updateActionPoints(lostPoints);
+    if (this.fightMode) {
+      const lostPoints = lostActionPointsForHero.step;
+      this.updateActionPoints(lostPoints);
+    }
+
   }
 
   moveHeroByArrows() {

@@ -3,6 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
 import { startPositionsForScorpionsMap1 } from './constants';
 import { scorpionAnims } from "./constants";
+import Hero from "./hero";
 
 function getRandomXYDelta() {
   const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
@@ -43,6 +44,12 @@ class Enemy extends Entity {
   clearTimer() {
     clearInterval(this.movesTimerId as NodeJS.Timer);
     this.movesTimerId = null;
+  }
+  
+  makeStep() {
+    if (this.fightMode) {
+      this.currentActionPoints -= 1;
+    }
   }
 
   // позже надо удалить из аргументов карту и функцию покраски тайлов
