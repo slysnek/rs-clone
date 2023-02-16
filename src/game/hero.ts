@@ -80,6 +80,13 @@ class Hero extends Entity {
     this.createEntityAnimation('punch_up-left', 'hero', heroAnims.punch.upLeft.startFrame, heroAnims.punch.upLeft.endFrame, 0);
   }
 
+  setShootAnimation() {
+    this.createEntityAnimation('shoot_up-right', 'hero', heroAnims.shoot.upRight.startFrame, heroAnims.shoot.upRight.endFrame, 0);
+    this.createEntityAnimation('shoot_down-right', 'hero', heroAnims.shoot.downRight.startFrame, heroAnims.shoot.downRight.endFrame, 0);
+    this.createEntityAnimation('shoot_down-left', 'hero', heroAnims.shoot.downLeft.startFrame, heroAnims.shoot.downLeft.endFrame, 0);
+    this.createEntityAnimation('shoot_up-left', 'hero', heroAnims.shoot.upLeft.startFrame, heroAnims.shoot.upLeft.endFrame, 0);
+  }
+
   setGetHidePistolAnimation() {
     this.createEntityAnimation('getPistol_up-right', 'hero', heroAnims.getPistol.upRight.startFrame, heroAnims.getPistol.upRight.endFrame, 0);
     this.createEntityAnimation('getPistol_down-right', 'hero', heroAnims.getPistol.downRight.startFrame, heroAnims.getPistol.downRight.endFrame, 0);
