@@ -3,17 +3,58 @@ import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine } from 'grid-engine';
 import Enemy from "./enemy";
 import { lostActionPointsForHero, damageFromHero } from './battlePoints';
-import { heroAnims } from "./constants";
+import { heroAnims, oppositeDirections } from "./constants";
 import MeleeWeapon from './meleeweapon'
+
+type coords  = {
+  x: number,
+  y: number
+}
+
+function getDirectionTo(entityA: coords, entityB: coords) {
+  if (entityA.x === entityB.x) {
+    return entityA.y > entityB.y ? 'up-right' : 'down-left';
+  }
+  
+  if (entityA.y === entityB.y) {
+    return entityA.x > entityB.x ? 'up-left' : 'down-right';
+  }
+}
+
+function isAttackPossible(entityA: coords, entityB: coords) {
+  if (entityA.x !== entityB.x && entityA.y !== entityB.y) {
+  return false;
+  }
+  return true;
+}
+
+function getDistance(entityA: coords, entityB: coords) {
+  return Math.abs(entityA.x - entityB.x) + Math.abs(entityA.y - entityB.y)
+}
+
+function isAttackInRange(entityA: coords, entityB: coords, attackRange: number) {
+  if (isAttackPossible(entityA, entityB)) {
+    return getDistance(entityA, entityB) <= attackRange;
+  }
+  return false;  
+}
+
+function attack(entityA: coords, entityB: coords, range: number) {
+  if (isAttackInRange(entityA, entityB, range)) {
+  return getDirectionTo(entityA, entityB);
+  } else {
+  return '';
+  }
+}
 
 class Hero extends Entity {
   gridEngine: GridEngine;
   map: Tilemaps.Tilemap;
   cursor: Phaser.Types.Input.Keyboard.CursorKeys;
-  weapon: string;
   getEntitiesMap: () => Map<string, Hero | Enemy>;
   secondaryWeapon: MeleeWeapon;
   currentWeapon: MeleeWeapon;
+  id: string;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -27,11 +68,11 @@ class Hero extends Entity {
     this.gridEngine = gridEngine;
     this.map = map;
     this.cursor = cursor;
-    this.weapon = 'fistPunch';
     this.getEntitiesMap = getEntitiesMap;
-    this.mainWeapon = new MeleeWeapon('Fists', './assets/weapons/fist.png', 5, 0.8)
-    this.secondaryWeapon = new MeleeWeapon('Pistol', './assets/weapons/pistol-03.png', 12, 0.6)
+    this.mainWeapon = new MeleeWeapon('fists', './assets/weapons/fist.png', 5, 0.8, 1)
+    this.secondaryWeapon = new MeleeWeapon('pistol', './assets/weapons/pistol-03.png', 12, 0.6, 3)
     this.currentWeapon = this.mainWeapon;
+    this.id = 'hero';
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -51,7 +92,7 @@ class Hero extends Entity {
           if (!entityKey.match(/^hero/i)) {
             const enemyPosition = this.gridEngine.getPosition(entityKey);
             if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y) {
-              this.attackEnemy(entityValue as Enemy)
+              this.attackEnemy(entityValue as Enemy);
             }
           }
         })
@@ -64,7 +105,7 @@ class Hero extends Entity {
   changeWeapon() {
     if (this.currentWeapon.name === this.mainWeapon.name) this.currentWeapon = this.secondaryWeapon;
     else this.currentWeapon = this.mainWeapon;
-    this.behavior = this.currentWeapon.name === 'Pistol' ? 'walkWithPistol' : 'walk';
+    this.behavior = this.currentWeapon.name === 'pistol' ? 'walkWithPistol' : 'walk';
     this.changeAnimationWithWeapon(this.behavior);
   }
 
@@ -74,17 +115,17 @@ class Hero extends Entity {
   }
 
   setPunchAnimation() {
-    this.createEntityAnimation('punch_up-right', 'hero', heroAnims.punch.upRight.startFrame, heroAnims.punch.upRight.endFrame, 0);
-    this.createEntityAnimation('punch_down-right', 'hero', heroAnims.punch.downRight.startFrame, heroAnims.punch.downRight.endFrame, 0);
-    this.createEntityAnimation('punch_down-left', 'hero', heroAnims.punch.downLeft.startFrame, heroAnims.punch.downLeft.endFrame, 0);
-    this.createEntityAnimation('punch_up-left', 'hero', heroAnims.punch.upLeft.startFrame, heroAnims.punch.upLeft.endFrame, 0);
+    this.createEntityAnimation('fists_up-right', 'hero', heroAnims.fists.upRight.startFrame, heroAnims.fists.upRight.endFrame, 0);
+    this.createEntityAnimation('fists_down-right', 'hero', heroAnims.fists.downRight.startFrame, heroAnims.fists.downRight.endFrame, 0);
+    this.createEntityAnimation('fists_down-left', 'hero', heroAnims.fists.downLeft.startFrame, heroAnims.fists.downLeft.endFrame, 0);
+    this.createEntityAnimation('fists_up-left', 'hero', heroAnims.fists.upLeft.startFrame, heroAnims.fists.upLeft.endFrame, 0);
   }
 
   setShootAnimation() {
-    this.createEntityAnimation('shoot_up-right', 'hero', heroAnims.shoot.upRight.startFrame, heroAnims.shoot.upRight.endFrame, 0);
-    this.createEntityAnimation('shoot_down-right', 'hero', heroAnims.shoot.downRight.startFrame, heroAnims.shoot.downRight.endFrame, 0);
-    this.createEntityAnimation('shoot_down-left', 'hero', heroAnims.shoot.downLeft.startFrame, heroAnims.shoot.downLeft.endFrame, 0);
-    this.createEntityAnimation('shoot_up-left', 'hero', heroAnims.shoot.upLeft.startFrame, heroAnims.shoot.upLeft.endFrame, 0);
+    this.createEntityAnimation('pistol_up-right', 'hero', heroAnims.pistol.upRight.startFrame, heroAnims.pistol.upRight.endFrame, 0);
+    this.createEntityAnimation('pistol_down-right', 'hero', heroAnims.pistol.downRight.startFrame, heroAnims.pistol.downRight.endFrame, 0);
+    this.createEntityAnimation('pistol_down-left', 'hero', heroAnims.pistol.downLeft.startFrame, heroAnims.pistol.downLeft.endFrame, 0);
+    this.createEntityAnimation('pistol_up-left', 'hero', heroAnims.pistol.upLeft.startFrame, heroAnims.pistol.upLeft.endFrame, 0);
   }
 
   setGetHidePistolAnimation() {
@@ -116,44 +157,20 @@ class Hero extends Entity {
     this.behavior === 'walk' ? this.anims.play(`hidePistol_${currentDirection}`) : this.anims.play(`getPistol_${currentDirection}`);
   }
 
-  setWalkWithGunBehavior() {
-    this.anims.remove('up-right');
-    this.anims.remove('down-right');
-    this.anims.remove('down-left');
-    this.anims.remove('up-left');
-  }
-
   attackEnemy(enemy: Enemy) {
-    const heroPosition = this.gridEngine.getPosition('hero');
-    const enemyPosition = this.gridEngine.getPosition(enemy.id);
-    let currentHeroAnimation = '';
-    let currentEnemyAnimation = '';
-    if (heroPosition.x === enemyPosition.x) {
-      if (heroPosition.y > enemyPosition.y) {
-        currentHeroAnimation = 'up-right';
-        currentEnemyAnimation = 'down-left';
-      } else {
-        currentHeroAnimation = 'down-left';
-        currentEnemyAnimation = 'up-right';
-      }
-    } else if (heroPosition.y === enemyPosition.y) {
-      if (heroPosition.x > enemyPosition.x) {
-        currentHeroAnimation = 'up-left';
-        currentEnemyAnimation = 'down-right';
-      } else {
-        currentHeroAnimation = 'down-right';
-        currentEnemyAnimation = 'up-left';
-      }
-    }
-    if (currentHeroAnimation === '') {
+    const heroCoords = this.gridEngine.getPosition(this.id);
+    const enemyCoords = this.gridEngine.getPosition(enemy.id);
+    const HeroAnimationDirection = attack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
+    if(!HeroAnimationDirection){
       return;
+    } else {
+      this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
+      enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
+      const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
+      const damage = damageFromHero[this.currentWeapon.name];
+      this.updateActionPoints(lostPoints);
+      enemy.updateHealthPoints(damage);
     }
-    this.anims.play(`punch_${currentHeroAnimation}`);
-    enemy.play(`damage_${currentEnemyAnimation}`);
-    const lostPoints = lostActionPointsForHero[this.weapon];
-    const damage = damageFromHero[this.weapon];
-    this.updateActionPoints(lostPoints);
-    enemy.updateHealthPoints(damage);
   }
 
   makeStep() {

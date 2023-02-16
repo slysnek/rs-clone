@@ -26,7 +26,7 @@ export const heroAnims = {
       stopFrame: 43,
     },
   },
-  punch: {
+  fists: {
     upRight: {
       startFrame: 88,
       endFrame: 96,
@@ -114,7 +114,7 @@ export const heroAnims = {
       stopFrame: 219,
     },
   },
-  shoot: {
+  pistol: {
     upRight: {
       startFrame: 220,
       endFrame: 230,
@@ -250,6 +250,12 @@ export const scorpionAnims = {
   //     },
   // }
 };
+
+export const oppositeDirections = new Map();
+oppositeDirections.set('up-right', 'down-left');
+oppositeDirections.set('down-right', 'up-left');
+oppositeDirections.set('down-left', 'up-right');
+oppositeDirections.set('up-left', 'down-right');
 
 export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: number } } = {
   scorpion1: { x: 70, y: 70 },

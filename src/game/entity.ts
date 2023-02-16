@@ -21,7 +21,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     this.fightMode = true;
     this.actionPoints = 10;
     this.attackMode = false;
-    this.mainWeapon = new MeleeWeapon('nothing', '', 0, 0);
+    this.mainWeapon = new MeleeWeapon('nothing', '', 0, 0, 0);
     this.behavior = defaultBehavior;
   }
 
