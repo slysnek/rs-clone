@@ -3,31 +3,6 @@ export const windowSize = {
   windowHeight: 650
 }
 
-export type Animations = {
-  walk: {
-    upRight: {
-      startFrame: number;
-      endFrame: number;
-      stopFrame: number;
-    },
-    downRight: {
-      startFrame: number;
-      endFrame: number;
-      stopFrame: number;
-    },
-    downLeft: {
-      startFrame: number;
-      endFrame: number;
-      stopFrame: number;
-    },
-    upLeft: {
-      startFrame: number;
-      endFrame: number;
-      stopFrame: number;
-    }
-  }
-}
-
 export const heroAnims = {
   walk: {
     upRight: {
@@ -51,7 +26,7 @@ export const heroAnims = {
       stopFrame: 43,
     },
   },
-  punch: {
+  fists: {
     upRight: {
       startFrame: 88,
       endFrame: 96,
@@ -71,6 +46,94 @@ export const heroAnims = {
       startFrame: 121,
       endFrame: 129,
       stopFrame: 43,
+    },
+  },
+  getPistol: {
+    upRight: {
+      startFrame: 132,
+      endFrame: 136,
+      stopFrame: 136,
+    },
+    downRight: {
+      startFrame: 143,
+      endFrame: 147,
+      stopFrame: 147,
+    },
+    downLeft: {
+      startFrame: 154,
+      endFrame: 158,
+      stopFrame: 158,
+    },
+    upLeft: {
+      startFrame: 165,
+      endFrame: 169,
+      stopFrame: 169,
+    },
+  },
+  hidePistol: {
+    upRight: {
+      startFrame: 137,
+      endFrame: 142,
+      stopFrame: 142,
+    },
+    downRight: {
+      startFrame: 148,
+      endFrame: 153,
+      stopFrame: 153,
+    },
+    downLeft: {
+      startFrame: 159,
+      endFrame: 164,
+      stopFrame: 164,
+    },
+    upLeft: {
+      startFrame: 170,
+      endFrame: 174,
+      stopFrame: 174,
+    },
+  },
+  walkWithPistol: {
+    upRight: {
+      startFrame: 176,
+      endFrame: 183,
+      stopFrame: 186,
+    },
+    downRight: {
+      startFrame: 187,
+      endFrame: 194,
+      stopFrame: 197,
+    },
+    downLeft: {
+      startFrame: 198,
+      endFrame: 205,
+      stopFrame: 208,
+    },
+    upLeft: {
+      startFrame: 209,
+      endFrame: 216,
+      stopFrame: 219,
+    },
+  },
+  pistol: {
+    upRight: {
+      startFrame: 220,
+      endFrame: 230,
+      stopFrame: 220,
+    },
+    downRight: {
+      startFrame: 231,
+      endFrame: 241,
+      stopFrame: 231,
+    },
+    downLeft: {
+      startFrame: 242,
+      endFrame: 252,
+      stopFrame: 242,
+    },
+    upLeft: {
+      startFrame: 253,
+      endFrame: 263,
+      stopFrame: 253,
     },
   }
 };
@@ -122,30 +185,47 @@ export const scorpionAnims = {
   },
   punch: {
     upRight: {
-      startFrame: 83,
-      endFrame: 93,
-      stopFrame: 83,
+      startFrame: 88,
+      endFrame: 98,
+      stopFrame: 98,
     },
     downRight: {
-      startFrame: 94,
-      endFrame: 104,
-      stopFrame: 94,
+      startFrame: 99,
+      endFrame: 109,
+      stopFrame: 109,
     },
     downLeft: {
-      startFrame: 105,
-      endFrame: 115,
-      stopFrame: 105,
+      startFrame: 110,
+      endFrame: 120,
+      stopFrame: 120,
     },
     upLeft: {
-      startFrame: 116,
-      endFrame: 126,
-      stopFrame: 116,
+      startFrame: 121,
+      endFrame: 131,
+      stopFrame: 131,
     },
   },
   death: {
-    startFrame: 127,
-    endFrame: 130,
-    stopFrame: 120,
+    upRight: {
+      startFrame: 127,
+      endFrame: 130,
+      stopFrame: 120,
+    },
+    downRight: {
+      startFrame: 127,
+      endFrame: 130,
+      stopFrame: 120,
+    },
+    downLeft: {
+      startFrame: 127,
+      endFrame: 130,
+      stopFrame: 120,
+    },
+    upLeft: {
+      startFrame: 127,
+      endFrame: 130,
+      stopFrame: 120,
+    },
   },
   // damage: {
   //     upRight: {
@@ -170,6 +250,12 @@ export const scorpionAnims = {
   //     },
   // }
 };
+
+export const oppositeDirections = new Map();
+oppositeDirections.set('up-right', 'down-left');
+oppositeDirections.set('down-right', 'up-left');
+oppositeDirections.set('down-left', 'up-right');
+oppositeDirections.set('up-left', 'down-right');
 
 export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: number } } = {
   scorpion1: { x: 70, y: 70 },

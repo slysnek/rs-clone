@@ -9,13 +9,13 @@ export const damageFromScorpion: { [ attackType: string ]: number } = {
 
 export const lostActionPointsForHero: { [ attackType: string ]: number } = {
     step: 1,
-    Fists: 3,
-    Pistol: 4,
+    fists: 3,
+    pistol: 4,
 } 
 
 export const damageFromHero: { [ attackType: string ]: number } = {
-    Fists: 5,
-    Pistol: 10,
+    fists: 5,
+    pistol: 10,
 }
 
 export const entitiesTotalActionPoints: { [ attackType: string ]: number } = {
