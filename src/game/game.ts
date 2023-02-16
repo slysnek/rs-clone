@@ -49,6 +49,7 @@ class Game extends Phaser.Scene {
     this.hero.setPunchAnimation();
     this.hero.setShootAnimation();
     this.hero.setGetHidePistolAnimation();
+    this.hero.setDamageAnimation();
     console.log(this.hero.anims)
     this.createCamera();
 

@@ -26,6 +26,28 @@ export const heroAnims = {
       stopFrame: 43,
     },
   },
+  damageWithFist:{
+    upRight: {
+      startFrame: 44,
+      endFrame: 49,
+      stopFrame: 49,
+    },
+    downRight: {
+      startFrame: 55,
+      endFrame: 60,
+      stopFrame: 60,
+    },
+    downLeft: {
+      startFrame: 66,
+      endFrame: 71,
+      stopFrame: 71,
+    },
+    upLeft: {
+      startFrame: 77,
+      endFrame: 82,
+      stopFrame: 82,
+    },
+  },
   fists: {
     upRight: {
       startFrame: 88,
@@ -135,7 +157,51 @@ export const heroAnims = {
       endFrame: 263,
       stopFrame: 253,
     },
-  }
+  },
+  damageWithPistol:{
+    upRight: {
+      startFrame: 264,
+      endFrame: 269,
+      stopFrame: 269,
+    },
+    downRight: {
+      startFrame: 275,
+      endFrame: 280,
+      stopFrame: 280,
+    },
+    downLeft: {
+      startFrame: 286,
+      endFrame: 291,
+      stopFrame: 291,
+    },
+    upLeft: {
+      startFrame: 297,
+      endFrame: 302,
+      stopFrame: 302,
+    },
+  },
+  death: {
+    upRight: {
+      startFrame: 308,
+      endFrame: 313,
+      stopFrame: 313,
+    },
+    downRight: {
+      startFrame: 308,
+      endFrame: 313,
+      stopFrame: 313,
+    },
+    downLeft: {
+      startFrame: 308,
+      endFrame: 313,
+      stopFrame: 313,
+    },
+    upLeft: {
+      startFrame: 308,
+      endFrame: 313,
+      stopFrame: 313,
+    },
+  },
 };
 
 export const scorpionAnims = {

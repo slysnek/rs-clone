@@ -95,7 +95,7 @@ class Enemy extends Entity {
       return;
     } else {
       this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
-      hero.play(`damage_${oppositeDirections.get(enemyAnimationDirection)}`);
+      hero.play(`damage-${hero.currentWeapon.name}_${oppositeDirections.get(enemyAnimationDirection)}`);
     }
   }
 

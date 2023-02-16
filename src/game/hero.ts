@@ -57,7 +57,8 @@ class Hero extends Entity {
               && this.currentActionPoints >= lostActionPointsForHero[this.currentWeapon.name]) {
               // this.playAttackEnemyAnimation(entityValue as Enemy);
               // ! заменить имя
-              this.playAttackEnemyAnimation(entityValue as Enemy);
+              // this.playAttackEnemyAnimation(entityValue as Enemy);
+              (entityValue as Enemy).playAttackHeroAnimation(this);
             }
           }
         });
@@ -112,6 +113,21 @@ class Hero extends Entity {
     this.createEntityAnimation('pistol_down-right', 'hero', heroAnims.pistol.downRight.startFrame, heroAnims.pistol.downRight.endFrame, 0);
     this.createEntityAnimation('pistol_down-left', 'hero', heroAnims.pistol.downLeft.startFrame, heroAnims.pistol.downLeft.endFrame, 0);
     this.createEntityAnimation('pistol_up-left', 'hero', heroAnims.pistol.upLeft.startFrame, heroAnims.pistol.upLeft.endFrame, 0);
+  }
+
+  setDamageAnimation() {
+    this.createEntityAnimation('damage-fists_up-right', 'hero', heroAnims.damageWithFist.upRight.startFrame, heroAnims.damageWithFist.upRight.endFrame, 0);
+    this.createEntityAnimation('damage-fists_down-right', 'hero', heroAnims.damageWithFist.downRight.startFrame, heroAnims.damageWithFist.downRight.endFrame, 0);
+    this.createEntityAnimation('damage-fists_down-left', 'hero', heroAnims.damageWithFist.downLeft.startFrame, heroAnims.damageWithFist.downLeft.endFrame, 0);
+    this.createEntityAnimation('damage-fists_up-left', 'hero', heroAnims.damageWithFist.upLeft.startFrame, heroAnims.damageWithFist.upLeft.endFrame, 0);
+    this.createEntityAnimation('damage-pistol_up-right', 'hero', heroAnims.damageWithPistol.upRight.startFrame, heroAnims.damageWithPistol.upRight.endFrame, 0);
+    this.createEntityAnimation('damage-pistol_down-right', 'hero', heroAnims.damageWithPistol.downRight.startFrame, heroAnims.damageWithPistol.downRight.endFrame, 0);
+    this.createEntityAnimation('damage-pistol_down-left', 'hero', heroAnims.damageWithPistol.downLeft.startFrame, heroAnims.damageWithPistol.downLeft.endFrame, 0);
+    this.createEntityAnimation('damage-pistol_up-left', 'hero', heroAnims.damageWithPistol.upLeft.startFrame, heroAnims.damageWithPistol.upLeft.endFrame, 0);
+  }
+
+  setDeathAnimation(){
+    this.createEntityAnimation('death', 'hero', heroAnims.death.upLeft.startFrame, heroAnims.death.upLeft.endFrame, 0);
   }
 
   setGetHidePistolAnimation() {
