@@ -14,6 +14,6 @@ const level2 = {
 
 const level3 = {
   enemy: deathClawAnims,
-  map: 'map1',
+  map: 'map3',
   heroStartCoords: ''  
 }
