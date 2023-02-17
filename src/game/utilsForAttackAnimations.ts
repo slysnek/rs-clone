@@ -31,7 +31,7 @@ function isAttackInRange(entityA: coords, entityB: coords, attackRange: number) 
   return false;  
 }
 
-function attack(entityA: coords, entityB: coords, range: number) {
+export function attack(entityA: coords, entityB: coords, range: number) {
   if (isAttackInRange(entityA, entityB, range)) {
   return getDirectionTo(entityA, entityB);
   } else {
@@ -39,4 +39,6 @@ function attack(entityA: coords, entityB: coords, range: number) {
   }
 }
 
-export default attack;
+export function manhattanDist(x1: number, y1: number, x2: number, y2: number) {
+  return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+}
