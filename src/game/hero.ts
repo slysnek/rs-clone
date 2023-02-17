@@ -1,11 +1,11 @@
 import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
-import { Direction, GridEngine } from 'grid-engine';
+import { Direction, GridEngine, Position } from 'grid-engine';
 import Enemy from "./enemy";
 import { damageFromHero, lostActionPointsForHero } from './battlePoints';
 import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
-import attack from './utilsForAttackAnimations';
+import { attack } from './utilsForAttackAnimations';
 
 class Hero extends Entity {
   gridEngine: GridEngine;
@@ -16,7 +16,8 @@ class Hero extends Entity {
   currentWeapon: Weapon;
   id: string;
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
-  sounds: {[soundName: string]: Phaser.Sound.BaseSound}
+  moveEnemiesToHero: (heroPos: Position) => void;
+  sounds: { [soundName: string]: Phaser.Sound.BaseSound }
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -27,7 +28,8 @@ class Hero extends Entity {
     totalActionPoints: number,
     getEntitiesMap: () => Map<string, Hero | Enemy>,
     deleteEntityFromEntitiesMap: (entityKey: string) => void,
-    sounds: {[soundName: string]: Phaser.Sound.BaseSound}) {
+    moveEnemiesToHero: (heroPos: Position) => void,
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
     super(scene, texture, healthPoints, totalActionPoints)
     this.scene = scene;
     this.gridEngine = gridEngine;
@@ -39,6 +41,7 @@ class Hero extends Entity {
     this.currentWeapon = this.mainWeapon;
     this.id = 'hero';
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
+    this.moveEnemiesToHero = moveEnemiesToHero;
     this.sounds = sounds;
   }
 
@@ -60,10 +63,10 @@ class Hero extends Entity {
           if (!entityKey.match(/^hero/i)) {
             const enemyPosition = this.gridEngine.getPosition(entityKey);
             if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y
-              && this.currentActionPoints >= lostActionPointsForHero[this.currentWeapon.name]) {
-              // this.playAttackEnemyAnimation(entityValue as Enemy);
-              // ! заменить имя
+              && this.currentActionPoints >= lostActionPointsForHero[this.currentWeapon.name]
+              && this.isAllEnemiesIdle()) {
               this.playAttackEnemyAnimation(entityValue as Enemy);
+              this.attackEnemy(entityValue as Enemy);
               // (entityValue as Enemy).playDeathAnimation();
               // this.playDeathAnimation();
             }
@@ -76,7 +79,7 @@ class Hero extends Entity {
         return;
       }
 
-      // walk if enough AP and all enemies is not moving
+      // walk if not in fight
       this.gridEngine.moveTo("hero", { x: gridMouseCoords.x, y: gridMouseCoords.y });
 
     }, this);
@@ -103,12 +106,6 @@ class Hero extends Entity {
     this.sounds.changeWeapon.play();
   }
 
-  // // ?
-  // updateAP(distance: number) {
-  //   this.currentActionPoints -= distance;
-  //   while (this.currentActionPoints < 0) this.currentActionPoints += 10;
-  // }
-
   setPunchAnimation() {
     this.createEntityAnimation('fists_up-right', 'hero', heroAnims.fists.upRight.startFrame, heroAnims.fists.upRight.endFrame, 0);
     this.createEntityAnimation('fists_down-right', 'hero', heroAnims.fists.downRight.startFrame, heroAnims.fists.downRight.endFrame, 0);
@@ -134,7 +131,7 @@ class Hero extends Entity {
     this.createEntityAnimation('damage-pistol_up-left', 'hero', heroAnims.damageWithPistol.upLeft.startFrame, heroAnims.damageWithPistol.upLeft.endFrame, 0);
   }
 
-  setDeathAnimation(){
+  setDeathAnimation() {
     this.createEntityAnimation('death', 'hero', heroAnims.death.upLeft.startFrame, heroAnims.death.upLeft.endFrame, 0);
   }
 
@@ -149,7 +146,7 @@ class Hero extends Entity {
     this.createEntityAnimation('hidePistol_up-left', 'hero', heroAnims.hidePistol.upLeft.startFrame, heroAnims.hidePistol.upLeft.endFrame, 0);
   }
 
-  playDeathAnimation(){
+  playDeathAnimation() {
     this.anims.play('death');
     this.deleteEntityFromEntitiesMap(this.id);
   }
@@ -183,16 +180,29 @@ class Hero extends Entity {
       this.sounds[this.currentWeapon.name].play();
       enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
       this.sounds.radScorpionDamage.play();
-      // вынести в метод
+    }
+  }
+
+  attackEnemy(enemy: Enemy) {
       const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
       this.updateActionPoints(lostPoints);
 
       const damage = damageFromHero[this.currentWeapon.name];
       enemy.updateHealthPoints(damage);
 
-      console.log("Hero Weapon:", this.currentWeapon.name);
-      console.log("Hero AP:", this.currentActionPoints, ", Enemy HP:", enemy.healthPoints);
-    }
+      // if hero turn finished with attack, refresh enemies AP then
+      if (this.currentActionPoints <= 0) {
+        const entitiesMap = this.getEntitiesMap();
+        entitiesMap.forEach((entityValue, entityKey) => {
+          if (!entityKey.match(/^hero/i)) {
+            (entityValue as Enemy).refreshActionPoints();
+            // console.log(entityKey, (entityValue as Enemy).currentActionPoints);
+          }
+        });
+      }
+      this.moveEnemiesToHero(this.gridEngine.getPosition(this.id));
+      // console.log("Hero Weapon:", this.currentWeapon.name);
+      // console.log("Hero AP:", this.currentActionPoints, ", Enemy HP:", enemy.healthPoints);
   }
 
   makeStep() {

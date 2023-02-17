@@ -4,7 +4,8 @@ import { GridEngine } from 'grid-engine';
 import { startPositionsForScorpions } from './constants';
 import { scorpionAnims, oppositeDirections } from "./constants";
 import Hero from "./hero";
-import attack from "./utilsForAttackAnimations";
+import { attack } from "./utilsForAttackAnimations";
+import { damageFromScorpion } from "./battlePoints";
 import { currentLevel } from "./levels";
 function getRandomXYDelta() {
   const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
@@ -27,7 +28,7 @@ class Enemy extends Entity {
   attackBehavior: string;
   maxRange: number;
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
-  sounds: {[soundName: string]: Phaser.Sound.BaseSound};
+  sounds: { [soundName: string]: Phaser.Sound.BaseSound };
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -39,7 +40,7 @@ class Enemy extends Entity {
     size: string,
     totalActionPoints: number,
     deleteEntityFromEntitiesMap: (entityKey: string) => void,
-    sounds: {[soundName: string]: Phaser.Sound.BaseSound}) {
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
     super(scene, texture, healthPoints, totalActionPoints);
     this.gridEngine = gridEngine;
     this.movesTimerId = null;
@@ -57,17 +58,11 @@ class Enemy extends Entity {
     clearInterval(this.movesTimerId as NodeJS.Timer);
     this.movesTimerId = null;
   }
-  
+
   makeStep() {
     if (this.fightMode) {
       this.currentActionPoints -= 1;
     }
-  }
-
-  // ? заглушка
-  attackHero(hero: Hero) {
-    console.log(`${this} Attacking hero ${hero}!`);
-    this.currentActionPoints = 0;
   }
 
   // позже надо удалить из аргументов карту и функцию покраски тайлов
@@ -98,7 +93,7 @@ class Enemy extends Entity {
     const heroCoords = this.gridEngine.getPosition(hero.id);
     const enemyCoords = this.gridEngine.getPosition(this.id);
     const enemyAnimationDirection = attack(enemyCoords, heroCoords, this.maxRange);
-    if(!enemyAnimationDirection){
+    if (!enemyAnimationDirection) {
       return;
     } else {
       this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
@@ -106,7 +101,18 @@ class Enemy extends Entity {
     }
   }
 
-  playDeathAnimation(){
+  attackHero(hero: Hero) {
+    // console.log(`${this.id} attacking hero ${hero.id}!`);
+
+    // this.currentActionPoints = 0;
+
+    const damage = damageFromScorpion['punch'];
+    hero.updateHealthPoints(damage);
+
+    this.currentActionPoints = 0;
+  }
+
+  playDeathAnimation() {
     this.anims.play('death');
     this.deleteEntityFromEntitiesMap(this.id)
   }
