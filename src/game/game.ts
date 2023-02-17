@@ -6,6 +6,7 @@ import Hero from './hero';
 import { gridEngineType } from './types';
 import UI from './ui'
 import { entitiesTotalActionPoints } from './battlePoints';
+import { currentLevel } from './levels';
 
 const defaultBehavior = 'walk';
 
@@ -32,12 +33,15 @@ class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.tilemapTiledJSON('map', 'assets/maps/currentMap.json');
-    this.load.image('tiles', 'assets/maps/tiles-02.png');
+    this.load.tilemapTiledJSON('map', `assets/maps/${currentLevel.map}.json`);
+    this.load.image('tiles', `assets/maps/${currentLevel.tiles}.png`);
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
-    this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
-    this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
-    this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
+    for (let i = 0; i < currentLevel.enemyQuantity; i++){
+      this.load.spritesheet(`${currentLevel.enemyName}${i + 1}`, `assets/spritesheets/${currentLevel.enemySpriteSheet}.png`, currentLevel.spriteSheetsSizes);
+    }
+    // this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
+    // this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
+    // this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
     this.load.html('ui', '/assets/html/test.html');
     this.load.audio('enemyAttack', 'assets/music/enemyAttack.wav');
     this.load.audio('changeWeapon', 'assets/music/changeWeapon.wav');
@@ -65,15 +69,19 @@ class Game extends Phaser.Scene {
     this.hero.setDamageAnimation();
     this.hero.setDeathAnimation();
     this.createCamera();
-    this.createEnemy('scorpion1', map, 6, 'big');
-    this.createEnemy('scorpion2', map, 6, 'small', 0.75);
-    this.createEnemy('scorpion3', map, 6, 'small', 0.75);
+    for (let i = 0; i < currentLevel.enemyQuantity; i++){
+      const name = `${currentLevel.enemyName}${i + 1}`;
+      this.createEnemy(name, map, 6, currentLevel.infoForCreateEnemies[name].size, currentLevel.infoForCreateEnemies[name].scale);
+    }
+    // this.createEnemy('scorpion1', map, 6, 'big');
+    // this.createEnemy('scorpion2', map, 6, 'small', 0.75);
+    // this.createEnemy('scorpion3', map, 6, 'small', 0.75);
 
     this.gridEngineInit(map);
 
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
-        entityValue.setFramesForEntityAnimations(entityValue, entityKey, scorpionAnims, defaultBehavior);
+        entityValue.setFramesForEntityAnimations(entityValue, entityKey, currentLevel.enemyAnims, defaultBehavior);
         (entityValue as Enemy).setAttackAnimation();
         (entityValue as Enemy).setDamageAnimation();
         // (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
@@ -140,7 +148,7 @@ class Game extends Phaser.Scene {
 
   buildMap() {
     const map = this.make.tilemap({ key: 'map' });
-    const tilesets = map.addTilesetImage('tiles-02', 'tiles');
+    const tilesets = map.addTilesetImage(`${currentLevel.tiles}`, 'tiles');
 
     // Layers creation based on tilemap's layers
     for (let i = 0; i < map.layers.length; i++) {
@@ -155,8 +163,8 @@ class Game extends Phaser.Scene {
     this.entitiesMap.set('hero', this.hero);
   }
 
-  createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size: string, scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints.scorpion, this.deleteEntityFromEntitiesMap, this.sounds));
+  createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size = 'big', scaleValue = 1) {
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
@@ -189,9 +197,9 @@ class Game extends Phaser.Scene {
           {
             id: enemyKey,
             sprite: enemyValue,
-            startPosition: { x: startPositionsForScorpions[enemyKey].x, y: startPositionsForScorpions[enemyKey].y },
-            offsetX: offsetCoordForScorpions[(enemyValue as Enemy).size].x,
-            offsetY: offsetCoordForScorpions[(enemyValue as Enemy).size].y,
+            startPosition: { x: currentLevel.enemyStartPositions[enemyKey].x, y: currentLevel.enemyStartPositions[enemyKey].y },
+            offsetX: currentLevel.enemyOffsetCoords[(enemyValue as Enemy).size].x,
+            offsetY: currentLevel.enemyOffsetCoords[(enemyValue as Enemy).size].y,
             walkingAnimationEnabled: false,
             speed: 2,
           }
@@ -411,8 +419,8 @@ class Game extends Phaser.Scene {
     this.tintTile(map, 40, 48, 0xaf22ff); // magenta
     this.tintTile(map, 0, 0, 0xaf2462); // red
     this.tintTile(map, 48, 53, 0xaf2462); // red
-    this.tintTile(map, startPositionsForScorpions.scorpion1.x, startPositionsForScorpions.scorpion1.y, 0xaf2462); // red (unreachable)
-    this.tintTile(map, startPositionsForScorpions.scorpion2.x, startPositionsForScorpions.scorpion2.y, 0xaf2462);
+    // this.tintTile(map, currentLevel.sta.scorpion1.x, startPositionsForScorpions.scorpion1.y, 0xaf2462); // red (unreachable)
+    // this.tintTile(map, startPositionsForScorpions.scorpion2.x, startPositionsForScorpions.scorpion2.y, 0xaf2462);
   }
 
   tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {

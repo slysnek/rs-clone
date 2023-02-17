@@ -495,12 +495,22 @@ export const startPositionsForGhouls: { [key: string]: { x: number, y: number } 
   ghoul3: { x: 60, y: 60 },
 };
 
+export const startPositionsForDeathClaw: { [key: string]: { x: number, y: number } } = {
+  deathClaw1: { x: 70, y: 70 },
+  deathClaw2: { x: 73, y: 74 },
+};
+
 export const offsetCoordForScorpions: { [key: string]: { x: number, y: number } } = {
   big: { x: 0, y: 10 },
   small: { x: 0, y: 0 },
 };
 
 export const offsetCoordForGhouls: { [key: string]: { x: number, y: number } } = {
+  big: { x: 0, y: 10 },
+  small: { x: 0, y: 0 },
+};
+
+export const offsetCoordForDeathClaw: { [key: string]: { x: number, y: number } } = {
   big: { x: 0, y: 10 },
   small: { x: 0, y: 0 },
 };

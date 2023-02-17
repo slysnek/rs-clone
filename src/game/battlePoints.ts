@@ -21,5 +21,6 @@ export const damageFromHero: { [ attackType: string ]: number } = {
 export const entitiesTotalActionPoints: { [ attackType: string ]: number } = {
   hero: 10,
   scorpion: 5,
-  deathclaw: 8,
+  deathClaw: 8,
+  ghoul: 5,
 };
