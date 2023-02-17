@@ -386,6 +386,97 @@ export const ghoulAnims = {
   },
 };
 
+export const deathClawAnims = {
+  walk: {
+    upRight: {
+      startFrame: 0,
+      endFrame: 7,
+      stopFrame: 9,
+    },
+    downRight: {
+      startFrame: 10,
+      endFrame: 17,
+      stopFrame: 19,
+    },
+    downLeft: {
+      startFrame: 20,
+      endFrame: 27,
+      stopFrame: 29,
+    },
+    upLeft: {
+      startFrame: 30,
+      endFrame: 37,
+      stopFrame: 39,
+    },
+  },
+  damage: {
+    upRight: {
+      startFrame: 80,
+      endFrame: 87,
+      stopFrame: 87,
+    },
+    downRight: {
+      startFrame: 90,
+      endFrame: 97,
+      stopFrame: 97,
+    },
+    downLeft: {
+      startFrame: 100,
+      endFrame: 107,
+      stopFrame: 107,
+    },
+    upLeft: {
+      startFrame: 110,
+      endFrame: 117,
+      stopFrame: 117,
+    },
+  },
+  punch: {
+    upRight: {
+      startFrame: 40,
+      endFrame: 49,
+      stopFrame: 49,
+    },
+    downRight: {
+      startFrame: 50,
+      endFrame: 59,
+      stopFrame: 59,
+    },
+    downLeft: {
+      startFrame: 60,
+      endFrame: 69,
+      stopFrame: 69,
+    },
+    upLeft: {
+      startFrame: 70,
+      endFrame: 79,
+      stopFrame: 79,
+    },
+  },
+  death: {
+    upRight: {
+      startFrame: 120,
+      endFrame: 127,
+      stopFrame: 127,
+    },
+    downRight: {
+      startFrame: 120,
+      endFrame: 127,
+      stopFrame: 127,
+    },
+    downLeft: {
+      startFrame: 120,
+      endFrame: 127,
+      stopFrame: 127,
+    },
+    upLeft: {
+      startFrame: 120,
+      endFrame: 127,
+      stopFrame: 127,
+    },
+  },
+};
+
 export const oppositeDirections = new Map();
 oppositeDirections.set('up-right', 'down-left');
 oppositeDirections.set('down-right', 'up-left');
