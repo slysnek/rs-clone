@@ -16,6 +16,7 @@ class Game extends Phaser.Scene {
   target: Phaser.Math.Vector2;
   gridEngine: GridEngine;
   ui: UI;
+  sounds: {[soundName: string]: Phaser.Sound.BaseSound}
 
   constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
     super('game');
@@ -27,6 +28,7 @@ class Game extends Phaser.Scene {
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
     this.deleteEntityFromEntitiesMap = this.deleteEntityFromEntitiesMap.bind(this);
     this.ui = new UI();
+    this.sounds = {};
   }
 
   preload() {
@@ -37,6 +39,16 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
     this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
     this.load.html('ui', '/assets/html/test.html');
+    this.load.audio('enemyAttack', 'assets/music/enemyAttack.wav');
+    this.load.audio('changeWeapon', 'assets/music/changeWeapon.wav');
+    this.load.audio('deathClawPunch', 'assets/music/deathClawPunch.wav');
+    this.load.audio('heroAttack', 'assets/music/heroAttack.wav');
+    this.load.audio('heroDamageFromGhoul', 'assets/music/heroDamageFromGhoul.wav');
+    this.load.audio('heroDamageFromRadScorpion', 'assets/music/heroDamageFromRadScorpion.wav');
+    this.load.audio('fists', 'assets/music/fists.wav');
+    this.load.audio('pistol', 'assets/music/pistol.wav');
+    this.load.audio('radScorpionDamage', 'assets/music/radScorpionDamage.wav');
+    this.load.audio('startFight', 'assets/music/startFight.wav');
   }
 
   create() {
@@ -44,7 +56,7 @@ class Game extends Phaser.Scene {
 
     const map = this.buildMap();
     this.tintTiles(map);
-
+    this.addSounds();
     this.createHero(map);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
     this.hero.setPunchAnimation();
@@ -52,9 +64,7 @@ class Game extends Phaser.Scene {
     this.hero.setGetHidePistolAnimation();
     this.hero.setDamageAnimation();
     this.hero.setDeathAnimation();
-    console.log(this.hero.anims)
     this.createCamera();
-
     this.createEnemy('scorpion1', map, 6, 'big');
     this.createEnemy('scorpion2', map, 6, 'small', 0.75);
     this.createEnemy('scorpion3', map, 6, 'small', 0.75);
@@ -79,6 +89,19 @@ class Game extends Phaser.Scene {
     this.ui.updateWeapon(this.hero);
     this.createDamageButton();
     this.ui.setChangeWeaponListener(this.hero);
+  }
+
+  addSounds(){
+    this.sounds.enemyAttack = this.sound.add('enemyAttack');
+    this.sounds.changeWeapon = this.sound.add('changeWeapon');
+    this.sounds.deathClawPunch = this.sound.add('deathClawPunch');
+    this.sounds.heroAttack = this.sound.add('heroAttack');
+    this.sounds.heroDamageFromGhoul = this.sound.add('heroDamageFromGhoul');
+    this.sounds.heroDamageFromRadScorpion = this.sound.add('heroDamageFromRadScorpion');
+    this.sounds.fists = this.sound.add('fists');
+    this.sounds.pistol = this.sound.add('pistol');
+    this.sounds.radScorpionDamage = this.sound.add('radScorpionDamage');
+    this.sounds.startFight = this.sound.add('startFight');
   }
 
   createDamageButton() {
@@ -127,13 +150,13 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.sounds));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size: string, scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints.scorpion, this.deleteEntityFromEntitiesMap));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints.scorpion, this.deleteEntityFromEntitiesMap, this.sounds));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;

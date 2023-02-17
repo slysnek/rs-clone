@@ -16,6 +16,7 @@ class Hero extends Entity {
   currentWeapon: Weapon;
   id: string;
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
+  sounds: {[soundName: string]: Phaser.Sound.BaseSound}
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -25,7 +26,8 @@ class Hero extends Entity {
     healthPoints: number,
     totalActionPoints: number,
     getEntitiesMap: () => Map<string, Hero | Enemy>,
-    deleteEntityFromEntitiesMap: (entityKey: string) => void) {
+    deleteEntityFromEntitiesMap: (entityKey: string) => void,
+    sounds: {[soundName: string]: Phaser.Sound.BaseSound}) {
     super(scene, texture, healthPoints, totalActionPoints)
     this.scene = scene;
     this.gridEngine = gridEngine;
@@ -37,6 +39,7 @@ class Hero extends Entity {
     this.currentWeapon = this.mainWeapon;
     this.id = 'hero';
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
+    this.sounds = sounds;
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -60,9 +63,9 @@ class Hero extends Entity {
               && this.currentActionPoints >= lostActionPointsForHero[this.currentWeapon.name]) {
               // this.playAttackEnemyAnimation(entityValue as Enemy);
               // ! заменить имя
-              // this.playAttackEnemyAnimation(entityValue as Enemy);
+              this.playAttackEnemyAnimation(entityValue as Enemy);
               // (entityValue as Enemy).playDeathAnimation();
-              this.playDeathAnimation();
+              // this.playDeathAnimation();
             }
           }
         });
@@ -97,6 +100,7 @@ class Hero extends Entity {
     else this.currentWeapon = this.mainWeapon;
     this.behavior = this.currentWeapon.name === 'pistol' ? 'walkWithPistol' : 'walk';
     this.changeAnimationWithWeapon(this.behavior);
+    this.sounds.changeWeapon.play();
   }
 
   // // ?
@@ -176,7 +180,9 @@ class Hero extends Entity {
       return;
     } else {
       this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
+      this.sounds[this.currentWeapon.name].play();
       enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
+      this.sounds.radScorpionDamage.play();
       // вынести в метод
       const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
       this.updateActionPoints(lostPoints);

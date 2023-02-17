@@ -27,6 +27,8 @@ class Enemy extends Entity {
   attackBehavior: string;
   maxRange: number;
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
+  sounds: {[soundName: string]: Phaser.Sound.BaseSound};
+
   constructor(scene: Phaser.Scene,
     texture: string,
     gridEngine: GridEngine,
@@ -36,7 +38,8 @@ class Enemy extends Entity {
     battleRadius: number,
     size: string,
     totalActionPoints: number,
-    deleteEntityFromEntitiesMap: (entityKey: string) => void) {
+    deleteEntityFromEntitiesMap: (entityKey: string) => void,
+    sounds: {[soundName: string]: Phaser.Sound.BaseSound}) {
     super(scene, texture, healthPoints, totalActionPoints);
     this.gridEngine = gridEngine;
     this.movesTimerId = null;
@@ -47,6 +50,7 @@ class Enemy extends Entity {
     this.attackBehavior = 'punch';
     this.maxRange = 1;
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
+    this.sounds = sounds;
   }
 
   clearTimer() {
