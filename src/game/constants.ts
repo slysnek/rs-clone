@@ -295,19 +295,222 @@ export const scorpionAnims = {
   },
 };
 
+export const ghoulAnims = {
+  walk: {
+    upRight: {
+      startFrame: 0,
+      endFrame: 10,
+      stopFrame: 107,
+    },
+    downRight: {
+      startFrame: 12,
+      endFrame: 22,
+      stopFrame: 119,
+    },
+    downLeft: {
+      startFrame: 24,
+      endFrame: 34,
+      stopFrame: 131,
+    },
+    upLeft: {
+      startFrame: 36,
+      endFrame: 46,
+      stopFrame: 143,
+    },
+  },
+  damage: {
+    upRight: {
+      startFrame: 48,
+      endFrame: 55,
+      stopFrame: 107,
+    },
+    downRight: {
+      startFrame: 60,
+      endFrame: 67,
+      stopFrame: 55,
+    },
+    downLeft: {
+      startFrame: 72,
+      endFrame: 79,
+      stopFrame: 66,
+    },
+    upLeft: {
+      startFrame: 84,
+      endFrame: 91,
+      stopFrame: 77,
+    },
+  },
+  punch: {
+    upRight: {
+      startFrame: 96,
+      endFrame: 107,
+      stopFrame: 107,
+    },
+    downRight: {
+      startFrame: 108,
+      endFrame: 119,
+      stopFrame: 119,
+    },
+    downLeft: {
+      startFrame: 120,
+      endFrame: 131,
+      stopFrame: 131,
+    },
+    upLeft: {
+      startFrame: 132,
+      endFrame: 143,
+      stopFrame: 143,
+    },
+  },
+  death: {
+    upRight: {
+      startFrame: 144,
+      endFrame: 151,
+      stopFrame: 151,
+    },
+    downRight: {
+      startFrame: 144,
+      endFrame: 151,
+      stopFrame: 151,
+    },
+    downLeft: {
+      startFrame: 144,
+      endFrame: 151,
+      stopFrame: 151,
+    },
+    upLeft: {
+      startFrame: 144,
+      endFrame: 151,
+      stopFrame: 151,
+    },
+  },
+};
+
+export const deathClawAnims = {
+  walk: {
+    upRight: {
+      startFrame: 0,
+      endFrame: 7,
+      stopFrame: 9,
+    },
+    downRight: {
+      startFrame: 10,
+      endFrame: 17,
+      stopFrame: 19,
+    },
+    downLeft: {
+      startFrame: 20,
+      endFrame: 27,
+      stopFrame: 29,
+    },
+    upLeft: {
+      startFrame: 30,
+      endFrame: 37,
+      stopFrame: 39,
+    },
+  },
+  damage: {
+    upRight: {
+      startFrame: 80,
+      endFrame: 87,
+      stopFrame: 87,
+    },
+    downRight: {
+      startFrame: 90,
+      endFrame: 97,
+      stopFrame: 97,
+    },
+    downLeft: {
+      startFrame: 100,
+      endFrame: 107,
+      stopFrame: 107,
+    },
+    upLeft: {
+      startFrame: 110,
+      endFrame: 117,
+      stopFrame: 117,
+    },
+  },
+  punch: {
+    upRight: {
+      startFrame: 40,
+      endFrame: 49,
+      stopFrame: 49,
+    },
+    downRight: {
+      startFrame: 50,
+      endFrame: 59,
+      stopFrame: 59,
+    },
+    downLeft: {
+      startFrame: 60,
+      endFrame: 69,
+      stopFrame: 69,
+    },
+    upLeft: {
+      startFrame: 70,
+      endFrame: 79,
+      stopFrame: 79,
+    },
+  },
+  death: {
+    upRight: {
+      startFrame: 120,
+      endFrame: 127,
+      stopFrame: 127,
+    },
+    downRight: {
+      startFrame: 120,
+      endFrame: 127,
+      stopFrame: 127,
+    },
+    downLeft: {
+      startFrame: 120,
+      endFrame: 127,
+      stopFrame: 127,
+    },
+    upLeft: {
+      startFrame: 120,
+      endFrame: 127,
+      stopFrame: 127,
+    },
+  },
+};
+
 export const oppositeDirections = new Map();
 oppositeDirections.set('up-right', 'down-left');
 oppositeDirections.set('down-right', 'up-left');
 oppositeDirections.set('down-left', 'up-right');
 oppositeDirections.set('up-left', 'down-right');
 
-export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: number } } = {
+export const startPositionsForScorpions: { [key: string]: { x: number, y: number } } = {
   scorpion1: { x: 70, y: 70 },
   scorpion2: { x: 73, y: 74 },
   scorpion3: { x: 60, y: 60 },
 };
 
+export const startPositionsForGhouls: { [key: string]: { x: number, y: number } } = {
+  ghoul1: { x: 70, y: 70 },
+  ghoul2: { x: 73, y: 74 },
+  ghoul3: { x: 60, y: 60 },
+};
+
+export const startPositionsForDeathClaw: { [key: string]: { x: number, y: number } } = {
+  deathClaw1: { x: 70, y: 70 },
+  deathClaw2: { x: 73, y: 74 },
+};
+
 export const offsetCoordForScorpions: { [key: string]: { x: number, y: number } } = {
+  big: { x: 0, y: 10 },
+  small: { x: 0, y: 0 },
+};
+
+export const offsetCoordForGhouls: { [key: string]: { x: number, y: number } } = {
+  big: { x: 0, y: 10 },
+  small: { x: 0, y: 0 },
+};
+
+export const offsetCoordForDeathClaw: { [key: string]: { x: number, y: number } } = {
   big: { x: 0, y: 10 },
   small: { x: 0, y: 0 },
 };
