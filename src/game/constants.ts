@@ -483,13 +483,13 @@ oppositeDirections.set('down-right', 'up-left');
 oppositeDirections.set('down-left', 'up-right');
 oppositeDirections.set('up-left', 'down-right');
 
-export const startPositionsForScorpionsMap1: { [key: string]: { x: number, y: number } } = {
+export const startPositionsForScorpions: { [key: string]: { x: number, y: number } } = {
   scorpion1: { x: 70, y: 70 },
   scorpion2: { x: 73, y: 74 },
   scorpion3: { x: 60, y: 60 },
 };
 
-export const startPositionsForGhoulsMap1: { [key: string]: { x: number, y: number } } = {
+export const startPositionsForGhouls: { [key: string]: { x: number, y: number } } = {
   ghoul1: { x: 70, y: 70 },
   ghoul2: { x: 73, y: 74 },
   ghoul3: { x: 60, y: 60 },

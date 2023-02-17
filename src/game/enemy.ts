@@ -1,7 +1,7 @@
 import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
-import { startPositionsForScorpionsMap1 } from './constants';
+import { startPositionsForScorpions } from './constants';
 import { scorpionAnims, oppositeDirections } from "./constants";
 import Hero from "./hero";
 import attack from "./utilsForAttackAnimations";
@@ -74,8 +74,8 @@ class Enemy extends Entity {
   setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap) {
     this.movesTimerId = setInterval(() => {
       const deltaXY = getRandomXYDelta();
-      this.gridEngine.moveTo(`${charId}`, { x: startPositionsForScorpionsMap1[charId].x + deltaXY.xDelta, y: startPositionsForScorpionsMap1[charId].y + deltaXY.yDelta });
-      this.tintTile(map, startPositionsForScorpionsMap1[charId].x + deltaXY.xDelta, startPositionsForScorpionsMap1[charId].y + deltaXY.yDelta, 0xff7a4a);
+      this.gridEngine.moveTo(`${charId}`, { x: startPositionsForScorpions[charId].x + deltaXY.xDelta, y: startPositionsForScorpions[charId].y + deltaXY.yDelta });
+      this.tintTile(map, startPositionsForScorpions[charId].x + deltaXY.xDelta, startPositionsForScorpions[charId].y + deltaXY.yDelta, 0xff7a4a);
     }, getRandomTimeInterval())
   }
 

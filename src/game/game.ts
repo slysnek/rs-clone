@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine, Position } from 'grid-engine';
-import { windowSize, startPositionsForScorpionsMap1, heroAnims, scorpionAnims, offsetCoordForScorpions } from './constants';
+import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims, offsetCoordForScorpions } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
@@ -189,7 +189,7 @@ class Game extends Phaser.Scene {
           {
             id: enemyKey,
             sprite: enemyValue,
-            startPosition: { x: startPositionsForScorpionsMap1[enemyKey].x, y: startPositionsForScorpionsMap1[enemyKey].y },
+            startPosition: { x: startPositionsForScorpions[enemyKey].x, y: startPositionsForScorpions[enemyKey].y },
             offsetX: offsetCoordForScorpions[(enemyValue as Enemy).size].x,
             offsetY: offsetCoordForScorpions[(enemyValue as Enemy).size].y,
             walkingAnimationEnabled: false,
@@ -411,8 +411,8 @@ class Game extends Phaser.Scene {
     this.tintTile(map, 40, 48, 0xaf22ff); // magenta
     this.tintTile(map, 0, 0, 0xaf2462); // red
     this.tintTile(map, 48, 53, 0xaf2462); // red
-    this.tintTile(map, startPositionsForScorpionsMap1.scorpion1.x, startPositionsForScorpionsMap1.scorpion1.y, 0xaf2462); // red (unreachable)
-    this.tintTile(map, startPositionsForScorpionsMap1.scorpion2.x, startPositionsForScorpionsMap1.scorpion2.y, 0xaf2462);
+    this.tintTile(map, startPositionsForScorpions.scorpion1.x, startPositionsForScorpions.scorpion1.y, 0xaf2462); // red (unreachable)
+    this.tintTile(map, startPositionsForScorpions.scorpion2.x, startPositionsForScorpions.scorpion2.y, 0xaf2462);
   }
 
   tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
