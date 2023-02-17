@@ -15,6 +15,7 @@ class Hero extends Entity {
   secondaryWeapon: Weapon;
   currentWeapon: Weapon;
   id: string;
+  deleteEntityFromEntitiesMap: (entityKey: string) => void;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -23,7 +24,8 @@ class Hero extends Entity {
     cursor: Phaser.Types.Input.Keyboard.CursorKeys,
     healthPoints: number,
     totalActionPoints: number,
-    getEntitiesMap: () => Map<string, Hero | Enemy>) {
+    getEntitiesMap: () => Map<string, Hero | Enemy>,
+    deleteEntityFromEntitiesMap: (entityKey: string) => void) {
     super(scene, texture, healthPoints, totalActionPoints)
     this.scene = scene;
     this.gridEngine = gridEngine;
@@ -34,6 +36,7 @@ class Hero extends Entity {
     this.secondaryWeapon = new Weapon('pistol', './assets/weapons/pistol-03.png', 12, 0.6, 3)
     this.currentWeapon = this.mainWeapon;
     this.id = 'hero';
+    this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -58,7 +61,8 @@ class Hero extends Entity {
               // this.playAttackEnemyAnimation(entityValue as Enemy);
               // ! заменить имя
               // this.playAttackEnemyAnimation(entityValue as Enemy);
-              (entityValue as Enemy).playDeathAnimation();
+              // (entityValue as Enemy).playDeathAnimation();
+              this.playDeathAnimation();
             }
           }
         });
@@ -139,6 +143,11 @@ class Hero extends Entity {
     this.createEntityAnimation('hidePistol_down-right', 'hero', heroAnims.hidePistol.downRight.startFrame, heroAnims.hidePistol.downRight.endFrame, 0);
     this.createEntityAnimation('hidePistol_down-left', 'hero', heroAnims.hidePistol.downLeft.startFrame, heroAnims.hidePistol.downLeft.endFrame, 0);
     this.createEntityAnimation('hidePistol_up-left', 'hero', heroAnims.hidePistol.upLeft.startFrame, heroAnims.hidePistol.upLeft.endFrame, 0);
+  }
+
+  playDeathAnimation(){
+    this.anims.play('death');
+    this.deleteEntityFromEntitiesMap(this.id);
   }
 
   changeAnimationWithWeapon(behavior: string) {

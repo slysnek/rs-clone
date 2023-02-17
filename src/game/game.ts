@@ -25,7 +25,7 @@ class Game extends Phaser.Scene {
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
-    this.deleteEnemyFromEntitiesMap = this.deleteEnemyFromEntitiesMap.bind(this);
+    this.deleteEntityFromEntitiesMap = this.deleteEntityFromEntitiesMap.bind(this);
     this.ui = new UI();
   }
 
@@ -51,6 +51,7 @@ class Game extends Phaser.Scene {
     this.hero.setShootAnimation();
     this.hero.setGetHidePistolAnimation();
     this.hero.setDamageAnimation();
+    this.hero.setDeathAnimation();
     console.log(this.hero.anims)
     this.createCamera();
 
@@ -102,7 +103,7 @@ class Game extends Phaser.Scene {
     })
   }
 
-  deleteEnemyFromEntitiesMap(entityKey: string){
+  deleteEntityFromEntitiesMap(entityKey: string){
     this.entitiesMap.delete(entityKey);
   }
 
@@ -126,13 +127,13 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size: string, scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints.scorpion, this.deleteEnemyFromEntitiesMap));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints.scorpion, this.deleteEntityFromEntitiesMap));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;

@@ -26,7 +26,7 @@ class Enemy extends Entity {
   size: string;
   attackBehavior: string;
   maxRange: number;
-  deleteEnemyFromEntitiesMap: (entityKey: string) => void;
+  deleteEntityFromEntitiesMap: (entityKey: string) => void;
   constructor(scene: Phaser.Scene,
     texture: string,
     gridEngine: GridEngine,
@@ -36,7 +36,7 @@ class Enemy extends Entity {
     battleRadius: number,
     size: string,
     totalActionPoints: number,
-    deleteEnemyFromEntitiesMap: (entityKey: string) => void) {
+    deleteEntityFromEntitiesMap: (entityKey: string) => void) {
     super(scene, texture, healthPoints, totalActionPoints);
     this.gridEngine = gridEngine;
     this.movesTimerId = null;
@@ -46,7 +46,7 @@ class Enemy extends Entity {
     this.size = size;
     this.attackBehavior = 'punch';
     this.maxRange = 1;
-    this.deleteEnemyFromEntitiesMap = deleteEnemyFromEntitiesMap;
+    this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
   }
 
   clearTimer() {
@@ -104,7 +104,7 @@ class Enemy extends Entity {
 
   playDeathAnimation(){
     this.anims.play('death');
-    this.deleteEnemyFromEntitiesMap(this.id)
+    this.deleteEntityFromEntitiesMap(this.id)
   }
 
   //повтор функции, удалить
