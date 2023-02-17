@@ -273,48 +273,26 @@ export const scorpionAnims = {
   },
   death: {
     upRight: {
-      startFrame: 127,
-      endFrame: 130,
-      stopFrame: 120,
+      startFrame: 132,
+      endFrame: 135,
+      stopFrame: 135,
     },
     downRight: {
-      startFrame: 127,
-      endFrame: 130,
-      stopFrame: 120,
+      startFrame: 132,
+      endFrame: 135,
+      stopFrame: 135,
     },
     downLeft: {
-      startFrame: 127,
-      endFrame: 130,
-      stopFrame: 120,
+      startFrame: 132,
+      endFrame: 135,
+      stopFrame: 135,
     },
     upLeft: {
-      startFrame: 127,
-      endFrame: 130,
-      stopFrame: 120,
+      startFrame: 132,
+      endFrame: 135,
+      stopFrame: 125,
     },
   },
-  // damage: {
-  //     upRight: {
-  //         startFrame: 138,
-  //         endFrame: 139,
-  //         stopFrame: 138,
-  //     },
-  //     downRight: {
-  //         startFrame: 149,
-  //         endFrame: 151,
-  //         stopFrame: 149,
-  //     },
-  //     downLeft: {
-  //         startFrame: 160,
-  //         endFrame: 162,
-  //         stopFrame: 160,
-  //     },
-  //     upLeft: {
-  //         startFrame: 171,
-  //         endFrame: 173,
-  //         stopFrame: 171,
-  //     },
-  // }
 };
 
 export const oppositeDirections = new Map();

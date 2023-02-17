@@ -58,7 +58,7 @@ class Hero extends Entity {
               // this.playAttackEnemyAnimation(entityValue as Enemy);
               // ! заменить имя
               // this.playAttackEnemyAnimation(entityValue as Enemy);
-              (entityValue as Enemy).playAttackHeroAnimation(this);
+              (entityValue as Enemy).playDeathAnimation();
             }
           }
         });

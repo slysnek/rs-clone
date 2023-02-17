@@ -104,6 +104,7 @@ class Enemy extends Entity {
 
   playDeathAnimation(){
     this.anims.play('death');
+    this.deleteEnemyFromEntitiesMap(this.id)
   }
 
   //повтор функции, удалить
