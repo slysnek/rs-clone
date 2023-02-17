@@ -25,6 +25,7 @@ class Game extends Phaser.Scene {
     this.target = new Phaser.Math.Vector2();
     this.gridEngine = gridEngine;
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
+    this.deleteEnemyFromEntitiesMap = this.deleteEnemyFromEntitiesMap.bind(this);
     this.ui = new UI();
   }
 
@@ -101,6 +102,10 @@ class Game extends Phaser.Scene {
     })
   }
 
+  deleteEnemyFromEntitiesMap(entityKey: string){
+    this.entitiesMap.delete(entityKey);
+  }
+
   getEntitiesMap() {
     return this.entitiesMap;
   }
@@ -127,7 +132,7 @@ class Game extends Phaser.Scene {
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size: string, scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints.scorpion));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints.scorpion, this.deleteEnemyFromEntitiesMap));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
