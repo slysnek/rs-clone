@@ -39,13 +39,20 @@ class Dialogue extends Phaser.Scene {
     text.textContent = state.text!;
 
     state.answers.forEach((el: string[]) => {
-      console.log(el, 'answer');
-      const answer = document.createElement('li');
       type ObjectKey = keyof typeof options['dialogue-1'];
+      const answer = document.createElement('li');
       const objKey = el[1] as ObjectKey;
-      console.log(objKey);
+
       answer.classList.add('answer')
       answer.textContent = el[0];
+
+      if(el[1] === 'state-0'){
+        answer.addEventListener('click', () =>{
+          this.sys.game.destroy(true)
+          new Phaser.Game(config)
+        })
+      }
+
       answer.addEventListener('click', () =>{
         this.setDialogueState(options['dialogue-1'][objKey])
       })
