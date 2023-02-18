@@ -6,6 +6,7 @@ import config from './config'
 import Button from 'phaser3-rex-plugins/plugins/button';
 import Buttons from 'phaser3-rex-plugins/templates/ui/buttons/Buttons';
 import { GameObject } from 'grid-engine/dist/GridCharacter/GridCharacter';
+import {options} from './dialogue-options'
 
 class Dialogue extends Phaser.Scene {
   rexUI: RexUIPlugin;
@@ -21,13 +22,43 @@ class Dialogue extends Phaser.Scene {
   }
 
   create(){
-    this.createDialogue(this)
+    this.createDialogueTemplate(this)
+    this.setDialogueState(options['dialogue-1']['state-1'])
   }
 
-  createDialogue(scene: Dialogue) {
-    const testUI = scene.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight / 2).createFromCache('dialogue')
-    testUI.scrollFactorX = 0;
-    testUI.scrollFactorY = 0;
+  createDialogueTemplate(scene: Dialogue) {
+    const dialogue = scene.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight / 2).createFromCache('dialogue')
+    dialogue.scrollFactorX = 0;
+    dialogue.scrollFactorY = 0;
+  }
+
+  setDialogueState(state: { text: string; answers: string[][] }){
+    this.clearDialogueTexts();
+    const text = document.querySelector('.text-container') as HTMLElement;
+    const answerContainer = document.querySelector('.answers-list') as HTMLElement;
+    text.textContent = state.text!;
+
+    state.answers.forEach((el: string[]) => {
+      console.log(el, 'answer');
+      const answer = document.createElement('li');
+      type ObjectKey = keyof typeof options['dialogue-1'];
+      const objKey = el[1] as ObjectKey;
+      console.log(objKey);
+      answer.classList.add('answer')
+      answer.textContent = el[0];
+      answer.addEventListener('click', () =>{
+        this.setDialogueState(options['dialogue-1'][objKey])
+      })
+      answerContainer.appendChild(answer)
+    })
+  }
+
+  clearDialogueTexts(){
+    const text = document.querySelector('.text-container') as HTMLElement;
+    const answerContainer = document.querySelector('.answers-list') as HTMLElement;
+
+    text.innerHTML = '';
+    answerContainer.innerHTML = '';
   }
 
 
