@@ -58,7 +58,7 @@ class Hero extends Entity {
       gridMouseCoords.y = Math.round(gridMouseCoords.y);
 
       const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
-      clickedTile.tint = 0xff7a4a;
+      // clickedTile.tint = 0xff7a4a;
 
       // attack if fight mode and enough AP
       if (this.fightMode) {

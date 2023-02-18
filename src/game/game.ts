@@ -62,7 +62,7 @@ class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     const map = this.buildMap();
-    this.tintTiles(map);
+    // this.tintTiles(map);
     this.addSounds();
     this.createHero(map);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
@@ -95,7 +95,7 @@ class Game extends Phaser.Scene {
     this.ui.updateHP(this.hero);
     this.ui.updateAP(this.hero);
     this.ui.updateWeapon(this.hero);
-    this.createDamageButton();
+    // this.createDamageButton();
     this.ui.setChangeWeaponListener(this.hero);
   }
 
@@ -112,27 +112,27 @@ class Game extends Phaser.Scene {
     this.sounds.startFight = this.sound.add('startFight');
   }
 
-  createDamageButton() {
-    const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 100)
-      .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
-    damageButton.scrollFactorX = 0;
-    damageButton.scrollFactorY = 0;
-    damageButton.addListener('click');
-    damageButton.on('click', () => {
-      if (this.hero.healthPoints === 0) {
-        this.ui.putMessageToConsole('I am already dead. Stop mocking me.');
-        return;
-      }
+  // createDamageButton() {
+  //   const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 100)
+  //     .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
+  //   damageButton.scrollFactorX = 0;
+  //   damageButton.scrollFactorY = 0;
+  //   damageButton.addListener('click');
+  //   damageButton.on('click', () => {
+  //     if (this.hero.healthPoints === 0) {
+  //       this.ui.putMessageToConsole('I am already dead. Stop mocking me.');
+  //       return;
+  //     }
 
-      this.hero.healthPoints -= 1;
-      this.ui.updateHP(this.hero);
-      if (this.hero.healthPoints === 0) {
-        this.ui.putMessageToConsole('You killed me.');
-        return;
-      }
-      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage');
-    })
-  }
+  //     this.hero.healthPoints -= 1;
+  //     this.ui.updateHP(this.hero);
+  //     if (this.hero.healthPoints === 0) {
+  //       this.ui.putMessageToConsole('You killed me.');
+  //       return;
+  //     }
+  //     this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage');
+  //   })
+  // }
 
   deleteEntityFromEntitiesMap(entityKey: string) {
     this.entitiesMap.delete(entityKey);
@@ -401,37 +401,37 @@ class Game extends Phaser.Scene {
     }
   }
 
-  tintTiles(map: Tilemaps.Tilemap) {
-    this.tintTile(map, 30, 35, 0xff7a4a); // orange
-    this.tintTile(map, 35, 28, 0xffff0a); // yellow
-    this.tintTile(map, 35, 25, 0x4a4aff); // blue
-    this.tintTile(map, 15, 18, 0x4aff4a); // green
-    this.tintTile(map, 20, 28, 0xaf2462); // red
-    this.tintTile(map, 40, 48, 0xaf22ff); // magenta
-    this.tintTile(map, 0, 0, 0xaf2462); // red
-    this.tintTile(map, 48, 53, 0xaf2462); // red
-    // this.tintTile(map, currentLevel.enemyStartPositions.ghoul1.x, currentLevel.enemyStartPositions.ghoul1.y, 0xaf2462); // red (unreachable)
-    // this.tintTile(map, currentLevel.enemyStartPositions.ghoul2.x, currentLevel.enemyStartPositions.ghoul2.y, 0xaf2462);
-  }
+  // tintTiles(map: Tilemaps.Tilemap) {
+  //   this.tintTile(map, 30, 35, 0xff7a4a); // orange
+  //   this.tintTile(map, 35, 28, 0xffff0a); // yellow
+  //   this.tintTile(map, 35, 25, 0x4a4aff); // blue
+  //   this.tintTile(map, 15, 18, 0x4aff4a); // green
+  //   this.tintTile(map, 20, 28, 0xaf2462); // red
+  //   this.tintTile(map, 40, 48, 0xaf22ff); // magenta
+  //   this.tintTile(map, 0, 0, 0xaf2462); // red
+  //   this.tintTile(map, 48, 53, 0xaf2462); // red
+  //   // this.tintTile(map, currentLevel.enemyStartPositions.ghoul1.x, currentLevel.enemyStartPositions.ghoul1.y, 0xaf2462); // red (unreachable)
+  //   // this.tintTile(map, currentLevel.enemyStartPositions.ghoul2.x, currentLevel.enemyStartPositions.ghoul2.y, 0xaf2462);
+  // }
 
-  tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
-    for (let x = 0; x <= radius; x++) {
-      for (let y = 0; y <= radius; y++) {
-        if (manhattanDist(posX, posY, posX + x, posY + y) <= radius) {
-          this.tintTile(tilemap, posX + x, posY + y, color);
-        }
-        if (manhattanDist(posX, posY, posX - x, posY + y) <= radius) {
-          this.tintTile(tilemap, posX - x, posY + y, color);
-        }
-        if (manhattanDist(posX, posY, posX + x, posY - y) <= radius) {
-          this.tintTile(tilemap, posX + x, posY - y, color);
-        }
-        if (manhattanDist(posX, posY, posX - x, posY - y) <= radius) {
-          this.tintTile(tilemap, posX - x, posY - y, color);
-        }
-      }
-    }
-  }
+  // tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
+  //   for (let x = 0; x <= radius; x++) {
+  //     for (let y = 0; y <= radius; y++) {
+  //       if (manhattanDist(posX, posY, posX + x, posY + y) <= radius) {
+  //         this.tintTile(tilemap, posX + x, posY + y, color);
+  //       }
+  //       if (manhattanDist(posX, posY, posX - x, posY + y) <= radius) {
+  //         this.tintTile(tilemap, posX - x, posY + y, color);
+  //       }
+  //       if (manhattanDist(posX, posY, posX + x, posY - y) <= radius) {
+  //         this.tintTile(tilemap, posX + x, posY - y, color);
+  //       }
+  //       if (manhattanDist(posX, posY, posX - x, posY - y) <= radius) {
+  //         this.tintTile(tilemap, posX - x, posY - y, color);
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 export default Game;

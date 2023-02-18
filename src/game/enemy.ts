@@ -74,7 +74,7 @@ class Enemy extends Entity {
     this.movesTimerId = setInterval(() => {
       const deltaXY = getRandomXYDelta();
       this.gridEngine.moveTo(`${charId}`, { x: currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, y: currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta });
-      this.tintTile(map, currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta, 0xff7a4a);
+      // this.tintTile(map, currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta, 0xff7a4a);
     }, getRandomTimeInterval())
   }
 
@@ -124,12 +124,12 @@ class Enemy extends Entity {
     this.deleteEntityFromEntitiesMap(this.id)
   }
 
-  //повтор функции, удалить
-  tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
-    for (const element of tilemap.layers) {
-      element.tilemapLayer.layer.data[row][col].tint = color;
-    }
-  }
+  // //повтор функции, удалить
+  // tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
+  //   for (const element of tilemap.layers) {
+  //     element.tilemapLayer.layer.data[row][col].tint = color;
+  //   }
+  // }
 }
 
 export default Enemy;
