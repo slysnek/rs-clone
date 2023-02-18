@@ -6,6 +6,8 @@ import Hero from "./hero";
 import { attack } from "./utilsForAttackAnimations";
 import { damageFromScorpion } from "./battlePoints";
 import { currentLevel } from "./levels";
+import UI from "./ui";
+
 function getRandomXYDelta() {
   const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
   return { xDelta: deltaValue(), yDelta: deltaValue() };
@@ -28,6 +30,7 @@ class Enemy extends Entity {
   maxRange: number;
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
+  ui: UI;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -39,7 +42,8 @@ class Enemy extends Entity {
     size: string,
     totalActionPoints: number,
     deleteEntityFromEntitiesMap: (entityKey: string) => void,
-    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound },
+    ui: UI) {
     super(scene, texture, healthPoints, totalActionPoints);
     this.gridEngine = gridEngine;
     this.movesTimerId = null;
@@ -51,6 +55,7 @@ class Enemy extends Entity {
     this.maxRange = 1;
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
     this.sounds = sounds;
+    this.ui = ui;
   }
 
   clearTimer() {
@@ -111,6 +116,7 @@ class Enemy extends Entity {
       hero.playDeathAnimation();
     }
     this.currentActionPoints = 0;
+    this.ui.updateHP(hero);
   }
 
   playDeathAnimation() {

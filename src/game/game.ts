@@ -164,7 +164,7 @@ class Game extends Phaser.Scene {
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size = 'big', scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds, this.ui));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
@@ -284,8 +284,11 @@ class Game extends Phaser.Scene {
         if (!charId.match(/^hero/i)) {
           if (!this.gridEngine.isMoving(charId)) {
             const enemy = this.entitiesMap.get(charId) as Enemy;
-            enemy.playAttackHeroAnimation(this.hero);
-            enemy.attackHero(this.hero);
+            // поставила условие, чтобы герой не умирал хотя бы вне боя. вопрос: почему атака вообще происходит именно здесь?
+            if(enemy.fightMode){
+              enemy.playAttackHeroAnimation(this.hero);
+              enemy.attackHero(this.hero);
+            }
           }
         }
       });

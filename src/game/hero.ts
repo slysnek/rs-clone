@@ -193,7 +193,7 @@ class Hero extends Entity {
   attackEnemy(enemy: Enemy) {
       const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
       this.updateActionPoints(lostPoints);
-
+      this.ui.updateAP(this);
       const damage = damageFromHero[this.currentWeapon.name];
       enemy.updateHealthPoints(damage);
 
@@ -216,6 +216,7 @@ class Hero extends Entity {
     if (this.fightMode) {
       const lostPoints = lostActionPointsForHero.step;
       this.updateActionPoints(lostPoints);
+      this.ui.updateAP(this);
     }
   }
 
