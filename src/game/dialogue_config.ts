@@ -11,7 +11,7 @@ const dialogueConfig = {
     dom: {
       createContainer: true,
     },
-    backgroundColor: '#ababab',
+    backgroundColor: '#000000',
     parent: 'phaser-example',
     scene: [Dialogue],
     physics: {
