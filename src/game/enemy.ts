@@ -1,8 +1,7 @@
 import Entity from "./entity";
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
-import { startPositionsForScorpions } from './constants';
-import { scorpionAnims, oppositeDirections } from "./constants";
+import { oppositeDirections } from "./constants";
 import Hero from "./hero";
 import { attack } from "./utilsForAttackAnimations";
 import { damageFromScorpion } from "./battlePoints";

@@ -6,7 +6,10 @@ import { scorpionAnims,
   startPositionsForDeathClaw,
   offsetCoordForDeathClaw,
   offsetCoordForGhouls,
-  offsetCoordForScorpions } from "./constants"
+  offsetCoordForScorpions,
+  startPositionsForHeroMap1,
+  startPositionsForHeroMap2,
+  startPositionsForHeroMap3} from "./constants"
 
 export type level = {
   enemyAnims: typeof scorpionAnims | typeof deathClawAnims | typeof ghoulAnims,
@@ -19,7 +22,7 @@ export type level = {
   spriteSheetsSizes: { frameWidth: number, frameHeight: number },
   map: string,
   tiles: string,
-  heroStartCoords: string
+  heroStartCoords: { x: number, y: number }
 }
 
 export const level1 = {
@@ -37,7 +40,7 @@ export const level1 = {
   spriteSheetsSizes: { frameWidth: 50, frameHeight: 100 },
   map: 'currentMap',
   tiles: 'tiles-02',
-  heroStartCoords: ''
+  heroStartCoords: startPositionsForHeroMap1
 };
 
 export const level2 = {
@@ -52,10 +55,10 @@ export const level2 = {
   enemySpriteSheet: 'scorpion-02',
   enemyStartPositions: startPositionsForScorpions,
   enemyOffsetCoords: offsetCoordForScorpions,
-  spriteSheetsSizes: { frameWidth: 120, frameHeight: 118 },
+  spriteSheetsSizes: { frameWidth: 106, frameHeight: 135 },
   map: 'map1',
   tiles: 'maptiles2-01-01',
-  heroStartCoords: ''
+  heroStartCoords: startPositionsForHeroMap2
 };
 
 export const level3 = {
@@ -70,10 +73,10 @@ export const level3 = {
   enemySpriteSheet: 'deathclaw-spritesheet',
   enemyStartPositions: startPositionsForDeathClaw,
   enemyOffsetCoords: offsetCoordForDeathClaw,
-  spriteSheetsSizes: { frameWidth: 75, frameHeight: 133 },
+  spriteSheetsSizes: { frameWidth: 120, frameHeight: 118 },
   map: 'map3',
-  tiles: 'tiles-03',
-  heroStartCoords: ''  
+  tiles: 'gas-spritesheet',
+  heroStartCoords: startPositionsForHeroMap3  
 }
 
 export function setCurrentLevel(level: level){

@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine, Position } from 'grid-engine';
-import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims, offsetCoordForScorpions } from './constants';
+import { windowSize, heroAnims } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
@@ -76,9 +76,6 @@ class Game extends Phaser.Scene {
       const name = `${currentLevel.enemyName}${i + 1}`;
       this.createEnemy(name, map, 6, currentLevel.infoForCreateEnemies[name].size, currentLevel.infoForCreateEnemies[name].scale);
     }
-    // this.createEnemy('scorpion1', map, 6, 'big');
-    // this.createEnemy('scorpion2', map, 6, 'small', 0.75);
-    // this.createEnemy('scorpion3', map, 6, 'small', 0.75);
 
     this.gridEngineInit(map);
 
@@ -87,7 +84,7 @@ class Game extends Phaser.Scene {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, currentLevel.enemyAnims, defaultBehavior);
         (entityValue as Enemy).setAttackAnimation();
         (entityValue as Enemy).setDamageAnimation();
-        // (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
+        (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
     });
     this.hero.setPointerDownListener(map);
@@ -184,7 +181,7 @@ class Game extends Phaser.Scene {
         {
           id: 'hero',
           sprite: this.hero,
-          startPosition: { x: 68, y: 58 },
+          startPosition: currentLevel.heroStartCoords,
           offsetX: 0,
           offsetY: 42,
           walkingAnimationEnabled: false,
@@ -410,8 +407,8 @@ class Game extends Phaser.Scene {
     this.tintTile(map, 40, 48, 0xaf22ff); // magenta
     this.tintTile(map, 0, 0, 0xaf2462); // red
     this.tintTile(map, 48, 53, 0xaf2462); // red
-    // this.tintTile(map, currentLevel.sta.scorpion1.x, startPositionsForScorpions.scorpion1.y, 0xaf2462); // red (unreachable)
-    // this.tintTile(map, startPositionsForScorpions.scorpion2.x, startPositionsForScorpions.scorpion2.y, 0xaf2462);
+    // this.tintTile(map, currentLevel.enemyStartPositions.ghoul1.x, currentLevel.enemyStartPositions.ghoul1.y, 0xaf2462); // red (unreachable)
+    // this.tintTile(map, currentLevel.enemyStartPositions.ghoul2.x, currentLevel.enemyStartPositions.ghoul2.y, 0xaf2462);
   }
 
   tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
