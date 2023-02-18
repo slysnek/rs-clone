@@ -158,7 +158,7 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.sounds));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.sounds, this.ui));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }

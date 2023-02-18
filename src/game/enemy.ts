@@ -107,7 +107,9 @@ class Enemy extends Entity {
 
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
-
+    if(hero.healthPoints <= 0){
+      hero.playDeathAnimation();
+    }
     this.currentActionPoints = 0;
   }
 

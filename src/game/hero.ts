@@ -6,6 +6,7 @@ import { damageFromHero, lostActionPointsForHero } from './battlePoints';
 import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
 import { attack } from './utilsForAttackAnimations';
+import UI from "./ui";
 
 class Hero extends Entity {
   gridEngine: GridEngine;
@@ -17,7 +18,8 @@ class Hero extends Entity {
   id: string;
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
   moveEnemiesToHero: (heroPos: Position) => void;
-  sounds: { [soundName: string]: Phaser.Sound.BaseSound }
+  sounds: { [soundName: string]: Phaser.Sound.BaseSound };
+  ui: UI
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -29,7 +31,8 @@ class Hero extends Entity {
     getEntitiesMap: () => Map<string, Hero | Enemy>,
     deleteEntityFromEntitiesMap: (entityKey: string) => void,
     moveEnemiesToHero: (heroPos: Position) => void,
-    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound },
+    ui: UI) {
     super(scene, texture, healthPoints, totalActionPoints)
     this.scene = scene;
     this.gridEngine = gridEngine;
@@ -43,6 +46,7 @@ class Hero extends Entity {
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
     this.moveEnemiesToHero = moveEnemiesToHero;
     this.sounds = sounds;
+    this.ui = ui;
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -67,6 +71,9 @@ class Hero extends Entity {
               && this.isAllEnemiesIdle()) {
               this.playAttackEnemyAnimation(entityValue as Enemy);
               this.attackEnemy(entityValue as Enemy);
+              if(entityValue.healthPoints <= 0){
+                entityValue.playDeathAnimation();
+              }
               // (entityValue as Enemy).playDeathAnimation();
               // this.playDeathAnimation();
             }
