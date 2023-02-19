@@ -279,18 +279,24 @@ class Game extends Phaser.Scene {
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
-            // fight
             this.moveEnemiesToHero(enterTile);
             this.enableFightMode();
           }
         }
         if (!charId.match(/^hero/i)) {
-          if (!this.gridEngine.isMoving(charId)) {
-            const enemy = this.entitiesMap.get(charId) as Enemy;
-            enemy.playAttackHeroAnimation(this.hero);
-            enemy.attackHero(this.hero);
+          const enemy = this.entitiesMap.get(charId) as Enemy;
+
+          if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0) {
+            if (this.isEnemyStaysNearHero(enemy)) {
+              enemy.playAttackHeroAnimation(this.hero);
+              enemy.attackHero(this.hero);
+              this.hero.refreshActionPoints();
+            } else {
+              this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
+            }
           }
         }
+        // console.log('Hero HP:', this.hero.healthPoints);
       });
   }
 
@@ -309,13 +315,13 @@ class Game extends Phaser.Scene {
 
       enemyObj.clearTimer();
       if (enemyObj.currentActionPoints > 0) {
-        if (this.isEnemyStaysNearHero(enemyObj)) {
-          enemyObj.playAttackHeroAnimation(this.hero);
-          enemyObj.attackHero(this.hero);
-          this.hero.refreshActionPoints();
-        } else {
+        // if (this.isEnemyStaysNearHero(enemyObj)) {
+        //   enemyObj.playAttackHeroAnimation(this.hero);
+        //   enemyObj.attackHero(this.hero);
+        //   this.hero.refreshActionPoints();
+        // } else {
           this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
-        }
+        // }
       }
     });
   }
