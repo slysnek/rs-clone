@@ -11,8 +11,11 @@ export default class UI {
   }
 
   updateHP(hero: Hero) {
-    const HP = document.querySelector('.hp') as HTMLElement
-    if (hero.healthPoints < 0) return
+    const HP = document.querySelector('.hp') as HTMLElement;
+    if (hero.healthPoints < 0) {
+      HP.textContent = '0';
+      return;
+    }
     if (hero.healthPoints < 10) {
       HP.textContent = '0' + hero.healthPoints.toString();
     } else {
@@ -33,7 +36,7 @@ export default class UI {
   updateWeapon(hero: Hero) {
     const weapon = document.querySelector('.weapon') as HTMLElement;
     const weaponName = document.querySelector('.weapon-name') as HTMLElement;
-    weapon.style.background = `url(${hero.currentWeapon.image}) no-repeat`
+    weapon.style.background = `url(${hero.currentWeapon.image}) no-repeat`;
     weaponName.textContent = hero.currentWeapon.name;
   }
 
@@ -51,8 +54,8 @@ export default class UI {
     coordMessage.classList.add('console-message');
     coordMessage.textContent = message;
     const consoleList = document.querySelector('.console-messages-list') as HTMLElement;
-    consoleList.prepend(coordMessage)
-    this.deleteLastMessage()
+    consoleList.prepend(coordMessage);
+    this.deleteLastMessage();
   }
 
   deleteLastMessage() {

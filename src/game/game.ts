@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine, Position } from 'grid-engine';
-import { windowSize, startPositionsForScorpions, heroAnims, scorpionAnims, offsetCoordForScorpions } from './constants';
+import { windowSize, heroAnims } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
@@ -281,6 +281,7 @@ class Game extends Phaser.Scene {
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
             this.moveEnemiesToHero(enterTile);
             this.enableFightMode();
+            this.ui.updateHP(this.hero);
           }
         }
         if (!charId.match(/^hero/i)) {
@@ -291,8 +292,10 @@ class Game extends Phaser.Scene {
               enemy.playAttackHeroAnimation(this.hero);
               enemy.attackHero(this.hero);
               this.hero.refreshActionPoints();
+              this.ui.updateHP(this.hero);
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
+              this.ui.updateHP(this.hero);
             }
           }
         }
@@ -310,20 +313,32 @@ class Game extends Phaser.Scene {
         closestEnemiesAroundHero.push(entityKey);
       }
     });
-    closestEnemiesAroundHero.forEach((enemyKey, index) => {
-      const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
+    try {
+      closestEnemiesAroundHero.forEach((enemyKey, index) => {
+        const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
+  
+        enemyObj.clearTimer();
+        if (enemyObj.currentActionPoints > 0) {
+          // if (this.isEnemyStaysNearHero(enemyObj)) {
+          //   enemyObj.playAttackHeroAnimation(this.hero);
+          //   enemyObj.attackHero(this.hero);
+          //   this.hero.refreshActionPoints();
+          // } else {
+            this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
+          // }
+        }
+      });
+    }
+    catch (e) {
+      // console.log('TypeError: Cannot read properties of undefined (reading x)');
+      closestEnemiesAroundHero.forEach((enemyKey) => {
+        const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
+        enemyObj.clearTimer();
+        enemyObj.currentActionPoints = 0;
+      });
+      return;
+    }
 
-      enemyObj.clearTimer();
-      if (enemyObj.currentActionPoints > 0) {
-        // if (this.isEnemyStaysNearHero(enemyObj)) {
-        //   enemyObj.playAttackHeroAnimation(this.hero);
-        //   enemyObj.attackHero(this.hero);
-        //   this.hero.refreshActionPoints();
-        // } else {
-          this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
-        // }
-      }
-    });
   }
 
   isEnemyStaysNearHero(enemy: Enemy) {
