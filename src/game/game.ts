@@ -316,23 +316,30 @@ class Game extends Phaser.Scene {
     try {
       closestEnemiesAroundHero.forEach((enemyKey, index) => {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
-  
+
         enemyObj.clearTimer();
         if (enemyObj.currentActionPoints > 0) {
-          // if (this.isEnemyStaysNearHero(enemyObj)) {
-          //   enemyObj.playAttackHeroAnimation(this.hero);
-          //   enemyObj.attackHero(this.hero);
-          //   this.hero.refreshActionPoints();
-          // } else {
+          if (this.isEnemyStaysNearHero(enemyObj) && !this.gridEngine.isMoving(enemyKey)) {
+            enemyObj.playAttackHeroAnimation(this.hero);
+            enemyObj.attackHero(this.hero);
+            this.hero.refreshActionPoints();
+          } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
-          // }
+          }
         }
       });
     }
     catch (e) {
-      // console.log('TypeError: Cannot read properties of undefined (reading x)');
+      console.log('TypeError: Cannot read properties of undefined (reading x)');
       closestEnemiesAroundHero.forEach((enemyKey) => {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
+        if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
+        && !this.gridEngine.isMoving(enemyKey)) {
+          enemyObj.playAttackHeroAnimation(this.hero);
+          enemyObj.attackHero(this.hero);
+          this.gridEngine.stopMovement(enemyKey);
+          this.hero.refreshActionPoints();
+        }
         enemyObj.clearTimer();
         enemyObj.currentActionPoints = 0;
       });
