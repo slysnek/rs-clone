@@ -134,7 +134,7 @@ class Game extends Phaser.Scene {
         return;
       }
       this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage');
-    })
+    });
   }
 
   deleteEntityFromEntitiesMap(entityKey: string) {
@@ -161,7 +161,7 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.sounds));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.ui, this.sounds));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
@@ -263,6 +263,9 @@ class Game extends Phaser.Scene {
             this.hero.refreshActionPoints();
           }
         }
+        
+        this.ui.updateHP(this.hero);
+        this.ui.updateAP(this.hero);
       });
 
     this.gridEngine
@@ -292,13 +295,16 @@ class Game extends Phaser.Scene {
               enemy.playAttackHeroAnimation(this.hero);
               enemy.attackHero(this.hero);
               this.hero.refreshActionPoints();
-              this.ui.updateHP(this.hero);
+              this.ui.putMessageToConsole(`Enemy attacks hero!`);
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
-              this.ui.updateHP(this.hero);
+
             }
           }
         }
+
+        this.ui.updateHP(this.hero);
+        this.ui.updateAP(this.hero);
         // console.log('Hero HP:', this.hero.healthPoints);
       });
   }
@@ -323,6 +329,7 @@ class Game extends Phaser.Scene {
             enemyObj.playAttackHeroAnimation(this.hero);
             enemyObj.attackHero(this.hero);
             this.hero.refreshActionPoints();
+            this.ui.putMessageToConsole(`Enemy attacks hero!`);
           } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
           }
@@ -330,7 +337,7 @@ class Game extends Phaser.Scene {
       });
     }
     catch (e) {
-      console.log('TypeError: Cannot read properties of undefined (reading x)');
+      // console.log('TypeError: Cannot read properties of undefined (reading x)');
       closestEnemiesAroundHero.forEach((enemyKey) => {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
         if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
@@ -339,13 +346,15 @@ class Game extends Phaser.Scene {
           enemyObj.attackHero(this.hero);
           this.gridEngine.stopMovement(enemyKey);
           this.hero.refreshActionPoints();
+          this.ui.putMessageToConsole(`Enemy attacks hero!`);
         }
         enemyObj.clearTimer();
         enemyObj.currentActionPoints = 0;
       });
       return;
     }
-
+    this.ui.updateHP(this.hero);
+    this.ui.updateAP(this.hero);
   }
 
   isEnemyStaysNearHero(enemy: Enemy) {

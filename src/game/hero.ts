@@ -6,6 +6,7 @@ import { damageFromHero, lostActionPointsForHero } from './battlePoints';
 import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
 import { attack } from './utilsForAttackAnimations';
+import UI from './ui';
 
 class Hero extends Entity {
   gridEngine: GridEngine;
@@ -18,6 +19,7 @@ class Hero extends Entity {
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
   moveEnemiesToHero: (heroPos: Position) => void;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound }
+  ui: UI;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -29,6 +31,7 @@ class Hero extends Entity {
     getEntitiesMap: () => Map<string, Hero | Enemy>,
     deleteEntityFromEntitiesMap: (entityKey: string) => void,
     moveEnemiesToHero: (heroPos: Position) => void,
+    ui: UI,
     sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
     super(scene, texture, healthPoints, totalActionPoints)
     this.scene = scene;
@@ -42,6 +45,7 @@ class Hero extends Entity {
     this.id = 'hero';
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
     this.moveEnemiesToHero = moveEnemiesToHero;
+    this.ui = ui;
     this.sounds = sounds;
   }
 
@@ -67,6 +71,7 @@ class Hero extends Entity {
               && this.isAllEnemiesIdle()) {
               this.playAttackEnemyAnimation(entityValue as Enemy);
               this.attackEnemy(entityValue as Enemy);
+              this.ui.putMessageToConsole(`Hero attacks enemy!`);
               // (entityValue as Enemy).playDeathAnimation();
               // this.playDeathAnimation();
             }
