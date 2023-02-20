@@ -32,6 +32,9 @@
     </div>
   </div>
 </div>
+<div class="inventory-panel hide">
+  <div class="inventory-panel-img"></div>
+</div>
 <div class="exchange-items-panel hide">
   <div class="exchange-items-panel-img"></div>
 </div>
@@ -206,12 +209,18 @@
   .hide{
     display: none;
   }
-  .exchange-items-panel{
+  .exchange-items-panel, .inventory-panel{
     width: 527px;
     height: 377px;
     position: absolute;
   }
   .exchange-items-panel-img{
+    height: 100%;
+    width: 100%;
+    background-image: url(../assets/ui-elements/panel.png);
+    background-size: cover;
+  }
+  .inventory-panel-img{
     height: 100%;
     width: 100%;
     background-image: url(../assets/ui-elements/panel.png);

@@ -20,8 +20,9 @@ class Game extends Phaser.Scene {
   gridEngine: GridEngine;
   ui: UI;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound }
+  inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
-  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
+  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine, inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
     super('game');
     this.hero = hero;
     this.entitiesMap = new Map();
@@ -33,6 +34,7 @@ class Game extends Phaser.Scene {
     this.moveEnemiesToHero = this.moveEnemiesToHero.bind(this);
     this.ui = new UI(this);
     this.sounds = {};
+    this.inventoryContainer = inventoryContainer;
   }
 
   preload() {
@@ -58,6 +60,7 @@ class Game extends Phaser.Scene {
     this.load.audio('startFight', 'assets/music/startFight.wav');
 
     // this.input.setDefaultCursor('url("assets/cursor/cursor-24x24.png"), pointer');
+    this.load.image('dump', 'assets/maps/dump.png');
   }
 
   create() {
@@ -100,6 +103,8 @@ class Game extends Phaser.Scene {
     this.ui.updateWeapon(this.hero)
     this.ui.setInvButtonListener();
     this.ui.setChangeWeaponListener(this.hero)
+    this.placeObject();
+    this.setInventoryContainerListener();
   }
 
   addSounds() {
@@ -440,6 +445,18 @@ class Game extends Phaser.Scene {
         }
       }
     }
+  }
+
+  placeObject ()
+  {
+      this.inventoryContainer = this.physics.add.sprite(923, 1913, 'dump');
+      // console.log(this.inventoryContainer)
+  }
+
+  setInventoryContainerListener(){
+    this.inventoryContainer.setInteractive().on('pointerdown', () => {
+      this.ui.showExchangePanel();
+   }, this);
   }
 }
 

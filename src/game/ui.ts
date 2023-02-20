@@ -19,6 +19,9 @@ export default class UI {
     const left = testUI.width / 2 - 264;
     exchangePanel.style.top = `${top}px`;
     exchangePanel.style.left = `${left}px`;
+    const inventoryPanel = document.querySelector('.inventory-panel') as HTMLElement;
+    inventoryPanel.style.top = `${top}px`;
+    inventoryPanel.style.left = `${left}px`;
   }
 
   updateHP(hero: Hero) {
@@ -84,5 +87,10 @@ export default class UI {
       const lastMessage = allMessages[allMessages.length - 1];
       lastMessage.remove();
     }
+  }
+
+  showExchangePanel(){
+    const inventoryPanel = document.querySelector('.inventory-panel') as HTMLElement;
+    inventoryPanel.classList.toggle('hide');
   }
 }
