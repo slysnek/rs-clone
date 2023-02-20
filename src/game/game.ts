@@ -31,7 +31,7 @@ class Game extends Phaser.Scene {
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
     this.deleteEntityFromEntitiesMap = this.deleteEntityFromEntitiesMap.bind(this);
     this.moveEnemiesToHero = this.moveEnemiesToHero.bind(this);
-    this.ui = new UI();
+    this.ui = new UI(this);
     this.sounds = {};
   }
 
@@ -91,12 +91,15 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    this.ui.createUI(this);
-    this.ui.putMessageToConsole('Game loaded');
-    this.ui.updateHP(this.hero);
-    this.ui.updateAP(this.hero);
-    this.ui.updateWeapon(this.hero);
-    this.ui.setChangeWeaponListener(this.hero);
+    this.subscribeCharacterToChangeMoving();
+    //ui section
+    this.ui.createUI(this)
+    this.ui.putMessageToConsole('Game loaded')
+    this.ui.updateHP(this.hero)
+    this.ui.updateAP(this.hero)
+    this.ui.updateWeapon(this.hero)
+    this.ui.setInvButtonListener();
+    this.ui.setChangeWeaponListener(this.hero)
   }
 
   addSounds() {

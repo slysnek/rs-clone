@@ -32,7 +32,8 @@
     </div>
   </div>
 </div>
-<div class="change-items-panel">
+<div class="exchange-items-panel hide">
+  <div class="exchange-items-panel-img"></div>
 </div>
 <style>
   * {
@@ -200,6 +201,20 @@
     height: 100%;
     width: 100%;
     background-image: url(../assets/ui-elements/inv-button.png);
+    background-size: cover;
+  }
+  .hide{
+    display: none;
+  }
+  .exchange-items-panel{
+    width: 527px;
+    height: 377px;
+    position: absolute;
+  }
+  .exchange-items-panel-img{
+    height: 100%;
+    width: 100%;
+    background-image: url(../assets/ui-elements/panel.png);
     background-size: cover;
   }
 </style>

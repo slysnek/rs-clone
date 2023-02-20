@@ -4,10 +4,21 @@ import Game from "./game";
 import Hero from "./hero";
 
 export default class UI {
+  scene: Phaser.Scene;
+
+  constructor(scene: Phaser.Scene){
+    this.scene = scene;
+  }
+
   createUI(scene: Game) {
     const testUI = scene.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 45).createFromCache('ui')
     testUI.scrollFactorX = 0;
     testUI.scrollFactorY = 0;
+    const exchangePanel = document.querySelector('.exchange-items-panel') as HTMLElement;
+    const top = -(((windowSize.windowHeight - 45) / 2) + 377 / 2);
+    const left = testUI.width / 2 - 264;
+    exchangePanel.style.top = `${top}px`;
+    exchangePanel.style.left = `${left}px`;
   }
 
   updateHP(hero: Hero) {
@@ -46,6 +57,14 @@ export default class UI {
       hero.changeWeapon();
       this.updateWeapon(hero);
       this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`);
+    })
+  }
+
+  setInvButtonListener(){
+    const invButton = document.querySelector('.inv-button') as HTMLElement;
+    invButton.addEventListener('click', () => {
+      const exchanhePanel = document.querySelector('.exchange-items-panel') as HTMLElement;
+      exchanhePanel.classList.toggle('hide');
     })
   }
 
