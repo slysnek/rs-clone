@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import dialogueConfig from './game/dialogue_config';
+import dialogueConfig from './game/dialogue-config';
 // import AppView from './app/appView';
 
 // new AppView().run();
