@@ -26,7 +26,13 @@
   <div class="hp-element">
     <span class="hp">?</span>
   </div>
-  <div class="right-pan"></div>
+  <div class="right-pan">
+    <div class="inv-button-container">
+      <div class="inv-button"></div>
+    </div>
+  </div>
+</div>
+<div class="change-items-panel">
 </div>
 <style>
   * {
@@ -176,9 +182,24 @@
   }
 
   .right-pan {
+    position: relative;
     height: 100%;
     width: 229px;
     background-image: url(../assets/ui-elements/right-pan.png);
+    background-size: cover;
+  }
+  .inv-button-container{
+    position: absolute;
+    height: 22px;
+    width: 34px;
+    left: 20px;
+    top: 6px;
+    z-index: 20;
+  }
+  .inv-button{
+    height: 100%;
+    width: 100%;
+    background-image: url(../assets/ui-elements/inv-button.png);
     background-size: cover;
   }
 </style>
