@@ -81,9 +81,11 @@ class Game extends Phaser.Scene {
       const name = `${currentLevel.enemyName}${i + 1}`;
       this.createEnemy(name, map, 6, currentLevel.infoForCreateEnemies[name].size, currentLevel.infoForCreateEnemies[name].scale);
     }
-
+    this.placeObject();
+    this.setInventoryContainerListener();
     this.gridEngineInit(map);
-
+    const pos = this.gridEngine.getPosition('dump')
+    console.log(pos)
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, currentLevel.enemyAnims, defaultBehavior);
@@ -103,8 +105,6 @@ class Game extends Phaser.Scene {
     this.ui.updateWeapon(this.hero)
     this.ui.setInvButtonListener();
     this.ui.setChangeWeaponListener(this.hero)
-    this.placeObject();
-    this.setInventoryContainerListener();
   }
 
   addSounds() {
@@ -172,6 +172,11 @@ class Game extends Phaser.Scene {
           offsetY: 42,
           walkingAnimationEnabled: false,
           speed: 7,
+        },
+        {
+          id: 'dump',
+          sprite: this.inventoryContainer,
+          startPosition: { x: 72, y: 48 },
         },
       ],
       numberOfDirections: 4
@@ -448,12 +453,19 @@ class Game extends Phaser.Scene {
   }
 
   placeObject() {
-    this.inventoryContainer = this.physics.add.staticSprite(923, 1913, 'dump');
+    this.inventoryContainer = this.physics.add.staticSprite(0, 0, 'dump');
   }
 
   setInventoryContainerListener() {
-    this.inventoryContainer.setInteractive().on('pointerdown', () => {
-      this.ui.showExchangePanel();
+    this.inventoryContainer.setInteractive().on('pointerdown', (pointer: Phaser.Types.Input.Keyboard.CursorKeys, localX: number, localY:number, event: Event) => {
+      event.stopPropagation();
+      const heroPosition = this.gridEngine.getPosition('hero');
+      const invContainerPosition = this.gridEngine.getPosition('dump');
+      const w1 = ((invContainerPosition.x - 2) <= heroPosition.x && (invContainerPosition.x + 2) >= heroPosition.x);
+      const w2 = ((invContainerPosition.y - 2) <= heroPosition.y && (invContainerPosition.y + 2) >= heroPosition.y)
+      if(w1 && w2){
+        this.ui.showExchangePanel();
+      }
     }, this);
   }
 }
