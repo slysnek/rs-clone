@@ -12,6 +12,8 @@ import { currentLevel } from './levels';
 
 const defaultBehavior = 'walk';
 
+// Phaser.Types.Physics.Arcade.SpriteWithStaticBody
+
 class Game extends Phaser.Scene {
   hero: Hero;
   entitiesMap: Map<string, Hero | Enemy>;
@@ -22,7 +24,8 @@ class Game extends Phaser.Scene {
   sounds: { [soundName: string]: Phaser.Sound.BaseSound }
   inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
-  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine, inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine, inventoryContainer: any) {
     super('game');
     this.hero = hero;
     this.entitiesMap = new Map();
@@ -173,6 +176,11 @@ class Game extends Phaser.Scene {
           walkingAnimationEnabled: false,
           speed: 7,
         },
+        {
+          id: 'dump',
+          sprite: this.inventoryContainer,
+          charLayer: `${map.layers[map.layers.length - 1].name}`,
+        }
       ],
       numberOfDirections: 4
     };
@@ -447,9 +455,18 @@ class Game extends Phaser.Scene {
     }
   }
 
+  stopHero(){
+    // this.hero.anims.stop()
+    console.log('hiii')
+  }
+
   placeObject ()
   {
-      this.inventoryContainer = this.physics.add.sprite(923, 1913, 'dump');
+      this.inventoryContainer = this.physics.add.staticImage(923, 1913, 'dump');
+      this.gridEngine.setCollisionGroups('hero', ['dump'])
+      console.log(this.gridEngine.getCollisionGroups('hero'))
+      // this.physics.enable(this.inventoryContainer, Phaser.Physics.ARCADE);
+      // this.physics.add.collider(this.hero, this.inventoryContainer);
       // console.log(this.inventoryContainer)
   }
 

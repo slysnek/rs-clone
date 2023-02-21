@@ -6,14 +6,14 @@ export type gridEngineType = {
   characters: {
     id: string;
     sprite: Hero | Enemy;
-    startPosition: {
+    startPosition?: {
       x: number;
       y: number;
     };
-    offsetX: number;
-    offsetY: number;
-    walkingAnimationEnabled: boolean;
-    speed: number;
+    offsetX?: number;
+    offsetY?: number;
+    walkingAnimationEnabled?: boolean;
+    speed?: number;
     charLayer?: string;
   }[];
   numberOfDirections: number;
