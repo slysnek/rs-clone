@@ -292,7 +292,7 @@ class Game extends Phaser.Scene {
               enemy.playAttackHeroAnimation(this.hero);
               enemy.attackHero(this.hero);
               this.hero.refreshActionPoints();
-              this.ui.putMessageToConsole(`Enemy attacks hero!`);
+              // this.ui.putMessageToConsole(`Enemy attacks hero!`);
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
 
@@ -326,7 +326,7 @@ class Game extends Phaser.Scene {
             enemyObj.playAttackHeroAnimation(this.hero);
             enemyObj.attackHero(this.hero);
             this.hero.refreshActionPoints();
-            this.ui.putMessageToConsole(`Enemy attacks hero!`);
+            // this.ui.putMessageToConsole(`Enemy attacks hero!`);
           } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
           }
@@ -343,7 +343,7 @@ class Game extends Phaser.Scene {
           enemyObj.attackHero(this.hero);
           this.gridEngine.stopMovement(enemyKey);
           this.hero.refreshActionPoints();
-          this.ui.putMessageToConsole(`Enemy attacks hero!`);
+          // this.ui.putMessageToConsole(`Enemy attacks hero!`);
         }
         enemyObj.clearTimer();
         enemyObj.currentActionPoints = 0;

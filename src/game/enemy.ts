@@ -106,8 +106,6 @@ class Enemy extends Entity {
   }
 
   attackHero(hero: Hero) {
-    // console.log(`${this.id} attacking hero ${hero.id}!`);
-
     // this.currentActionPoints = 0;
 
     const damage = damageFromScorpion['punch'];
@@ -117,6 +115,7 @@ class Enemy extends Entity {
     }
     this.currentActionPoints = 0;
     this.ui.updateHP(hero);
+    this.ui.putMessageToConsole(`Enemy attacks hero: -${damage} health`);
   }
 
   playDeathAnimation() {

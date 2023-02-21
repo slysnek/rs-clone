@@ -5,7 +5,7 @@ import Enemy from "./enemy";
 import { damageFromHero, lostActionPointsForHero } from './battlePoints';
 import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
-import { attack } from './utils';
+import { attack, randomIntFromInterval } from './utils';
 import UI from './ui';
 
 class Hero extends Entity {
@@ -39,8 +39,8 @@ class Hero extends Entity {
     this.map = map;
     this.cursor = cursor;
     this.getEntitiesMap = getEntitiesMap;
-    this.mainWeapon = new Weapon('fists', './assets/weapons/fist.png', 5, 0.8, 1)
-    this.secondaryWeapon = new Weapon('pistol', './assets/weapons/pistol-03.png', 12, 0.6, 3)
+    this.mainWeapon = new Weapon('fists', './assets/weapons/fist.png', 5, 75, 85, 1);
+    this.secondaryWeapon = new Weapon('pistol', './assets/weapons/pistol-03.png', 12, 55, 75, 3);
     this.currentWeapon = this.mainWeapon;
     this.id = 'hero';
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
@@ -72,7 +72,6 @@ class Hero extends Entity {
               && this.isAllEnemiesIdle()) {
               this.playAttackEnemyAnimation(entityValue as Enemy);
               this.attackEnemy(entityValue as Enemy);
-              this.ui.putMessageToConsole(`Hero attacks enemy!`);
               if(entityValue.healthPoints <= 0){
                 entityValue.playDeathAnimation();
               }
@@ -193,11 +192,18 @@ class Hero extends Entity {
   }
 
   attackEnemy(enemy: Enemy) {
+      // changing accuracy. Is enough to attack?
+      if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
+        const damage = damageFromHero[this.currentWeapon.name];
+        enemy.updateHealthPoints(damage);
+        this.ui.putMessageToConsole(`Hero hits enemy: -${damage} health`);
+      } else {
+        this.ui.putMessageToConsole(`Hero misses the attack`);
+      }
+
       const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
       this.updateActionPoints(lostPoints);
       this.ui.updateAP(this);
-      const damage = damageFromHero[this.currentWeapon.name];
-      enemy.updateHealthPoints(damage);
 
       // if hero turn finished with attack, refresh enemies AP then
       if (this.currentActionPoints <= 0) {
@@ -210,8 +216,6 @@ class Hero extends Entity {
         });
       }
       this.moveEnemiesToHero(this.gridEngine.getPosition(this.id));
-      // console.log("Hero Weapon:", this.currentWeapon.name);
-      // console.log("Hero AP:", this.currentActionPoints, ", Enemy HP:", enemy.healthPoints);
   }
 
   makeStep() {
