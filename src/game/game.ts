@@ -6,7 +6,7 @@ import Hero from './hero';
 import { gridEngineType } from './types';
 import UI from './ui';
 import { entitiesTotalActionPoints } from './battlePoints';
-import { manhattanDist } from './utilsForAttackAnimations';
+import { manhattanDist } from './utils';
 import Entity from './entity';
 import { currentLevel } from './levels';
 
@@ -84,7 +84,7 @@ class Game extends Phaser.Scene {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, currentLevel.enemyAnims, defaultBehavior);
         (entityValue as Enemy).setAttackAnimation();
         (entityValue as Enemy).setDamageAnimation();
-        (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
+        (entityValue as Enemy).setEnemyWalkBehavior(entityKey/*, map*/);
       }
     });
     this.hero.setPointerDownListener(map);

@@ -5,7 +5,7 @@ import Enemy from "./enemy";
 import { damageFromHero, lostActionPointsForHero } from './battlePoints';
 import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
-import { attack } from './utilsForAttackAnimations';
+import { attack } from './utils';
 import UI from './ui';
 
 class Hero extends Entity {
