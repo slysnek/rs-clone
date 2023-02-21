@@ -260,6 +260,9 @@ class Game extends Phaser.Scene {
             this.hero.refreshActionPoints();
           }
         }
+        
+        this.ui.updateHP(this.hero);
+        this.ui.updateAP(this.hero);
       });
 
     this.gridEngine
@@ -276,21 +279,30 @@ class Game extends Phaser.Scene {
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
-            // fight
             this.moveEnemiesToHero(enterTile);
             this.enableFightMode();
+            this.ui.updateHP(this.hero);
           }
         }
         if (!charId.match(/^hero/i)) {
-          if (!this.gridEngine.isMoving(charId)) {
-            const enemy = this.entitiesMap.get(charId) as Enemy;
-            // поставила условие, чтобы герой не умирал хотя бы вне боя. вопрос: почему атака вообще происходит именно здесь?
-            if(enemy.fightMode){
+          const enemy = this.entitiesMap.get(charId) as Enemy;
+
+          if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0) {
+            if (this.isEnemyStaysNearHero(enemy)) {
               enemy.playAttackHeroAnimation(this.hero);
               enemy.attackHero(this.hero);
+              this.hero.refreshActionPoints();
+              this.ui.putMessageToConsole(`Enemy attacks hero!`);
+            } else {
+              this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
+
             }
           }
         }
+
+        this.ui.updateHP(this.hero);
+        this.ui.updateAP(this.hero);
+        // console.log('Hero HP:', this.hero.healthPoints);
       });
   }
 
@@ -304,20 +316,42 @@ class Game extends Phaser.Scene {
         closestEnemiesAroundHero.push(entityKey);
       }
     });
-    closestEnemiesAroundHero.forEach((enemyKey, index) => {
-      const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
+    try {
+      closestEnemiesAroundHero.forEach((enemyKey, index) => {
+        const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
 
-      enemyObj.clearTimer();
-      if (enemyObj.currentActionPoints > 0) {
-        if (this.isEnemyStaysNearHero(enemyObj)) {
+        enemyObj.clearTimer();
+        if (enemyObj.currentActionPoints > 0) {
+          if (this.isEnemyStaysNearHero(enemyObj) && !this.gridEngine.isMoving(enemyKey)) {
+            enemyObj.playAttackHeroAnimation(this.hero);
+            enemyObj.attackHero(this.hero);
+            this.hero.refreshActionPoints();
+            this.ui.putMessageToConsole(`Enemy attacks hero!`);
+          } else {
+            this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
+          }
+        }
+      });
+    }
+    catch (e) {
+      // console.log('TypeError: Cannot read properties of undefined (reading x)');
+      closestEnemiesAroundHero.forEach((enemyKey) => {
+        const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
+        if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
+        && !this.gridEngine.isMoving(enemyKey)) {
           enemyObj.playAttackHeroAnimation(this.hero);
           enemyObj.attackHero(this.hero);
+          this.gridEngine.stopMovement(enemyKey);
           this.hero.refreshActionPoints();
-        } else {
-          this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
+          this.ui.putMessageToConsole(`Enemy attacks hero!`);
         }
-      }
-    });
+        enemyObj.clearTimer();
+        enemyObj.currentActionPoints = 0;
+      });
+      return;
+    }
+    this.ui.updateHP(this.hero);
+    this.ui.updateAP(this.hero);
   }
 
   isEnemyStaysNearHero(enemy: Enemy) {
