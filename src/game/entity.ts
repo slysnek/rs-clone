@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { heroAnims, scorpionAnims } from "./constants";
+import { heroAnims, scorpionAnims, deathClawAnims, ghoulAnims } from "./constants";
 import { Animations, StopAnimations } from "./types";
 import Weapon from './weapon'
 
@@ -83,6 +83,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     const heroRegex = /^hero/i;
     const scorpionRegex = /^scorpion/i;
     const deathClawRegex = /^deathClaw/i;
+    const ghoulRegex = /^ghoul/i;
 
     if (entityKey.match(heroRegex)) {
       entityAnims = heroAnims;
@@ -91,7 +92,10 @@ class Entity extends Phaser.GameObjects.Sprite {
       entityAnims = scorpionAnims;
     }
     if (entityKey.match(deathClawRegex)) {
-      // deathclaw anims
+      entityAnims = deathClawAnims;
+    }
+    if (entityKey.match(ghoulRegex)) {
+      entityAnims = ghoulAnims;
     }
 
     switch (direction) {

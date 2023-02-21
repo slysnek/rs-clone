@@ -62,7 +62,7 @@ class Game extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     const map = this.buildMap();
-    this.tintTiles(map);
+    // this.tintTiles(map);
     this.addSounds();
     this.createHero(map);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
@@ -76,9 +76,6 @@ class Game extends Phaser.Scene {
       const name = `${currentLevel.enemyName}${i + 1}`;
       this.createEnemy(name, map, 6, currentLevel.infoForCreateEnemies[name].size, currentLevel.infoForCreateEnemies[name].scale);
     }
-    // this.createEnemy('scorpion1', map, 6, 'big');
-    // this.createEnemy('scorpion2', map, 6, 'small', 0.75);
-    // this.createEnemy('scorpion3', map, 6, 'small', 0.75);
 
     this.gridEngineInit(map);
 
@@ -87,7 +84,7 @@ class Game extends Phaser.Scene {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, currentLevel.enemyAnims, defaultBehavior);
         (entityValue as Enemy).setAttackAnimation();
         (entityValue as Enemy).setDamageAnimation();
-        // (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
+        (entityValue as Enemy).setEnemyWalkBehavior(entityKey, map);
       }
     });
     this.hero.setPointerDownListener(map);
@@ -98,7 +95,7 @@ class Game extends Phaser.Scene {
     this.ui.updateHP(this.hero);
     this.ui.updateAP(this.hero);
     this.ui.updateWeapon(this.hero);
-    this.createDamageButton();
+    // this.createDamageButton();
     this.ui.setChangeWeaponListener(this.hero);
   }
 
@@ -115,27 +112,27 @@ class Game extends Phaser.Scene {
     this.sounds.startFight = this.sound.add('startFight');
   }
 
-  createDamageButton() {
-    const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 100)
-      .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
-    damageButton.scrollFactorX = 0;
-    damageButton.scrollFactorY = 0;
-    damageButton.addListener('click');
-    damageButton.on('click', () => {
-      if (this.hero.healthPoints === 0) {
-        this.ui.putMessageToConsole('I am already dead. Stop mocking me.');
-        return;
-      }
+  // createDamageButton() {
+  //   const damageButton = this.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 100)
+  //     .createElement('div', 'width: 250px; height: 30px; background-color: black; color: green; cursor: pointer', 'Click me to give hero 1 damage')
+  //   damageButton.scrollFactorX = 0;
+  //   damageButton.scrollFactorY = 0;
+  //   damageButton.addListener('click');
+  //   damageButton.on('click', () => {
+  //     if (this.hero.healthPoints === 0) {
+  //       this.ui.putMessageToConsole('I am already dead. Stop mocking me.');
+  //       return;
+  //     }
 
-      this.hero.healthPoints -= 1;
-      this.ui.updateHP(this.hero);
-      if (this.hero.healthPoints === 0) {
-        this.ui.putMessageToConsole('You killed me.');
-        return;
-      }
-      this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage');
-    });
-  }
+  //     this.hero.healthPoints -= 1;
+  //     this.ui.updateHP(this.hero);
+  //     if (this.hero.healthPoints === 0) {
+  //       this.ui.putMessageToConsole('You killed me.');
+  //       return;
+  //     }
+  //     this.ui.putMessageToConsole('Ouch, you have given me 1 debug damage');
+  //   })
+  // }
 
   deleteEntityFromEntitiesMap(entityKey: string) {
     this.entitiesMap.delete(entityKey);
@@ -161,13 +158,13 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.ui, this.sounds));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.sounds, this.ui));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size = 'big', scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds, this.ui));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
@@ -184,7 +181,7 @@ class Game extends Phaser.Scene {
         {
           id: 'hero',
           sprite: this.hero,
-          startPosition: { x: 68, y: 58 },
+          startPosition: currentLevel.heroStartCoords,
           offsetX: 0,
           offsetY: 42,
           walkingAnimationEnabled: false,
@@ -438,37 +435,37 @@ class Game extends Phaser.Scene {
     }
   }
 
-  tintTiles(map: Tilemaps.Tilemap) {
-    this.tintTile(map, 30, 35, 0xff7a4a); // orange
-    this.tintTile(map, 35, 28, 0xffff0a); // yellow
-    this.tintTile(map, 35, 25, 0x4a4aff); // blue
-    this.tintTile(map, 15, 18, 0x4aff4a); // green
-    this.tintTile(map, 20, 28, 0xaf2462); // red
-    this.tintTile(map, 40, 48, 0xaf22ff); // magenta
-    this.tintTile(map, 0, 0, 0xaf2462); // red
-    this.tintTile(map, 48, 53, 0xaf2462); // red
-    // this.tintTile(map, currentLevel.sta.scorpion1.x, startPositionsForScorpions.scorpion1.y, 0xaf2462); // red (unreachable)
-    // this.tintTile(map, startPositionsForScorpions.scorpion2.x, startPositionsForScorpions.scorpion2.y, 0xaf2462);
-  }
+  // tintTiles(map: Tilemaps.Tilemap) {
+  //   this.tintTile(map, 30, 35, 0xff7a4a); // orange
+  //   this.tintTile(map, 35, 28, 0xffff0a); // yellow
+  //   this.tintTile(map, 35, 25, 0x4a4aff); // blue
+  //   this.tintTile(map, 15, 18, 0x4aff4a); // green
+  //   this.tintTile(map, 20, 28, 0xaf2462); // red
+  //   this.tintTile(map, 40, 48, 0xaf22ff); // magenta
+  //   this.tintTile(map, 0, 0, 0xaf2462); // red
+  //   this.tintTile(map, 48, 53, 0xaf2462); // red
+  //   // this.tintTile(map, currentLevel.enemyStartPositions.ghoul1.x, currentLevel.enemyStartPositions.ghoul1.y, 0xaf2462); // red (unreachable)
+  //   // this.tintTile(map, currentLevel.enemyStartPositions.ghoul2.x, currentLevel.enemyStartPositions.ghoul2.y, 0xaf2462);
+  // }
 
-  tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
-    for (let x = 0; x <= radius; x++) {
-      for (let y = 0; y <= radius; y++) {
-        if (manhattanDist(posX, posY, posX + x, posY + y) <= radius) {
-          this.tintTile(tilemap, posX + x, posY + y, color);
-        }
-        if (manhattanDist(posX, posY, posX - x, posY + y) <= radius) {
-          this.tintTile(tilemap, posX - x, posY + y, color);
-        }
-        if (manhattanDist(posX, posY, posX + x, posY - y) <= radius) {
-          this.tintTile(tilemap, posX + x, posY - y, color);
-        }
-        if (manhattanDist(posX, posY, posX - x, posY - y) <= radius) {
-          this.tintTile(tilemap, posX - x, posY - y, color);
-        }
-      }
-    }
-  }
+  // tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
+  //   for (let x = 0; x <= radius; x++) {
+  //     for (let y = 0; y <= radius; y++) {
+  //       if (manhattanDist(posX, posY, posX + x, posY + y) <= radius) {
+  //         this.tintTile(tilemap, posX + x, posY + y, color);
+  //       }
+  //       if (manhattanDist(posX, posY, posX - x, posY + y) <= radius) {
+  //         this.tintTile(tilemap, posX - x, posY + y, color);
+  //       }
+  //       if (manhattanDist(posX, posY, posX + x, posY - y) <= radius) {
+  //         this.tintTile(tilemap, posX + x, posY - y, color);
+  //       }
+  //       if (manhattanDist(posX, posY, posX - x, posY - y) <= radius) {
+  //         this.tintTile(tilemap, posX - x, posY - y, color);
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 export default Game;

@@ -483,6 +483,18 @@ oppositeDirections.set('down-right', 'up-left');
 oppositeDirections.set('down-left', 'up-right');
 oppositeDirections.set('up-left', 'down-right');
 
+export const startPositionsForHeroMap1: { x: number, y: number } = {
+  x: 58, y: 48 
+};
+
+export const startPositionsForHeroMap2: { x: number, y: number } = {
+  x: 57, y: 73
+};
+
+export const startPositionsForHeroMap3: { x: number, y: number } = {
+  x: 58, y: 48
+};
+
 export const startPositionsForScorpions: { [key: string]: { x: number, y: number } } = {
   scorpion1: { x: 70, y: 70 },
   scorpion2: { x: 73, y: 74 },

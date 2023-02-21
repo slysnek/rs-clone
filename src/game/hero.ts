@@ -18,8 +18,8 @@ class Hero extends Entity {
   id: string;
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
   moveEnemiesToHero: (heroPos: Position) => void;
-  sounds: { [soundName: string]: Phaser.Sound.BaseSound }
-  ui: UI;
+  sounds: { [soundName: string]: Phaser.Sound.BaseSound };
+  ui: UI
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -31,8 +31,8 @@ class Hero extends Entity {
     getEntitiesMap: () => Map<string, Hero | Enemy>,
     deleteEntityFromEntitiesMap: (entityKey: string) => void,
     moveEnemiesToHero: (heroPos: Position) => void,
-    ui: UI,
-    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound },
+    ui: UI) {
     super(scene, texture, healthPoints, totalActionPoints)
     this.scene = scene;
     this.gridEngine = gridEngine;
@@ -47,6 +47,7 @@ class Hero extends Entity {
     this.moveEnemiesToHero = moveEnemiesToHero;
     this.ui = ui;
     this.sounds = sounds;
+    this.ui = ui;
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -58,7 +59,7 @@ class Hero extends Entity {
       gridMouseCoords.y = Math.round(gridMouseCoords.y);
 
       const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
-      clickedTile.tint = 0xff7a4a;
+      // clickedTile.tint = 0xff7a4a;
 
       // attack if fight mode and enough AP
       if (this.fightMode) {
@@ -72,6 +73,9 @@ class Hero extends Entity {
               this.playAttackEnemyAnimation(entityValue as Enemy);
               this.attackEnemy(entityValue as Enemy);
               this.ui.putMessageToConsole(`Hero attacks enemy!`);
+              if(entityValue.healthPoints <= 0){
+                entityValue.playDeathAnimation();
+              }
               // (entityValue as Enemy).playDeathAnimation();
               // this.playDeathAnimation();
             }
@@ -191,7 +195,7 @@ class Hero extends Entity {
   attackEnemy(enemy: Enemy) {
       const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
       this.updateActionPoints(lostPoints);
-
+      this.ui.updateAP(this);
       const damage = damageFromHero[this.currentWeapon.name];
       enemy.updateHealthPoints(damage);
 
@@ -214,6 +218,7 @@ class Hero extends Entity {
     if (this.fightMode) {
       const lostPoints = lostActionPointsForHero.step;
       this.updateActionPoints(lostPoints);
+      this.ui.updateAP(this);
     }
   }
 

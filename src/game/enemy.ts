@@ -6,6 +6,8 @@ import Hero from "./hero";
 import { attack } from "./utilsForAttackAnimations";
 import { damageFromScorpion } from "./battlePoints";
 import { currentLevel } from "./levels";
+import UI from "./ui";
+
 function getRandomXYDelta() {
   const deltaValue = () => Math.ceil(Math.random() * 10 / 3);
   return { xDelta: deltaValue(), yDelta: deltaValue() };
@@ -28,6 +30,7 @@ class Enemy extends Entity {
   maxRange: number;
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
+  ui: UI;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -39,7 +42,8 @@ class Enemy extends Entity {
     size: string,
     totalActionPoints: number,
     deleteEntityFromEntitiesMap: (entityKey: string) => void,
-    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound },
+    ui: UI) {
     super(scene, texture, healthPoints, totalActionPoints);
     this.gridEngine = gridEngine;
     this.movesTimerId = null;
@@ -51,6 +55,7 @@ class Enemy extends Entity {
     this.maxRange = 1;
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
     this.sounds = sounds;
+    this.ui = ui;
   }
 
   clearTimer() {
@@ -69,7 +74,7 @@ class Enemy extends Entity {
     this.movesTimerId = setInterval(() => {
       const deltaXY = getRandomXYDelta();
       this.gridEngine.moveTo(`${charId}`, { x: currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, y: currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta });
-      this.tintTile(map, currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta, 0xff7a4a);
+      // this.tintTile(map, currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta, 0xff7a4a);
     }, getRandomTimeInterval())
   }
 
@@ -107,8 +112,11 @@ class Enemy extends Entity {
 
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
-
+    if(hero.healthPoints <= 0){
+      hero.playDeathAnimation();
+    }
     this.currentActionPoints = 0;
+    this.ui.updateHP(hero);
   }
 
   playDeathAnimation() {
@@ -116,12 +124,12 @@ class Enemy extends Entity {
     this.deleteEntityFromEntitiesMap(this.id)
   }
 
-  //повтор функции, удалить
-  tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
-    for (const element of tilemap.layers) {
-      element.tilemapLayer.layer.data[row][col].tint = color;
-    }
-  }
+  // //повтор функции, удалить
+  // tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
+  //   for (const element of tilemap.layers) {
+  //     element.tilemapLayer.layer.data[row][col].tint = color;
+  //   }
+  // }
 }
 
 export default Enemy;
