@@ -15,7 +15,7 @@ export default class Weapon {
     this.attack = attack;
     this._minAccuracy = _minAccuracy;
     this._maxAccuracy = _maxAccuracy;
-    this._accuracy = randomIntFromInterval(this._minAccuracy, this._maxAccuracy);
+    this._accuracy = this.getRandomAccuracy;
     this.maxRange = maxRange;
   }
 

@@ -1,4 +1,4 @@
-type coords  = {
+type coords = {
   x: number,
   y: number
 }
@@ -7,7 +7,7 @@ function getDirectionTo(entityA: coords, entityB: coords) {
   if (entityA.x === entityB.x) {
     return entityA.y > entityB.y ? 'up-right' : 'down-left';
   }
-  
+
   if (entityA.y === entityB.y) {
     return entityA.x > entityB.x ? 'up-left' : 'down-right';
   }
@@ -15,7 +15,7 @@ function getDirectionTo(entityA: coords, entityB: coords) {
 
 function isAttackPossible(entityA: coords, entityB: coords) {
   if (entityA.x !== entityB.x && entityA.y !== entityB.y) {
-  return false;
+    return false;
   }
   return true;
 }
@@ -28,14 +28,14 @@ function isAttackInRange(entityA: coords, entityB: coords, attackRange: number) 
   if (isAttackPossible(entityA, entityB)) {
     return getDistance(entityA, entityB) <= attackRange;
   }
-  return false;  
+  return false;
 }
 
 export function attack(entityA: coords, entityB: coords, range: number) {
   if (isAttackInRange(entityA, entityB, range)) {
-  return getDirectionTo(entityA, entityB);
+    return getDirectionTo(entityA, entityB);
   } else {
-  return '';
+    return '';
   }
 }
 

@@ -72,7 +72,7 @@ class Hero extends Entity {
               && this.isAllEnemiesIdle()) {
               this.playAttackEnemyAnimation(entityValue as Enemy);
               this.attackEnemy(entityValue as Enemy);
-              if(entityValue.healthPoints <= 0){
+              if (entityValue.healthPoints <= 0) {
                 entityValue.playDeathAnimation();
               }
               // (entityValue as Enemy).playDeathAnimation();
@@ -192,30 +192,30 @@ class Hero extends Entity {
   }
 
   attackEnemy(enemy: Enemy) {
-      // changing accuracy. Is enough to attack?
-      if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
-        const damage = damageFromHero[this.currentWeapon.name];
-        enemy.updateHealthPoints(damage);
-        this.ui.putMessageToConsole(`Hero hits enemy: -${damage} health`);
-      } else {
-        this.ui.putMessageToConsole(`Hero misses the attack`);
-      }
+    // changing accuracy. Is enough to attack?
+    if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
+      const damage = damageFromHero[this.currentWeapon.name];
+      enemy.updateHealthPoints(damage);
+      this.ui.putMessageToConsole(`Hero hits enemy: -${damage} health`);
+    } else {
+      this.ui.putMessageToConsole(`Hero misses the attack`);
+    }
 
-      const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
-      this.updateActionPoints(lostPoints);
-      this.ui.updateAP(this);
+    const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
+    this.updateActionPoints(lostPoints);
+    this.ui.updateAP(this);
 
-      // if hero turn finished with attack, refresh enemies AP then
-      if (this.currentActionPoints <= 0) {
-        const entitiesMap = this.getEntitiesMap();
-        entitiesMap.forEach((entityValue, entityKey) => {
-          if (!entityKey.match(/^hero/i)) {
-            (entityValue as Enemy).refreshActionPoints();
-            // console.log(entityKey, (entityValue as Enemy).currentActionPoints);
-          }
-        });
-      }
-      this.moveEnemiesToHero(this.gridEngine.getPosition(this.id));
+    // if hero turn finished with attack, refresh enemies AP then
+    if (this.currentActionPoints <= 0) {
+      const entitiesMap = this.getEntitiesMap();
+      entitiesMap.forEach((entityValue, entityKey) => {
+        if (!entityKey.match(/^hero/i)) {
+          (entityValue as Enemy).refreshActionPoints();
+          // console.log(entityKey, (entityValue as Enemy).currentActionPoints);
+        }
+      });
+    }
+    this.moveEnemiesToHero(this.gridEngine.getPosition(this.id));
   }
 
   makeStep() {
