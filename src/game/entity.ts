@@ -22,7 +22,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     this.fightMode = false;
     this.totalActionPoints = totalActionPoints;
     this.currentActionPoints = totalActionPoints;
-    this.mainWeapon = new Weapon('nothing', '', 0, 0, 0);
+    this.mainWeapon = new Weapon('nothing', '', 0, 0, 0, 0);
     this.behavior = defaultBehavior;
   }
 

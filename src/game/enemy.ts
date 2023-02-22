@@ -3,7 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
 import { oppositeDirections } from "./constants";
 import Hero from "./hero";
-import { attack } from "./utilsForAttackAnimations";
+import { attack } from "./utils";
 import { damageFromScorpion } from "./battlePoints";
 import { currentLevel } from "./levels";
 import UI from "./ui";
@@ -70,7 +70,7 @@ class Enemy extends Entity {
   }
 
   // позже надо удалить из аргументов карту и функцию покраски тайлов
-  setEnemyWalkBehavior(charId: string, map: Tilemaps.Tilemap) {
+  setEnemyWalkBehavior(charId: string/*, map: Tilemaps.Tilemap*/) {
     this.movesTimerId = setInterval(() => {
       const deltaXY = getRandomXYDelta();
       this.gridEngine.moveTo(`${charId}`, { x: currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, y: currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta });
@@ -106,17 +106,16 @@ class Enemy extends Entity {
   }
 
   attackHero(hero: Hero) {
-    // console.log(`${this.id} attacking hero ${hero.id}!`);
-
     // this.currentActionPoints = 0;
 
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
-    if(hero.healthPoints <= 0){
+    if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();
     }
     this.currentActionPoints = 0;
     this.ui.updateHP(hero);
+    this.ui.putMessageToConsole(`Enemy attacks hero: -${damage} health`);
   }
 
   playDeathAnimation() {
