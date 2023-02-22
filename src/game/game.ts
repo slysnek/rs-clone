@@ -268,7 +268,7 @@ class Game extends Phaser.Scene {
 
           if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0 && enemy.fightMode) {
             if (this.isEnemyStaysNearHero(enemy)) {
-              enemy.playAttackHero(this.hero);
+              enemy.attackHero(this.hero);
               this.hero.refreshActionPoints();
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
@@ -300,7 +300,7 @@ class Game extends Phaser.Scene {
         enemyObj.clearTimer();
         if (!this.gridEngine.isMoving(enemyKey) && enemyObj.currentActionPoints > 0 && enemyObj.fightMode) {
           if (this.isEnemyStaysNearHero(enemyObj)) {
-            enemyObj.playAttackHero(this.hero);
+            enemyObj.attackHero(this.hero);
             this.hero.refreshActionPoints();
           } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
@@ -314,7 +314,7 @@ class Game extends Phaser.Scene {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
         if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
           && !this.gridEngine.isMoving(enemyKey) && enemyObj.fightMode) {
-          enemyObj.playAttackHero(this.hero);
+          enemyObj.attackHero(this.hero);
           this.gridEngine.stopMovement(enemyKey);
           this.hero.refreshActionPoints();
         }

@@ -70,7 +70,7 @@ class Hero extends Entity {
             if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y
               && this.currentActionPoints >= lostActionPointsForHero[this.currentWeapon.name]
               && this.isAllEnemiesIdle()) {
-              this.playAttackEnemy(entityValue as Enemy);
+              this.attackEnemy(entityValue as Enemy);
             }
           }
         });
@@ -166,23 +166,28 @@ class Hero extends Entity {
     this.behavior === 'walk' ? this.anims.play(`hidePistol_${currentDirection}`) : this.anims.play(`getPistol_${currentDirection}`);
   }
 
-  playAttackEnemy(enemy: Enemy) {
+  attackEnemy(enemy: Enemy) {
     const heroCoords = this.gridEngine.getPosition(this.id);
     const enemyCoords = this.gridEngine.getPosition(enemy.id);
     const HeroAnimationDirection = attack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
     if (!HeroAnimationDirection) {
       return;
     } else {
-      this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
-      this.sounds[this.currentWeapon.name].play();
-      enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
-      this.sounds.radScorpionDamage.play();
-
-      this.attackEnemy(enemy);
+      this._attackEnemyAnimation(enemy, HeroAnimationDirection);
+      this._dealDamageToEnemy(enemy);
+      this._decreaseHeroAPOnAttack();
+      this._isHeroEndTurn();
     }
   }
 
-  private attackEnemy(enemy: Enemy) {
+  private _attackEnemyAnimation(enemy: Enemy, HeroAnimationDirection: "up-right" | "down-left" | "up-left" | "down-right" | "" | undefined) {
+    this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
+    this.sounds[this.currentWeapon.name].play();
+    enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
+    this.sounds.radScorpionDamage.play();
+  }
+
+  private _dealDamageToEnemy(enemy: Enemy) {
     // changing accuracy. Is enough to attack?
     if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
       const damage = damageFromHero[this.currentWeapon.name];
@@ -194,18 +199,21 @@ class Hero extends Entity {
     } else {
       this.ui.putMessageToConsole(`Hero misses the attack`);
     }
+  }
 
+  private _decreaseHeroAPOnAttack() {
     const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
     this.updateActionPoints(lostPoints);
     this.ui.updateAP(this);
+  }
 
+  private _isHeroEndTurn() {
     // if hero turn finished with attack, refresh enemies AP then
     if (this.currentActionPoints <= 0) {
       const entitiesMap = this.getEntitiesMap();
       entitiesMap.forEach((entityValue, entityKey) => {
         if (!entityKey.match(/^hero/i)) {
           (entityValue as Enemy).refreshActionPoints();
-          // console.log(entityKey, (entityValue as Enemy).currentActionPoints);
         }
       });
     }
@@ -221,7 +229,6 @@ class Hero extends Entity {
   }
 
   moveHeroByArrows() {
-    // Move hero by arrows (can be deleted?)
     if (this.cursor.left.isDown) {
       this.gridEngine.move("hero", Direction.UP_LEFT);
     } else if (this.cursor.right.isDown) {

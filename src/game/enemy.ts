@@ -91,28 +91,29 @@ class Enemy extends Entity {
     this.createEntityAnimation('death', this.id, currentLevel.enemyAnims.death.upRight.startFrame, currentLevel.enemyAnims.death.upRight.endFrame, 0);
   }
 
-  playAttackHero(hero: Hero) {
+  attackHero(hero: Hero) {
     const heroCoords = this.gridEngine.getPosition(hero.id);
     const enemyCoords = this.gridEngine.getPosition(this.id);
     const enemyAnimationDirection = attack(enemyCoords, heroCoords, this.maxRange);
     if (!enemyAnimationDirection) {
       return;
     } else {
-      this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
-      hero.play(`damage-${hero.currentWeapon.name}_${oppositeDirections.get(enemyAnimationDirection)}`);
-
-      this.attackHero(hero);
+      this._attackHeroAnimation(hero, enemyAnimationDirection);
+      this._dealDamageToHero(hero);
     }
   }
 
-  private attackHero(hero: Hero) {
+  private _attackHeroAnimation(hero: Hero, enemyAnimationDirection: "up-right" | "down-left" | "up-left" | "down-right" | "" | undefined) {
+    this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
+    hero.play(`damage-${hero.currentWeapon.name}_${oppositeDirections.get(enemyAnimationDirection)}`);
+  }
+
+  private _dealDamageToHero(hero: Hero) {
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
-
     if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();
     }
-
     this.currentActionPoints = 0;
     this.ui.updateHP(hero);
     this.ui.putMessageToConsole(`Enemy attacks hero: -${damage} health`);
