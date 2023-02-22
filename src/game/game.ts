@@ -226,7 +226,6 @@ class Game extends Phaser.Scene {
             this.gridEngine.stopMovement(charId);
             this.refreshAllEnemiesActionPoints();
           }
-          // console.log(this.hero.currentActionPoints, charId);
         }
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
@@ -259,15 +258,17 @@ class Game extends Phaser.Scene {
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
-            this.moveEnemiesToHero(enterTile);
             this.enableFightMode();
+            this.moveEnemiesToHero(enterTile);
+            console.log('fightMode = true');
             this.ui.updateHP(this.hero);
           }
         }
+
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
 
-          if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0) {
+          if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0 && enemy.fightMode) {
             if (this.isEnemyStaysNearHero(enemy)) {
               enemy.playAttackHeroAnimation(this.hero);
               enemy.attackHero(this.hero);
@@ -275,6 +276,7 @@ class Game extends Phaser.Scene {
               // this.ui.putMessageToConsole(`Enemy attacks hero!`);
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
+              console.log('moveEnemiesToHero 1:');
 
             }
           }
@@ -286,10 +288,10 @@ class Game extends Phaser.Scene {
   }
 
   moveEnemiesToHero(targetPos: Position) {
-    // get an array of empty tiles around the hero
+    console.log('moveEnemiesToHero:');
     const emptyTilesAroundHero: Array<Position> = this.getEmptyPositionsArrNearObject(targetPos as Entity);
-    // get an array of the enemies relative to the hero
     const closestEnemiesAroundHero: Array<string> = [];
+
     this.entitiesMap.forEach((_entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         closestEnemiesAroundHero.push(entityKey);
