@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
-import config from './game/config';
+import dialogueConfig from './game/dialogue-config';
 // import AppView from './app/appView';
 
 // new AppView().run();
 
 
-new Phaser.Game(config);
+/* new Phaser.Game(config); */
+new Phaser.Game(dialogueConfig)

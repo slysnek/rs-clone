@@ -1,0 +1,76 @@
+<div class="dialogue-container">
+  <div class="text-container"></div>
+  <div class="answers-wrapper">
+    <ul class="answers-list">
+    </ul>
+  </div>
+</div>
+
+<style>
+  @font-face {
+    font-family: 'Fallout Font';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../assets/fonts/fallout-font.ttf');
+    /* IE9 Compat Modes */
+  }
+
+  html {
+    font-family: 'Fallout Font';
+    font-weight: 100;
+    color: #3cf800;
+  }
+
+  .dialogue-container {
+    position: relative;
+    background-image: url(../assets/dialogue-assets/dialogue-background.png);
+    background-size:contain;
+    width: 1024px;
+    height: 768px;
+  }
+
+  .text-container{
+    width: 600px;
+    height: 79px;
+    position: absolute;
+    color: white;
+    top: 371px;
+    left: 218px;
+    color: #3cf800;
+    line-height: 0.9;
+  }
+
+  .answers-wrapper {
+    position: relative;
+    top: 525px;
+    left: 196px;
+    height: 218px;
+    width: 646px;
+  }
+
+  .answers-list {
+    list-style-position: inside;
+    color: #3cf800;
+    margin-right: 18px;
+    overflow-y: scroll;
+    height: 90%;
+    font-size: 14px;
+  }
+
+  .answer:hover{
+    color: #92fb74;
+    cursor: pointer;
+  }
+
+  .answers-list::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .answers-list::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  .answers-list::-webkit-scrollbar-thumb {
+    background-color: #3cf800;
+  }
+</style>
