@@ -110,9 +110,11 @@ class Enemy extends Entity {
 
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
+
     if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();
     }
+
     this.currentActionPoints = 0;
     this.ui.updateHP(hero);
     this.ui.putMessageToConsole(`Enemy attacks hero: -${damage} health`);
@@ -120,15 +122,8 @@ class Enemy extends Entity {
 
   playDeathAnimation() {
     this.anims.play('death');
-    this.deleteEntityFromEntitiesMap(this.id)
+    this.deleteEntityFromEntitiesMap(this.id);
   }
-
-  // //повтор функции, удалить
-  // tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
-  //   for (const element of tilemap.layers) {
-  //     element.tilemapLayer.layer.data[row][col].tint = color;
-  //   }
-  // }
 }
 
 export default Enemy;

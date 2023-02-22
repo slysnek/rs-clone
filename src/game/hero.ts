@@ -72,11 +72,6 @@ class Hero extends Entity {
               && this.isAllEnemiesIdle()) {
               this.playAttackEnemyAnimation(entityValue as Enemy);
               this.attackEnemy(entityValue as Enemy);
-              if (entityValue.healthPoints <= 0) {
-                entityValue.playDeathAnimation();
-              }
-              // (entityValue as Enemy).playDeathAnimation();
-              // this.playDeathAnimation();
             }
           }
         });
@@ -196,6 +191,9 @@ class Hero extends Entity {
     if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
       const damage = damageFromHero[this.currentWeapon.name];
       enemy.updateHealthPoints(damage);
+      if (enemy.healthPoints <= 0) {
+        enemy.playDeathAnimation();
+      }
       this.ui.putMessageToConsole(`Hero hits enemy: -${damage} health`);
     } else {
       this.ui.putMessageToConsole(`Hero misses the attack`);
