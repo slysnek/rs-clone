@@ -2,35 +2,62 @@
 import { windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
+type inventoryContainerItemsType = {
+  [item: string]: {
+    src: string;
+    quantity: number
+  }
+}
+const inventoryContainerItems: inventoryContainerItemsType = {
+  item1: {
+    src: '../assets/ui-elements/inventory/armor.png',
+    quantity: 1
+  },
+  item2: {
+    src: '../assets/ui-elements/inventory/bullets.png',
+    quantity: 10
+  },
+}
 
 export default class UI {
   scene: Phaser.Scene;
   inventoryPanel: HTMLElement | null;
   exchangePanel: HTMLElement | null;
+  heroThingsBlock: HTMLElement | null;
+  inventoryContainerThingsBlock: HTMLElement | null;
+  takeAllButton: HTMLElement | null;
+  closeButton: HTMLElement | null;
 
   constructor(scene: Phaser.Scene){
     this.scene = scene;
     this.inventoryPanel = null;
     this.exchangePanel = null;
+    this.heroThingsBlock = null;
+    this.inventoryContainerThingsBlock = null;
+    this.takeAllButton = null;
+    this.closeButton = null;
   }
 
-  findInventoryPanels(){
+  findElementsForInventoryLogic(){
     this.inventoryPanel = document.querySelector('.inventory-panel') as HTMLElement;
     this.exchangePanel = document.querySelector('.exchange-items-panel') as HTMLElement;
+    this.heroThingsBlock = document.querySelector('.hero-things') as HTMLElement;
+    this.inventoryContainerThingsBlock = document.querySelector('.inventory-container-things') as HTMLElement;
+    this.takeAllButton = document.querySelector('.take-all-button') as HTMLElement;
+    this.closeButton = document.querySelector('.close-button') as HTMLElement;
   }
 
   createUI(scene: Game) {
     const testUI = scene.add.dom(windowSize.windowWidth / 2, windowSize.windowHeight - 45).createFromCache('ui')
     testUI.scrollFactorX = 0;
     testUI.scrollFactorY = 0;
-    const exchangePanel = document.querySelector('.exchange-items-panel') as HTMLElement;
     const top = -(((windowSize.windowHeight - 45) / 2) + 377 / 2);
     const left = testUI.width / 2 - 264;
-    exchangePanel.style.top = `${top}px`;
-    exchangePanel.style.left = `${left}px`;
-    const inventoryPanel = document.querySelector('.inventory-panel') as HTMLElement;
-    inventoryPanel.style.top = `${top}px`;
-    inventoryPanel.style.left = `${left}px`;
+    this.findElementsForInventoryLogic();
+    (this.exchangePanel as HTMLElement).style.top = `${top}px`;
+    (this.exchangePanel as HTMLElement).style.left = `${left}px`;
+    (this.inventoryPanel as HTMLElement).style.top = `${top}px`;
+    (this.inventoryPanel as HTMLElement).style.left = `${left}px`;
   }
 
   updateHP(hero: Hero) {
@@ -99,5 +126,22 @@ export default class UI {
 
   showExchangePanel(){
     (this.exchangePanel as HTMLElement).classList.toggle('hide');
+    this.addThingsToInventoryContainer();
+  }
+
+  addThingsToInventoryContainer(){
+    for(const item in inventoryContainerItems){
+      const thingContainer = document.createElement('div');
+      const thingImg = document.createElement('img');
+      const thingQuantity = document.createElement('div');
+      thingContainer.classList.add('thing-container');
+      thingImg.classList.add('thing-img');
+      thingQuantity.classList.add('thing-quantity');
+      thingQuantity.innerText = `x${inventoryContainerItems[item].quantity}`;
+      thingImg.src = inventoryContainerItems[item].src;
+      thingContainer.append(thingImg);
+      thingContainer.append(thingQuantity);
+      this.inventoryContainerThingsBlock?.append(thingContainer);
+    }
   }
 }
