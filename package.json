@@ -1,5 +1,5 @@
 {
-  "name": "async-race",
+  "name": "rs-clone",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "grid-engine": "^2.25.1",
-    "phaser": "^3.55.2",
-    "phaser3-rex-plugins": "^1.1.81"
+    "phaser": "^3.55.2"
   }
 }
