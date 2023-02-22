@@ -91,13 +91,11 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    //ui section
     this.ui.createUI(this);
     this.ui.putMessageToConsole('Game loaded');
     this.ui.updateHP(this.hero);
     this.ui.updateAP(this.hero);
     this.ui.updateWeapon(this.hero);
-    // this.createDamageButton();
     this.ui.setChangeWeaponListener(this.hero);
   }
 
@@ -300,7 +298,7 @@ class Game extends Phaser.Scene {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
 
         enemyObj.clearTimer();
-        if (!this.gridEngine.isMoving(enemyKey) && enemyObj.currentActionPoints > 0  && enemyObj.fightMode) {
+        if (!this.gridEngine.isMoving(enemyKey) && enemyObj.currentActionPoints > 0 && enemyObj.fightMode) {
           if (this.isEnemyStaysNearHero(enemyObj)) {
             enemyObj.playAttackHero(this.hero);
             this.hero.refreshActionPoints();
@@ -373,7 +371,6 @@ class Game extends Phaser.Scene {
       if (!entityKey.match(/^hero/i)) {
         const enemyPos = this.gridEngine.getPosition(entityKey);
         if (manhattanDist(enemyPos.x, enemyPos.y, heroPos.x, heroPos.y) <= (entityValue as Enemy).battleRadius) {
-          // console.log(`Hero stepped on enemy radius: (${heroPos.x},${heroPos.y})`);
           isStepped = true;
         }
       }

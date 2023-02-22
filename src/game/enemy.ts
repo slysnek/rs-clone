@@ -69,12 +69,10 @@ class Enemy extends Entity {
     }
   }
 
-  // позже надо удалить из аргументов карту и функцию покраски тайлов
-  setEnemyWalkBehavior(charId: string/*, map: Tilemaps.Tilemap*/) {
+  setEnemyWalkBehavior(charId: string) {
     this.movesTimerId = setInterval(() => {
       const deltaXY = getRandomXYDelta();
       this.gridEngine.moveTo(`${charId}`, { x: currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, y: currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta });
-      // this.tintTile(map, currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta, 0xff7a4a);
     }, getRandomTimeInterval())
   }
 

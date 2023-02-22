@@ -148,11 +148,6 @@ class Hero extends Entity {
     this.createEntityAnimation('hidePistol_up-left', 'hero', heroAnims.hidePistol.upLeft.startFrame, heroAnims.hidePistol.upLeft.endFrame, 0);
   }
 
-  playDeathAnimation() {
-    this.anims.play('death');
-    this.deleteEntityFromEntitiesMap(this.id);
-  }
-
   changeAnimationWithWeapon(behavior: string) {
     const currentAnim = this.anims.currentAnim;
     const currentFrame = currentAnim ? currentAnim.key : 'up-right';
@@ -236,6 +231,11 @@ class Hero extends Entity {
     } else if (this.cursor.down.isDown) {
       this.gridEngine.move("hero", Direction.DOWN_LEFT);
     }
+  }
+
+  playDeathAnimation() {
+    this.anims.play('death');
+    this.deleteEntityFromEntitiesMap(this.id);
   }
 }
 
