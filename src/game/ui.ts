@@ -2,18 +2,14 @@
 import { windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
-type inventoryContainerItemsType = {
-  [item: string]: {
-    src: string;
-    quantity: number
-  }
-}
+import { inventoryContainerItemsType } from './types'
+
 const inventoryContainerItems: inventoryContainerItemsType = {
-  item1: {
+  armor: {
     src: '../assets/ui-elements/inventory/armor.png',
     quantity: 1
   },
-  item2: {
+  bullets: {
     src: '../assets/ui-elements/inventory/bullets.png',
     quantity: 10
   },
@@ -27,9 +23,13 @@ export default class UI {
   inventoryContainerThingsBlock: HTMLElement | null;
   takeAllButton: HTMLElement | null;
   closeButton: HTMLElement | null;
+  addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void;
+  inventory: inventoryContainerItemsType
 
-  constructor(scene: Phaser.Scene){
+  constructor(scene: Phaser.Scene, addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void, inventory: inventoryContainerItemsType){
     this.scene = scene;
+    this.addItemToInventory = addItemToInventory;
+    this.inventory = inventory;
     this.inventoryPanel = null;
     this.exchangePanel = null;
     this.heroThingsBlock = null;
@@ -142,6 +142,10 @@ export default class UI {
       thingContainer.append(thingImg);
       thingContainer.append(thingQuantity);
       this.inventoryContainerThingsBlock?.append(thingContainer);
+      thingContainer.addEventListener('click', () => {
+        this.heroThingsBlock?.append(thingContainer);
+        this.addItemToInventory(item, inventoryContainerItems[item]);
+      });
     }
   }
 }

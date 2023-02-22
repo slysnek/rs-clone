@@ -7,6 +7,7 @@ import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
 import { attack, randomIntFromInterval } from './utils';
 import UI from './ui';
+import { inventoryContainerItemsType } from './types';
 
 class Hero extends Entity {
   gridEngine: GridEngine;
@@ -19,7 +20,8 @@ class Hero extends Entity {
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
   moveEnemiesToHero: (heroPos: Position) => void;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
-  ui: UI
+  ui: UI;
+  inventory: inventoryContainerItemsType;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -48,6 +50,12 @@ class Hero extends Entity {
     this.ui = ui;
     this.sounds = sounds;
     this.ui = ui;
+    this.inventory = {
+      pistol: {
+        src: '../assets/ui-elements/inventory/pistol-03.png',
+        quantity: 10
+      },
+    }
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -244,6 +252,10 @@ class Hero extends Entity {
     this.anims.play('death');
     this.deleteEntityFromEntitiesMap(this.id);
   }
+
+    addItemToInventory(itemName: string, item: { src: string; quantity: number }){
+      this.inventory[itemName] = item;
+    }
 }
 
 export default Hero;

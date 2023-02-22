@@ -60,3 +60,10 @@ export type StopAnimations = {
     }
   }
 }
+
+export type inventoryContainerItemsType = {
+  [item: string]: {
+    src: string;
+    quantity: number
+  }
+}

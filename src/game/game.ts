@@ -22,7 +22,7 @@ class Game extends Phaser.Scene {
   sounds: { [soundName: string]: Phaser.Sound.BaseSound }
   inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithStaticBody;
 
-  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine, inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithStaticBody) {
+  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine, inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithStaticBody, ui: UI) {
     super('game');
     this.hero = hero;
     this.entitiesMap = new Map();
@@ -32,7 +32,7 @@ class Game extends Phaser.Scene {
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
     this.deleteEntityFromEntitiesMap = this.deleteEntityFromEntitiesMap.bind(this);
     this.moveEnemiesToHero = this.moveEnemiesToHero.bind(this);
-    this.ui = new UI(this);
+    this.ui = ui;
     this.sounds = {};
     this.inventoryContainer = inventoryContainer;
   }
@@ -70,6 +70,7 @@ class Game extends Phaser.Scene {
     // this.tintTiles(map);
     this.addSounds();
     this.createHero(map);
+    this.ui = new UI(this, this.hero.addItemToInventory, this.hero.inventory);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
     this.hero.setPunchAnimation();
     this.hero.setShootAnimation();
