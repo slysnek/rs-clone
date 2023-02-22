@@ -5,9 +5,18 @@ import Hero from "./hero";
 
 export default class UI {
   scene: Phaser.Scene;
+  inventoryPanel: HTMLElement | null;
+  exchangePanel: HTMLElement | null;
 
   constructor(scene: Phaser.Scene){
     this.scene = scene;
+    this.inventoryPanel = null;
+    this.exchangePanel = null;
+  }
+
+  findInventoryPanels(){
+    this.inventoryPanel = document.querySelector('.inventory-panel') as HTMLElement;
+    this.exchangePanel = document.querySelector('.exchange-items-panel') as HTMLElement;
   }
 
   createUI(scene: Game) {
@@ -66,8 +75,7 @@ export default class UI {
   setInvButtonListener(){
     const invButton = document.querySelector('.inv-button') as HTMLElement;
     invButton.addEventListener('click', () => {
-      const exchanhePanel = document.querySelector('.exchange-items-panel') as HTMLElement;
-      exchanhePanel.classList.toggle('hide');
+      (this.inventoryPanel as HTMLElement).classList.toggle('hide');
     })
   }
 
@@ -90,7 +98,6 @@ export default class UI {
   }
 
   showExchangePanel(){
-    const inventoryPanel = document.querySelector('.inventory-panel') as HTMLElement;
-    inventoryPanel.classList.toggle('hide');
+    (this.exchangePanel as HTMLElement).classList.toggle('hide');
   }
 }
