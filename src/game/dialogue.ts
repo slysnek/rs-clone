@@ -1,5 +1,4 @@
-import Phaser, { Tilemaps } from 'phaser';
-import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
+import Phaser from 'phaser';
 import { windowSize } from './constants'
 import config from './config'
 import { options } from './dialogue-states'
@@ -8,13 +7,11 @@ type DialogueKey = keyof typeof options;
 type StateKey = keyof typeof options[DialogueKey]
 
 class Dialogue extends Phaser.Scene {
-  rexUI: RexUIPlugin;
   currDialogue: DialogueKey;
 
-  constructor(rexUI: RexUIPlugin) {
+  constructor() {
     super('dialogue')
-    this.rexUI = rexUI;
-    this.currDialogue = 'dialogue-2'; //need to change this to change the dialogue
+    this.currDialogue = 'dialogue-3'; //need to change this to change the dialogue
   }
 
   preload() {
