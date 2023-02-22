@@ -24,7 +24,6 @@ export default class Weapon {
   }
   public get getRandomAccuracy(): number {
     this._accuracy = randomIntFromInterval(this._minAccuracy, this._maxAccuracy);
-    // console.log('accuracy:', this._accuracy);
     return this._accuracy;
   }
 

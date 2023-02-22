@@ -69,12 +69,10 @@ class Enemy extends Entity {
     }
   }
 
-  // позже надо удалить из аргументов карту и функцию покраски тайлов
-  setEnemyWalkBehavior(charId: string/*, map: Tilemaps.Tilemap*/) {
+  setEnemyWalkBehavior(charId: string) {
     this.movesTimerId = setInterval(() => {
       const deltaXY = getRandomXYDelta();
       this.gridEngine.moveTo(`${charId}`, { x: currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, y: currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta });
-      // this.tintTile(map, currentLevel.enemyStartPositions[charId].x + deltaXY.xDelta, currentLevel.enemyStartPositions[charId].y + deltaXY.yDelta, 0xff7a4a);
     }, getRandomTimeInterval())
   }
 
@@ -93,21 +91,24 @@ class Enemy extends Entity {
     this.createEntityAnimation('death', this.id, currentLevel.enemyAnims.death.upRight.startFrame, currentLevel.enemyAnims.death.upRight.endFrame, 0);
   }
 
-  playAttackHeroAnimation(hero: Hero) {
+  attackHero(hero: Hero) {
     const heroCoords = this.gridEngine.getPosition(hero.id);
     const enemyCoords = this.gridEngine.getPosition(this.id);
     const enemyAnimationDirection = attack(enemyCoords, heroCoords, this.maxRange);
     if (!enemyAnimationDirection) {
       return;
     } else {
-      this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
-      hero.play(`damage-${hero.currentWeapon.name}_${oppositeDirections.get(enemyAnimationDirection)}`);
+      this._attackHeroAnimation(hero, enemyAnimationDirection);
+      this._dealDamageToHero(hero);
     }
   }
 
-  attackHero(hero: Hero) {
-    // this.currentActionPoints = 0;
+  private _attackHeroAnimation(hero: Hero, enemyAnimationDirection: "up-right" | "down-left" | "up-left" | "down-right" | "" | undefined) {
+    this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
+    hero.play(`damage-${hero.currentWeapon.name}_${oppositeDirections.get(enemyAnimationDirection)}`);
+  }
 
+  private _dealDamageToHero(hero: Hero) {
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
     if (hero.healthPoints <= 0) {
@@ -120,15 +121,8 @@ class Enemy extends Entity {
 
   playDeathAnimation() {
     this.anims.play('death');
-    this.deleteEntityFromEntitiesMap(this.id)
+    this.deleteEntityFromEntitiesMap(this.id);
   }
-
-  // //повтор функции, удалить
-  // tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
-  //   for (const element of tilemap.layers) {
-  //     element.tilemapLayer.layer.data[row][col].tint = color;
-  //   }
-  // }
 }
 
 export default Enemy;

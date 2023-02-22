@@ -91,13 +91,11 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    //ui section
     this.ui.createUI(this);
     this.ui.putMessageToConsole('Game loaded');
     this.ui.updateHP(this.hero);
     this.ui.updateAP(this.hero);
     this.ui.updateWeapon(this.hero);
-    // this.createDamageButton();
     this.ui.setChangeWeaponListener(this.hero);
   }
 
@@ -226,7 +224,6 @@ class Game extends Phaser.Scene {
             this.gridEngine.stopMovement(charId);
             this.refreshAllEnemiesActionPoints();
           }
-          // console.log(this.hero.currentActionPoints, charId);
         }
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
@@ -259,22 +256,23 @@ class Game extends Phaser.Scene {
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
-            this.moveEnemiesToHero(enterTile);
             this.enableFightMode();
+            this.moveEnemiesToHero(enterTile);
+            console.log('fightMode = true');
             this.ui.updateHP(this.hero);
           }
         }
+
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
 
-          if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0) {
+          if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0 && enemy.fightMode) {
             if (this.isEnemyStaysNearHero(enemy)) {
-              enemy.playAttackHeroAnimation(this.hero);
               enemy.attackHero(this.hero);
               this.hero.refreshActionPoints();
-              // this.ui.putMessageToConsole(`Enemy attacks hero!`);
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
+              console.log('moveEnemiesToHero 1:');
 
             }
           }
@@ -286,10 +284,10 @@ class Game extends Phaser.Scene {
   }
 
   moveEnemiesToHero(targetPos: Position) {
-    // get an array of empty tiles around the hero
+    console.log('moveEnemiesToHero:');
     const emptyTilesAroundHero: Array<Position> = this.getEmptyPositionsArrNearObject(targetPos as Entity);
-    // get an array of the enemies relative to the hero
     const closestEnemiesAroundHero: Array<string> = [];
+
     this.entitiesMap.forEach((_entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         closestEnemiesAroundHero.push(entityKey);
@@ -300,12 +298,10 @@ class Game extends Phaser.Scene {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
 
         enemyObj.clearTimer();
-        if (enemyObj.currentActionPoints > 0) {
-          if (this.isEnemyStaysNearHero(enemyObj) && !this.gridEngine.isMoving(enemyKey)) {
-            enemyObj.playAttackHeroAnimation(this.hero);
+        if (!this.gridEngine.isMoving(enemyKey) && enemyObj.currentActionPoints > 0 && enemyObj.fightMode) {
+          if (this.isEnemyStaysNearHero(enemyObj)) {
             enemyObj.attackHero(this.hero);
             this.hero.refreshActionPoints();
-            // this.ui.putMessageToConsole(`Enemy attacks hero!`);
           } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
           }
@@ -317,12 +313,10 @@ class Game extends Phaser.Scene {
       closestEnemiesAroundHero.forEach((enemyKey) => {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
         if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
-          && !this.gridEngine.isMoving(enemyKey)) {
-          enemyObj.playAttackHeroAnimation(this.hero);
+          && !this.gridEngine.isMoving(enemyKey) && enemyObj.fightMode) {
           enemyObj.attackHero(this.hero);
           this.gridEngine.stopMovement(enemyKey);
           this.hero.refreshActionPoints();
-          // this.ui.putMessageToConsole(`Enemy attacks hero!`);
         }
         enemyObj.clearTimer();
         enemyObj.currentActionPoints = 0;
@@ -377,7 +371,6 @@ class Game extends Phaser.Scene {
       if (!entityKey.match(/^hero/i)) {
         const enemyPos = this.gridEngine.getPosition(entityKey);
         if (manhattanDist(enemyPos.x, enemyPos.y, heroPos.x, heroPos.y) <= (entityValue as Enemy).battleRadius) {
-          // console.log(`Hero stepped on enemy radius: (${heroPos.x},${heroPos.y})`);
           isStepped = true;
         }
       }
