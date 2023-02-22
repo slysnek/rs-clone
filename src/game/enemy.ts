@@ -93,7 +93,7 @@ class Enemy extends Entity {
     this.createEntityAnimation('death', this.id, currentLevel.enemyAnims.death.upRight.startFrame, currentLevel.enemyAnims.death.upRight.endFrame, 0);
   }
 
-  playAttackHeroAnimation(hero: Hero) {
+  playAttackHero(hero: Hero) {
     const heroCoords = this.gridEngine.getPosition(hero.id);
     const enemyCoords = this.gridEngine.getPosition(this.id);
     const enemyAnimationDirection = attack(enemyCoords, heroCoords, this.maxRange);
@@ -102,12 +102,12 @@ class Enemy extends Entity {
     } else {
       this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
       hero.play(`damage-${hero.currentWeapon.name}_${oppositeDirections.get(enemyAnimationDirection)}`);
+
+      this.attackHero(hero);
     }
   }
 
-  attackHero(hero: Hero) {
-    // this.currentActionPoints = 0;
-
+  private attackHero(hero: Hero) {
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
 

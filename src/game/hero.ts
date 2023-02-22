@@ -70,8 +70,7 @@ class Hero extends Entity {
             if (enemyPosition.x === clickedTile.x && enemyPosition.y === clickedTile.y
               && this.currentActionPoints >= lostActionPointsForHero[this.currentWeapon.name]
               && this.isAllEnemiesIdle()) {
-              this.playAttackEnemyAnimation(entityValue as Enemy);
-              this.attackEnemy(entityValue as Enemy);
+              this.playAttackEnemy(entityValue as Enemy);
             }
           }
         });
@@ -172,7 +171,7 @@ class Hero extends Entity {
     this.behavior === 'walk' ? this.anims.play(`hidePistol_${currentDirection}`) : this.anims.play(`getPistol_${currentDirection}`);
   }
 
-  playAttackEnemyAnimation(enemy: Enemy) {
+  playAttackEnemy(enemy: Enemy) {
     const heroCoords = this.gridEngine.getPosition(this.id);
     const enemyCoords = this.gridEngine.getPosition(enemy.id);
     const HeroAnimationDirection = attack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
@@ -183,10 +182,12 @@ class Hero extends Entity {
       this.sounds[this.currentWeapon.name].play();
       enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
       this.sounds.radScorpionDamage.play();
+
+      this.attackEnemy(enemy);
     }
   }
 
-  attackEnemy(enemy: Enemy) {
+  private attackEnemy(enemy: Enemy) {
     // changing accuracy. Is enough to attack?
     if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
       const damage = damageFromHero[this.currentWeapon.name];
