@@ -130,7 +130,7 @@ export default class UI {
   }
 
   showExchangePanel(){
-    (this.exchangePanel as HTMLElement).classList.toggle('hide');
+    (this.exchangePanel as HTMLElement).classList.remove('hide');
     this.addThingsToInventoryContainer();
   }
 
@@ -184,5 +184,17 @@ export default class UI {
   addThingsToInventoryContainer(){
     this.drawThingsInExchangePanel(this.heroInventory, this.heroThingsBlock as HTMLElement);
     this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
+  }
+
+  addTakeAllButtonListener(){
+    this.takeAllButton?.addEventListener('click', () => {
+      for(const item in storageItems){
+        this.addItemToInventory(item, storageItems[item]);
+        this.deleteItemsFromStorage(item);
+      }
+      this.cleanExchangeWindowFields();
+      this.drawThingsInExchangePanel(this.heroInventory, this.heroThingsBlock as HTMLElement);
+      this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
+    }) 
   }
 }

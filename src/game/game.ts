@@ -106,6 +106,7 @@ class Game extends Phaser.Scene {
     this.ui.updateWeapon(this.hero)
     this.ui.setInvButtonListener();
     this.ui.setChangeWeaponListener(this.hero)
+    this.ui.addTakeAllButtonListener();
   }
 
   addSounds() {
