@@ -41,13 +41,13 @@ export default class UI {
   inventoryGif: HTMLImageElement | null;
   exchangeGif: HTMLImageElement | null;
 
-  constructor(scene: Phaser.Scene, 
+  constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
     heroInventory: thingsContainerItemsType,
     deleteItemFromInventory: (itemName: string) => void,
     putOnArmor: () => void,
     takeOffArmor: () => void,
-    isHeroInArmor: boolean){
+    isHeroInArmor: boolean) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
@@ -71,7 +71,7 @@ export default class UI {
     this.exchangeGif = null;
   }
 
-  findElementsForInventoryLogic(){
+  findElementsForInventoryLogic() {
     this.inventoryPanel = document.querySelector('.inventory-panel') as HTMLElement;
     this.exchangePanel = document.querySelector('.exchange-items-panel') as HTMLElement;
     this.heroThingsBlock = document.querySelector('.hero-things') as HTMLElement;
@@ -161,20 +161,20 @@ export default class UI {
     }
   }
 
-  addGif(gifElement: HTMLImageElement){
-    if(this.isHeroInArmor){
+  addGif(gifElement: HTMLImageElement) {
+    if (this.isHeroInArmor) {
       gifElement.src = womanInArmorGifSrc;
     } else {
       gifElement.src = womanInVaultSuitGifSrc;
     }
   }
 
-  deleteGif(gifElement: HTMLImageElement){
+  deleteGif(gifElement: HTMLImageElement) {
     gifElement.src = '';
   }
 
-  showExchangePanel(){
-    if(!(this.exchangePanel?.classList.contains('hide'))){
+  showExchangePanel() {
+    if (!(this.exchangePanel?.classList.contains('hide'))) {
       return;
     } else {
       (this.exchangePanel as HTMLElement).classList.remove('hide');
@@ -183,27 +183,27 @@ export default class UI {
     }
   }
 
-  addItemsToStorage(itemName: string, item: { src: string; quantity: number }){
+  addItemsToStorage(itemName: string, item: { src: string; quantity: number }) {
     storageItems[itemName] = item;
   }
 
-  deleteItemsFromStorage(itemName: string){
+  deleteItemsFromStorage(itemName: string) {
     delete storageItems[itemName];
   }
 
-  cleanExchangeWindowFields(){
+  cleanExchangeWindowFields() {
     (this.heroThingsBlock as HTMLElement).innerHTML = '';
     (this.inventoryContainerThingsBlock as HTMLElement).innerHTML = '';
   }
-  
-  cleanInventoryPanelFields(){
+
+  cleanInventoryPanelFields() {
     (this.inventoryThingContainer as HTMLElement).innerHTML = '';
   }
 
-  setInvButtonListener(){
+  setInvButtonListener() {
     const invButton = document.querySelector('.inv-button') as HTMLElement;
     invButton.addEventListener('click', () => {
-      if(!(this.inventoryPanel?.classList.contains('hide'))){
+      if (!(this.inventoryPanel?.classList.contains('hide'))) {
         return;
       } else {
         (this.inventoryPanel as HTMLElement).classList.remove('hide');
@@ -213,9 +213,9 @@ export default class UI {
     })
   }
 
-  addListenerToThingContainerInInventory(thingContainer: HTMLElement, itemName: string){
+  addListenerToThingContainerInInventory(thingContainer: HTMLElement, itemName: string) {
     thingContainer.addEventListener('click', () => {
-      if(itemName === 'armor'){
+      if (itemName === 'armor') {
         const thingContainerParent = thingContainer.parentElement;
         thingContainerParent?.removeChild(thingContainer);
         (this.armorImage as HTMLImageElement).src = inventory.armor.src;
@@ -223,21 +223,21 @@ export default class UI {
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.deleteItemFromInventory('armor');
-      } else if (itemName === 'bullets'){
+      } else if (itemName === 'bullets') {
         console.log(itemName);
-      } else if (itemName === 'cookie'){
+      } else if (itemName === 'cookie') {
         console.log(itemName);
-      } else if (itemName === 'healPowder'){
+      } else if (itemName === 'healPowder') {
         console.log(itemName);
-      } else if (itemName === 'stimulant'){
+      } else if (itemName === 'stimulant') {
         console.log(itemName);
       }
     })
   }
 
-  setArmorContainerListener(){
+  setArmorContainerListener() {
     this.armorFieldContainer?.addEventListener('click', () => {
-      if(!this.isHeroInArmor){
+      if (!this.isHeroInArmor) {
         return;
       } else {
         this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
@@ -250,14 +250,14 @@ export default class UI {
     })
   }
 
-  drawThings(thingsStorage: thingsContainerItemsType, containerHTMLElement: HTMLElement, listener: (thingContainer: HTMLElement, itemName: string) => void){
-    for(const itemName in thingsStorage){
+  drawThings(thingsStorage: thingsContainerItemsType, containerHTMLElement: HTMLElement, listener: (thingContainer: HTMLElement, itemName: string) => void) {
+    for (const itemName in thingsStorage) {
       const thingContainer = this.createThingContainer(containerHTMLElement, thingsStorage, itemName);
       listener(thingContainer, itemName);
     }
   }
 
-  createThingContainer(containerHTMLElement: HTMLElement, thingsStorage: thingsContainerItemsType, itemName: string){
+  createThingContainer(containerHTMLElement: HTMLElement, thingsStorage: thingsContainerItemsType, itemName: string) {
     const thingContainer = document.createElement('div');
     const thingImg = document.createElement('img');
     const thingQuantity = document.createElement('div');
@@ -273,13 +273,13 @@ export default class UI {
     return thingContainer;
   }
 
-  addListenerToThingContainerInExchangePanel(thingContainer: HTMLElement, itemName: string){
+  addListenerToThingContainerInExchangePanel(thingContainer: HTMLElement, itemName: string) {
     thingContainer.addEventListener('click', () => {
       const thingContainerParent = thingContainer.parentElement;
-      if(thingContainerParent?.classList.contains('inventory-container-things')){
+      if (thingContainerParent?.classList.contains('inventory-container-things')) {
         this.addItemToInventory(itemName, storageItems[itemName]);
         this.deleteItemsFromStorage(itemName);
-      } else if(thingContainerParent?.classList.contains('hero-things')) {
+      } else if (thingContainerParent?.classList.contains('hero-things')) {
         this.addItemsToStorage(itemName, this.heroInventory[itemName]);
         this.deleteItemFromInventory(itemName);
       }
@@ -289,24 +289,24 @@ export default class UI {
     });
   }
 
-  addThingsToInventoryContainer(){
+  addThingsToInventoryContainer() {
     this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
     this.drawThings(storageItems, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
   }
 
-  setTakeAllButtonListener(){
+  setTakeAllButtonListener() {
     this.takeAllButton?.addEventListener('click', () => {
-      for(const item in storageItems){
+      for (const item in storageItems) {
         this.addItemToInventory(item, storageItems[item]);
         this.deleteItemsFromStorage(item);
       }
       this.cleanExchangeWindowFields();
       this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
       this.drawThings(storageItems, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
-    }) 
+    })
   }
 
-  setCloseExchangePanelButtonListener(){
+  setCloseExchangePanelButtonListener() {
     this.closeExchangePanelButton?.addEventListener('click', () => {
       this.exchangePanel?.classList.add('hide');
       this.deleteGif(this.exchangeGif as HTMLImageElement);
@@ -314,7 +314,7 @@ export default class UI {
     })
   }
 
-  setCloseInventoryPanelButtonListener(){
+  setCloseInventoryPanelButtonListener() {
     this.closeInventoryPanelButton?.addEventListener('click', () => {
       this.inventoryPanel?.classList.add('hide');
       this.deleteGif(this.inventoryGif as HTMLImageElement);
