@@ -13,7 +13,9 @@ const storageItems: thingsContainerItemsType = {
     src: '../assets/ui-elements/inventory/bullets.png',
     quantity: 10
   },
-}
+};
+
+const storageItemsImageSrc = 'assets/maps/dump.png';
 
 export default class UI {
   scene: Phaser.Scene;
@@ -63,6 +65,11 @@ export default class UI {
     (this.exchangePanel as HTMLElement).style.left = `${left}px`;
     (this.inventoryPanel as HTMLElement).style.top = `${top}px`;
     (this.inventoryPanel as HTMLElement).style.left = `${left}px`;
+    const storageItemsImageContainer = document.querySelector('.storage-img-container');
+    const storageItemsImage = document.createElement('img');
+    storageItemsImage.src = storageItemsImageSrc;
+    storageItemsImage.classList.add('storage-img');
+    storageItemsImageContainer?.append(storageItemsImage);
   }
 
   updateHP(hero: Hero) {
