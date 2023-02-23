@@ -1,21 +1,26 @@
-export const lostActionPointsForScorpion: { [ attackType: string ]: number } = {
-    step: 1,
-    hit: 3,
-    tailPunch: 5
-} 
+export const lostActionPointsForScorpion: { [attackType: string]: number } = {
+  step: 1,
+  punch: 3,
+}
 
-export const damageFromScorpion: { [ attackType: string ]: number } = {
-    hit: 4,
-    tailPunch: 8
-} 
+export const damageFromScorpion: { [attackType: string]: number } = {
+  punch: 3,
+}
 
-export const lostActionPointsForHero: { [ attackType: string ]: number } = {
-    step: 1,
-    fistPunch: 3,
-    shoot: 4
-} 
+export const lostActionPointsForHero: { [attackType: string]: number } = {
+  step: 1,
+  fists: 3,
+  pistol: 4,
+}
 
-export const damageFromHero: { [ attackType: string ]: number } = {
-    fistPunch: 4,
-    shoot: 10
-} 
+export const damageFromHero: { [attackType: string]: number } = {
+  fists: 5,
+  pistol: 10,
+}
+
+export const entitiesTotalActionPoints: { [attackType: string]: number } = {
+  hero: 10,
+  scorpion: 5,
+  deathClaw: 8,
+  ghoul: 5,
+};
