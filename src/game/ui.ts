@@ -223,6 +223,14 @@ export default class UI {
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.deleteItemFromInventory('armor');
+      } else if (itemName === 'bullets'){
+        console.log(itemName);
+      } else if (itemName === 'cookie'){
+        console.log(itemName);
+      } else if (itemName === 'healPowder'){
+        console.log(itemName);
+      } else if (itemName === 'stimulant'){
+        console.log(itemName);
       }
     })
   }
