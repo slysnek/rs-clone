@@ -2,9 +2,9 @@
 import { windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
-import { inventoryContainerItemsType } from './types'
+import { thingsContainerItemsType } from './types'
 
-const inventoryContainerItems: inventoryContainerItemsType = {
+const storageItems: thingsContainerItemsType = {
   armor: {
     src: '../assets/ui-elements/inventory/armor.png',
     quantity: 1
@@ -24,18 +24,23 @@ export default class UI {
   takeAllButton: HTMLElement | null;
   closeButton: HTMLElement | null;
   addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void;
-  inventory: inventoryContainerItemsType
+  heroInventory: thingsContainerItemsType;
+  deleteItemFromInventory: (itemName: string) => void;
 
-  constructor(scene: Phaser.Scene, addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void, inventory: inventoryContainerItemsType){
+  constructor(scene: Phaser.Scene, 
+    addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
+    heroInventory: thingsContainerItemsType,
+    deleteItemFromInventory: (itemName: string) => void){
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
-    this.inventory = inventory;
+    this.heroInventory = heroInventory;
     this.inventoryPanel = null;
     this.exchangePanel = null;
     this.heroThingsBlock = null;
     this.inventoryContainerThingsBlock = null;
     this.takeAllButton = null;
     this.closeButton = null;
+    this.deleteItemFromInventory = deleteItemFromInventory;
   }
 
   findElementsForInventoryLogic(){
@@ -129,23 +134,55 @@ export default class UI {
     this.addThingsToInventoryContainer();
   }
 
-  addThingsToInventoryContainer(){
-    for(const item in inventoryContainerItems){
+  addItemsToStorage(itemName: string, item: { src: string; quantity: number }){
+    storageItems[itemName] = item;
+  }
+
+  deleteItemsFromStorage(itemName: string){
+    delete storageItems[itemName];
+  }
+
+  cleanExchangeWindowFields(){
+    (this.heroThingsBlock as HTMLElement).innerHTML = '';
+    (this.inventoryContainerThingsBlock as HTMLElement).innerHTML = '';
+  }
+
+  drawThingsInExchangePanel(thingsStorage: thingsContainerItemsType, containerHTMLElement: HTMLElement){
+    for(const item in thingsStorage){
       const thingContainer = document.createElement('div');
       const thingImg = document.createElement('img');
       const thingQuantity = document.createElement('div');
       thingContainer.classList.add('thing-container');
       thingImg.classList.add('thing-img');
       thingQuantity.classList.add('thing-quantity');
-      thingQuantity.innerText = `x${inventoryContainerItems[item].quantity}`;
-      thingImg.src = inventoryContainerItems[item].src;
+      thingQuantity.innerText = `x${thingsStorage[item].quantity}`;
+      thingImg.src = thingsStorage[item].src;
       thingContainer.append(thingImg);
       thingContainer.append(thingQuantity);
-      this.inventoryContainerThingsBlock?.append(thingContainer);
-      thingContainer.addEventListener('click', () => {
-        this.heroThingsBlock?.append(thingContainer);
-        this.addItemToInventory(item, inventoryContainerItems[item]);
-      });
+      containerHTMLElement.append(thingContainer);
+      this.addListenerToThingContainer(thingContainer, item);
     }
+  }
+
+  addListenerToThingContainer(thingContainer: HTMLElement, itemName: string){
+    thingContainer.addEventListener('click', () => {
+      const thingContainerParent = thingContainer.parentElement;
+      console.log(thingContainerParent)
+      if(thingContainerParent?.classList.contains('inventory-container-things')){
+        this.addItemToInventory(itemName, storageItems[itemName]);
+        this.deleteItemsFromStorage(itemName);
+      } else if(thingContainerParent?.classList.contains('hero-things')) {
+        this.addItemsToStorage(itemName, this.heroInventory[itemName]);
+        this.deleteItemFromInventory(itemName);
+      }
+      this.cleanExchangeWindowFields();
+      this.drawThingsInExchangePanel(this.heroInventory, this.heroThingsBlock as HTMLElement);
+      this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
+    });
+  }
+
+  addThingsToInventoryContainer(){
+    this.drawThingsInExchangePanel(this.heroInventory, this.heroThingsBlock as HTMLElement);
+    this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
   }
 }

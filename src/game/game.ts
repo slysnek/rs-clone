@@ -70,7 +70,7 @@ class Game extends Phaser.Scene {
     // this.tintTiles(map);
     this.addSounds();
     this.createHero(map);
-    this.ui = new UI(this, this.hero.addItemToInventory, this.hero.inventory);
+    this.ui = new UI(this, this.hero.addItemToInventory, this.hero.inventory, this.hero.deleteItemFromInventory);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
     this.hero.setPunchAnimation();
     this.hero.setShootAnimation();

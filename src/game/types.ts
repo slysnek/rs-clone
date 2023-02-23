@@ -5,7 +5,7 @@ import Enemy from './enemy';
 export type gridEngineType = {
   characters: {
     id: string;
-    sprite: Hero | Enemy;
+    sprite: Hero | Enemy | Phaser.Types.Physics.Arcade.SpriteWithStaticBody;
     startPosition?: {
       x: number;
       y: number;
@@ -61,7 +61,7 @@ export type StopAnimations = {
   }
 }
 
-export type inventoryContainerItemsType = {
+export type thingsContainerItemsType = {
   [item: string]: {
     src: string;
     quantity: number

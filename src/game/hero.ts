@@ -7,7 +7,7 @@ import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
 import { attack, randomIntFromInterval } from './utils';
 import UI from './ui';
-import { inventoryContainerItemsType } from './types';
+import { thingsContainerItemsType } from './types';
 
 class Hero extends Entity {
   gridEngine: GridEngine;
@@ -21,7 +21,7 @@ class Hero extends Entity {
   moveEnemiesToHero: (heroPos: Position) => void;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
   ui: UI;
-  inventory: inventoryContainerItemsType;
+  inventory: thingsContainerItemsType;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -55,7 +55,9 @@ class Hero extends Entity {
         src: '../assets/ui-elements/inventory/pistol-03.png',
         quantity: 10
       },
-    }
+    };
+    this.addItemToInventory = this.addItemToInventory.bind(this);
+    this.deleteItemFromInventory = this.deleteItemFromInventory.bind(this);
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -253,9 +255,13 @@ class Hero extends Entity {
     this.deleteEntityFromEntitiesMap(this.id);
   }
 
-    addItemToInventory(itemName: string, item: { src: string; quantity: number }){
-      this.inventory[itemName] = item;
-    }
+  addItemToInventory(itemName: string, item: { src: string; quantity: number }) {
+    this.inventory[itemName] = item;
+  }
+
+  deleteItemFromInventory(itemName: string) {
+    delete this.inventory[itemName];
+  }
 }
 
 export default Hero;
