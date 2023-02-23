@@ -24,10 +24,13 @@ export default class UI {
   heroThingsBlock: HTMLElement | null;
   inventoryContainerThingsBlock: HTMLElement | null;
   takeAllButton: HTMLElement | null;
-  closeButton: HTMLElement | null;
+  closeExchangePanelButton: HTMLElement | null;
+  closeInventoryPanelButton: HTMLElement | null;
   addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void;
   heroInventory: thingsContainerItemsType;
   deleteItemFromInventory: (itemName: string) => void;
+  inventoryThingContainer: HTMLElement | null;
+  armorFieldContainer: HTMLElement | null;
 
   constructor(scene: Phaser.Scene, 
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -41,8 +44,13 @@ export default class UI {
     this.heroThingsBlock = null;
     this.inventoryContainerThingsBlock = null;
     this.takeAllButton = null;
-    this.closeButton = null;
+    this.closeExchangePanelButton = null;
+    this.closeInventoryPanelButton = null;
     this.deleteItemFromInventory = deleteItemFromInventory;
+    this.inventoryThingContainer = null;
+    this.addListenerToThingContainerInExchangePanel = this.addListenerToThingContainerInExchangePanel.bind(this);
+    this.addListenerToThingContainerInInventory = this.addListenerToThingContainerInInventory.bind(this);
+    this.armorFieldContainer = null;
   }
 
   findElementsForInventoryLogic(){
@@ -51,7 +59,10 @@ export default class UI {
     this.heroThingsBlock = document.querySelector('.hero-things') as HTMLElement;
     this.inventoryContainerThingsBlock = document.querySelector('.inventory-container-things') as HTMLElement;
     this.takeAllButton = document.querySelector('.take-all-button') as HTMLElement;
-    this.closeButton = document.querySelector('.close-button') as HTMLElement;
+    this.closeExchangePanelButton = document.querySelector('.close-exchange-panel-button') as HTMLElement;
+    this.closeInventoryPanelButton = document.querySelector('.close-inventory-button') as HTMLElement;
+    this.inventoryThingContainer = document.querySelector('.inventory-things') as HTMLElement;
+    this.armorFieldContainer = document.querySelector('.armor-container') as HTMLElement;
   }
 
   createUI(scene: Game) {
@@ -111,13 +122,6 @@ export default class UI {
     })
   }
 
-  setInvButtonListener(){
-    const invButton = document.querySelector('.inv-button') as HTMLElement;
-    invButton.addEventListener('click', () => {
-      (this.inventoryPanel as HTMLElement).classList.toggle('hide');
-    })
-  }
-
   putMessageToConsole(message = 'debug message') {
     const coordMessage = document.createElement('li');
     coordMessage.classList.add('console-message');
@@ -157,13 +161,41 @@ export default class UI {
     (this.heroThingsBlock as HTMLElement).innerHTML = '';
     (this.inventoryContainerThingsBlock as HTMLElement).innerHTML = '';
   }
+  
+  cleanInventoryPanelFields(){
+    (this.inventoryThingContainer as HTMLElement).innerHTML = '';
+  }
 
-  drawThingsInExchangePanel(thingsStorage: thingsContainerItemsType, containerHTMLElement: HTMLElement){
+  setInvButtonListener(){
+    const invButton = document.querySelector('.inv-button') as HTMLElement;
+    invButton.addEventListener('click', () => {
+      if(!(this.inventoryPanel?.classList.contains('hide'))){
+        return;
+      } else {
+        (this.inventoryPanel as HTMLElement).classList.remove('hide');
+        this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
+      }
+    })
+  }
+
+  addListenerToThingContainerInInventory(thingContainer: HTMLElement, itemName: string){
+    thingContainer.addEventListener('click', () => {
+      if(itemName === 'armor'){
+        const armorThingContainer = document.querySelector(`.${itemName}`) as HTMLElement;
+        const quantityContainer = armorThingContainer.querySelector('.thing-quantity') as HTMLElement;
+        armorThingContainer.removeChild(quantityContainer);
+        this.armorFieldContainer?.append(armorThingContainer);
+      }
+    })
+  }
+
+  drawThings(thingsStorage: thingsContainerItemsType, containerHTMLElement: HTMLElement, listener: (thingContainer: HTMLElement, itemName: string) => void){
     for(const item in thingsStorage){
       const thingContainer = document.createElement('div');
       const thingImg = document.createElement('img');
       const thingQuantity = document.createElement('div');
       thingContainer.classList.add('thing-container');
+      thingContainer.classList.add(`${item}`);
       thingImg.classList.add('thing-img');
       thingQuantity.classList.add('thing-quantity');
       thingQuantity.innerText = `x${thingsStorage[item].quantity}`;
@@ -171,11 +203,11 @@ export default class UI {
       thingContainer.append(thingImg);
       thingContainer.append(thingQuantity);
       containerHTMLElement.append(thingContainer);
-      this.addListenerToThingContainer(thingContainer, item);
+      listener(thingContainer, item);
     }
   }
 
-  addListenerToThingContainer(thingContainer: HTMLElement, itemName: string){
+  addListenerToThingContainerInExchangePanel(thingContainer: HTMLElement, itemName: string){
     thingContainer.addEventListener('click', () => {
       const thingContainerParent = thingContainer.parentElement;
       console.log(thingContainerParent)
@@ -187,14 +219,14 @@ export default class UI {
         this.deleteItemFromInventory(itemName);
       }
       this.cleanExchangeWindowFields();
-      this.drawThingsInExchangePanel(this.heroInventory, this.heroThingsBlock as HTMLElement);
-      this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
+      this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
+      this.drawThings(storageItems, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
     });
   }
 
   addThingsToInventoryContainer(){
-    this.drawThingsInExchangePanel(this.heroInventory, this.heroThingsBlock as HTMLElement);
-    this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
+    this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
+    this.drawThings(storageItems, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
   }
 
   setTakeAllButtonListener(){
@@ -204,15 +236,22 @@ export default class UI {
         this.deleteItemsFromStorage(item);
       }
       this.cleanExchangeWindowFields();
-      this.drawThingsInExchangePanel(this.heroInventory, this.heroThingsBlock as HTMLElement);
-      this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
+      this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
+      this.drawThings(storageItems, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
     }) 
   }
 
-  setCloseButtonListener(){
-    this.closeButton?.addEventListener('click', () => {
+  setCloseExchangePanelButtonListener(){
+    this.closeExchangePanelButton?.addEventListener('click', () => {
       this.exchangePanel?.classList.add('hide');
       this.cleanExchangeWindowFields();
+    })
+  }
+
+  setCloseInventoryPanelButtonListener(){
+    this.closeInventoryPanelButton?.addEventListener('click', () => {
+      this.inventoryPanel?.classList.add('hide');
+      this.cleanInventoryPanelFields();
     })
   }
 }

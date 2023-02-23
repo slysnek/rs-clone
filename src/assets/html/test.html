@@ -33,7 +33,17 @@
   </div>
 </div>
 <div class="inventory-panel hide">
-  <div class="inventory-panel-img"></div>
+  <div class="inventory-panel-img">
+    <div class="inventory-things"></div>
+    <div class="armor-container"></div>
+    <div class="fists-container">
+      <img src="../assets/weapons/fist.png">
+    </div>
+    <div class="pistol-container">
+      <img src="../assets/weapons/blade.png">
+    </div>
+    <div class="close-inventory-button"></div>
+  </div>
 </div>
 <div class="exchange-items-panel hide">
   <div class="exchange-items-panel-img">
@@ -41,7 +51,7 @@
     <div class="hero-things"></div>
     <div class="inventory-container-things"></div>
     <div class="take-all-button"></div>
-    <div class="close-button"></div>
+    <div class="close-exchange-panel-button"></div>
   </div>
 </div>
 <style>
@@ -272,7 +282,7 @@
     top: 207px;
     left: 436px;
   }
-  .close-button{
+  .close-exchange-panel-button{
     width: 20px;
     height: 20px;
     position: absolute;
@@ -291,5 +301,55 @@
   }
   .storage-img{
     width: 100%;
+  }
+  .inventory-things{
+    width: 60px;
+    height: 307px;
+    position: absolute;
+    top: 48px;
+    left: 51px;
+  }
+  .armor-container{
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 196px;
+    left: 166px;
+  }
+  .fists-container{
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 307px;
+    left: 166px;
+  }
+  .fists-container > img{
+    width: 90%;
+  }
+  .pistol-container{
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 307px;
+    left: 264px;
+  }
+  .pistol-container > img{
+    width: 90%;
+  }
+  .close-inventory-button{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 344px;
+    left: 460px;
   }
 </style>
