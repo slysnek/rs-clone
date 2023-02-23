@@ -137,8 +137,12 @@ export default class UI {
   }
 
   showExchangePanel(){
-    (this.exchangePanel as HTMLElement).classList.remove('hide');
-    this.addThingsToInventoryContainer();
+    if(!(this.exchangePanel?.classList.contains('hide'))){
+      return;
+    } else {
+      (this.exchangePanel as HTMLElement).classList.remove('hide');
+      this.addThingsToInventoryContainer();
+    }
   }
 
   addItemsToStorage(itemName: string, item: { src: string; quantity: number }){
