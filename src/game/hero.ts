@@ -50,16 +50,19 @@ class Hero extends Entity {
     this.moveEnemiesToHero = moveEnemiesToHero;
     this.ui = ui;
     this.sounds = sounds;
-    this.ui = ui;
     this.inventory = {
       pistol: {
         src: '../assets/ui-elements/inventory/pistol-03.png',
-        quantity: 10
+        quantity: 1
       },
     };
     this.addItemToInventory = this.addItemToInventory.bind(this);
     this.deleteItemFromInventory = this.deleteItemFromInventory.bind(this);
     this.isHeroInArmor = false;
+  }
+
+  setUiProperty(ui: UI){
+    this.ui = ui;
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {

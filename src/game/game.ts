@@ -77,6 +77,7 @@ class Game extends Phaser.Scene {
     this.hero.putOnArmor,
     this.hero.takeOffArmor,
     this.hero.isHeroInArmor);
+    this.hero.setUiProperty(this.ui);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
     this.hero.setPunchAnimation();
     this.hero.setShootAnimation();
