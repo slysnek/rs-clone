@@ -33,6 +33,9 @@
   </div>
 </div>
 <div class="inventory-panel hide">
+  <div class="woman-image-container inventory-version">
+    <img class="woman-gif inventory-gif">
+  </div>
   <div class="inventory-panel-img">
     <div class="inventory-things"></div>
     <div class="armor-container"></div>
@@ -46,6 +49,9 @@
   </div>
 </div>
 <div class="exchange-items-panel hide">
+  <div class="woman-image-container exchange-panel-version">
+    <img class="woman-gif exchange-gif">
+  </div>
   <div class="exchange-items-panel-img">
     <div class="storage-img-container"></div>
     <div class="hero-things"></div>
@@ -351,5 +357,25 @@
     position: absolute;
     top: 344px;
     left: 460px;
+  }
+  .woman-image-container{
+    width: 62px;
+    height: 91px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 20;
+  }
+  .inventory-version{
+    top: 44px;
+    left: 187px;
+  }
+  .exchange-panel-version{
+    top: 41px;
+    left: 46px;
+  }
+  .woman-gif{
+    height: 100%;
   }
 </style>

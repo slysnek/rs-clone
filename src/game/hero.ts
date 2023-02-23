@@ -22,6 +22,7 @@ class Hero extends Entity {
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
   ui: UI;
   inventory: thingsContainerItemsType;
+  isHeroInArmor: boolean;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -58,6 +59,7 @@ class Hero extends Entity {
     };
     this.addItemToInventory = this.addItemToInventory.bind(this);
     this.deleteItemFromInventory = this.deleteItemFromInventory.bind(this);
+    this.isHeroInArmor = false;
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
@@ -261,6 +263,14 @@ class Hero extends Entity {
 
   deleteItemFromInventory(itemName: string) {
     delete this.inventory[itemName];
+  }
+
+  putOnArmor() {
+    this.isHeroInArmor = true;
+  }
+
+  takeOffArmor() {
+    this.isHeroInArmor = false;
   }
 }
 

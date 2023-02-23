@@ -16,6 +16,8 @@ const storageItems: thingsContainerItemsType = {
 };
 
 const storageItemsImageSrc = 'assets/maps/dump.png';
+const womanInVaultSuitGifSrc = 'assets/ui-elements/gifs/in-vault-suit.gif';
+const womanInArmorGifSrc = 'assets/ui-elements/gifs/in-armor.gif'
 
 export default class UI {
   scene: Phaser.Scene;
@@ -31,14 +33,25 @@ export default class UI {
   deleteItemFromInventory: (itemName: string) => void;
   inventoryThingContainer: HTMLElement | null;
   armorFieldContainer: HTMLElement | null;
+  putOnArmor: () => void;
+  takeOffArmor: () => void;
+  isHeroInArmor: boolean;
+  inventoryGif: HTMLImageElement | null;
+  exchangeGif: HTMLImageElement | null;
 
   constructor(scene: Phaser.Scene, 
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
     heroInventory: thingsContainerItemsType,
-    deleteItemFromInventory: (itemName: string) => void){
+    deleteItemFromInventory: (itemName: string) => void,
+    putOnArmor: () => void,
+    takeOffArmor: () => void,
+    isHeroInArmor: boolean){
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
+    this.putOnArmor = putOnArmor;
+    this.takeOffArmor = takeOffArmor;
+    this.isHeroInArmor = isHeroInArmor;
     this.inventoryPanel = null;
     this.exchangePanel = null;
     this.heroThingsBlock = null;
@@ -51,6 +64,8 @@ export default class UI {
     this.addListenerToThingContainerInExchangePanel = this.addListenerToThingContainerInExchangePanel.bind(this);
     this.addListenerToThingContainerInInventory = this.addListenerToThingContainerInInventory.bind(this);
     this.armorFieldContainer = null;
+    this.inventoryGif = null;
+    this.exchangeGif = null;
   }
 
   findElementsForInventoryLogic(){
@@ -63,6 +78,8 @@ export default class UI {
     this.closeInventoryPanelButton = document.querySelector('.close-inventory-button') as HTMLElement;
     this.inventoryThingContainer = document.querySelector('.inventory-things') as HTMLElement;
     this.armorFieldContainer = document.querySelector('.armor-container') as HTMLElement;
+    this.inventoryGif = document.querySelector('.inventory-gif') as HTMLImageElement;
+    this.exchangeGif = document.querySelector('.exchange-gif') as HTMLImageElement;
   }
 
   createUI(scene: Game) {
@@ -140,11 +157,24 @@ export default class UI {
     }
   }
 
+  addGif(gifElement: HTMLImageElement){
+    if(this.isHeroInArmor){
+      gifElement.src = womanInArmorGifSrc;
+    } else {
+      gifElement.src = womanInVaultSuitGifSrc;
+    }
+  }
+
+  deleteGif(gifElement: HTMLImageElement){
+    gifElement.src = '';
+  }
+
   showExchangePanel(){
     if(!(this.exchangePanel?.classList.contains('hide'))){
       return;
     } else {
       (this.exchangePanel as HTMLElement).classList.remove('hide');
+      this.addGif(this.exchangeGif as HTMLImageElement);
       this.addThingsToInventoryContainer();
     }
   }
@@ -173,6 +203,7 @@ export default class UI {
         return;
       } else {
         (this.inventoryPanel as HTMLElement).classList.remove('hide');
+        this.addGif(this.inventoryGif as HTMLImageElement);
         this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
       }
     })
@@ -185,6 +216,10 @@ export default class UI {
         const quantityContainer = armorThingContainer.querySelector('.thing-quantity') as HTMLElement;
         armorThingContainer.removeChild(quantityContainer);
         this.armorFieldContainer?.append(armorThingContainer);
+        this.putOnArmor();
+        this.deleteGif(this.inventoryGif as HTMLImageElement);
+        this.addGif(this.inventoryGif as HTMLImageElement);
+        this.deleteItemFromInventory('armor');
       }
     })
   }
@@ -244,6 +279,7 @@ export default class UI {
   setCloseExchangePanelButtonListener(){
     this.closeExchangePanelButton?.addEventListener('click', () => {
       this.exchangePanel?.classList.add('hide');
+      this.deleteGif(this.exchangeGif as HTMLImageElement);
       this.cleanExchangeWindowFields();
     })
   }
@@ -251,6 +287,7 @@ export default class UI {
   setCloseInventoryPanelButtonListener(){
     this.closeInventoryPanelButton?.addEventListener('click', () => {
       this.inventoryPanel?.classList.add('hide');
+      this.deleteGif(this.inventoryGif as HTMLImageElement);
       this.cleanInventoryPanelFields();
     })
   }
