@@ -2,7 +2,8 @@
 import { windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
-import { thingsContainerItemsType } from './types'
+import { thingsContainerItemsType } from './types';
+import inventory from './inventory';
 
 const storageItems: thingsContainerItemsType = {
   armor: {
@@ -33,6 +34,7 @@ export default class UI {
   deleteItemFromInventory: (itemName: string) => void;
   inventoryThingContainer: HTMLElement | null;
   armorFieldContainer: HTMLElement | null;
+  armorImage: HTMLImageElement | null;
   putOnArmor: () => void;
   takeOffArmor: () => void;
   isHeroInArmor: boolean;
@@ -64,6 +66,7 @@ export default class UI {
     this.addListenerToThingContainerInExchangePanel = this.addListenerToThingContainerInExchangePanel.bind(this);
     this.addListenerToThingContainerInInventory = this.addListenerToThingContainerInInventory.bind(this);
     this.armorFieldContainer = null;
+    this.armorImage = null;
     this.inventoryGif = null;
     this.exchangeGif = null;
   }
@@ -78,6 +81,7 @@ export default class UI {
     this.closeInventoryPanelButton = document.querySelector('.close-inventory-button') as HTMLElement;
     this.inventoryThingContainer = document.querySelector('.inventory-things') as HTMLElement;
     this.armorFieldContainer = document.querySelector('.armor-container') as HTMLElement;
+    this.armorImage = this.armorFieldContainer?.querySelector('.armor-image') as HTMLImageElement;
     this.inventoryGif = document.querySelector('.inventory-gif') as HTMLImageElement;
     this.exchangeGif = document.querySelector('.exchange-gif') as HTMLImageElement;
   }
@@ -212,10 +216,9 @@ export default class UI {
   addListenerToThingContainerInInventory(thingContainer: HTMLElement, itemName: string){
     thingContainer.addEventListener('click', () => {
       if(itemName === 'armor'){
-        const armorThingContainer = document.querySelector(`.${itemName}`) as HTMLElement;
-        const quantityContainer = armorThingContainer.querySelector('.thing-quantity') as HTMLElement;
-        armorThingContainer.removeChild(quantityContainer);
-        this.armorFieldContainer?.append(armorThingContainer);
+        const thingContainerParent = thingContainer.parentElement;
+        thingContainerParent?.removeChild(thingContainer);
+        (this.armorImage as HTMLImageElement).src = inventory.armor.src;
         this.putOnArmor();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
@@ -224,22 +227,42 @@ export default class UI {
     })
   }
 
+  setArmorContainerListener(){
+    this.armorFieldContainer?.addEventListener('click', () => {
+      if(!this.isHeroInArmor){
+        return;
+      } else {
+        this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
+        (this.armorImage as HTMLImageElement).src = '';
+        this.takeOffArmor();
+        this.deleteGif(this.inventoryGif as HTMLImageElement);
+        this.addGif(this.inventoryGif as HTMLImageElement);
+        this.addItemToInventory('armor', storageItems.armor);
+      }
+    })
+  }
+
   drawThings(thingsStorage: thingsContainerItemsType, containerHTMLElement: HTMLElement, listener: (thingContainer: HTMLElement, itemName: string) => void){
-    for(const item in thingsStorage){
-      const thingContainer = document.createElement('div');
-      const thingImg = document.createElement('img');
-      const thingQuantity = document.createElement('div');
-      thingContainer.classList.add('thing-container');
-      thingContainer.classList.add(`${item}`);
-      thingImg.classList.add('thing-img');
-      thingQuantity.classList.add('thing-quantity');
-      thingQuantity.innerText = `x${thingsStorage[item].quantity}`;
-      thingImg.src = thingsStorage[item].src;
-      thingContainer.append(thingImg);
-      thingContainer.append(thingQuantity);
-      containerHTMLElement.append(thingContainer);
-      listener(thingContainer, item);
+    for(const itemName in thingsStorage){
+      const thingContainer = this.createThingContainer(containerHTMLElement, thingsStorage, itemName)
+      listener(thingContainer, itemName);
     }
+  }
+
+  createThingContainer(containerHTMLElement: HTMLElement, thingsStorage: thingsContainerItemsType, itemName: string){
+    const thingContainer = document.createElement('div');
+    const thingImg = document.createElement('img');
+    const thingQuantity = document.createElement('div');
+    thingContainer.classList.add('thing-container');
+    thingContainer.classList.add(`${itemName}`);
+    thingImg.classList.add('thing-img');
+    thingQuantity.classList.add('thing-quantity');
+    thingQuantity.innerText = `x${thingsStorage[itemName].quantity}`;
+    thingImg.src = thingsStorage[itemName].src;
+    thingContainer.append(thingImg);
+    thingContainer.append(thingQuantity);
+    containerHTMLElement.append(thingContainer);
+    return thingContainer;
   }
 
   addListenerToThingContainerInExchangePanel(thingContainer: HTMLElement, itemName: string){
