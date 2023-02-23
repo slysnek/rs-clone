@@ -3,6 +3,4 @@
 import AppView from './app/appView';
 
 new AppView().run();
-
-
 // new Phaser.Game(config);
