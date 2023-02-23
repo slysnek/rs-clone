@@ -245,14 +245,14 @@ export default class UI {
         this.takeOffArmor();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
-        this.addItemToInventory('armor', storageItems.armor);
+        this.addItemToInventory('armor', inventory.armor);
       }
     })
   }
 
   drawThings(thingsStorage: thingsContainerItemsType, containerHTMLElement: HTMLElement, listener: (thingContainer: HTMLElement, itemName: string) => void){
     for(const itemName in thingsStorage){
-      const thingContainer = this.createThingContainer(containerHTMLElement, thingsStorage, itemName)
+      const thingContainer = this.createThingContainer(containerHTMLElement, thingsStorage, itemName);
       listener(thingContainer, itemName);
     }
   }
@@ -276,7 +276,6 @@ export default class UI {
   addListenerToThingContainerInExchangePanel(thingContainer: HTMLElement, itemName: string){
     thingContainer.addEventListener('click', () => {
       const thingContainerParent = thingContainer.parentElement;
-      console.log(thingContainerParent)
       if(thingContainerParent?.classList.contains('inventory-container-things')){
         this.addItemToInventory(itemName, storageItems[itemName]);
         this.deleteItemsFromStorage(itemName);
