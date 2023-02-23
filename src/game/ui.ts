@@ -186,7 +186,7 @@ export default class UI {
     this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
   }
 
-  addTakeAllButtonListener(){
+  setTakeAllButtonListener(){
     this.takeAllButton?.addEventListener('click', () => {
       for(const item in storageItems){
         this.addItemToInventory(item, storageItems[item]);
@@ -196,5 +196,12 @@ export default class UI {
       this.drawThingsInExchangePanel(this.heroInventory, this.heroThingsBlock as HTMLElement);
       this.drawThingsInExchangePanel(storageItems, this.inventoryContainerThingsBlock as HTMLElement);
     }) 
+  }
+
+  setCloseButtonListener(){
+    this.closeButton?.addEventListener('click', () => {
+      this.exchangePanel?.classList.add('hide');
+      this.cleanExchangeWindowFields();
+    })
   }
 }
