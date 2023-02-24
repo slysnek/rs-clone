@@ -104,7 +104,6 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    this.subscribeCharacterToChangeMoving();
     //ui section
     this.ui.createUI(this)
     this.ui.putMessageToConsole('Game loaded')
