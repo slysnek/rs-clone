@@ -1,5 +1,11 @@
 export const options = {
   "dialogue-1": {
+    "state-0": {
+      "text": "",
+      "answers":
+        [
+        ],
+    },
     "state-1": {
       "text": "Greetings, The Chosen One. Once again the people of Vault 13 are in desperate need of your help.  Will be you be able to prove your loyalty to us this time?",
       "answers":
@@ -47,6 +53,12 @@ export const options = {
     },
   },
   "dialogue-2": {
+    "state-0": {
+      "text": "",
+      "answers":
+        [
+        ],
+    },
     "state-1": {
       "text": "Welcome back, The Chosen one. Didn’t expect you to return soon. Tell me, what did you encounter in the forest?",
       "answers":
@@ -140,6 +152,12 @@ export const options = {
     },
   },
   "dialogue-3": {
+    "state-0": {
+      "text": "",
+      "answers":
+        [
+        ],
+    },
     "state-1": {
       "text": "You look… messy. Are you okay?",
       "answers":
