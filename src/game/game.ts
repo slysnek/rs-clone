@@ -20,8 +20,9 @@ class Game extends Phaser.Scene {
   gridEngine: GridEngine;
   ui: UI;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound }
+  inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithStaticBody;
 
-  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine) {
+  constructor(hero: Hero, cursors: Phaser.Types.Input.Keyboard.CursorKeys, gridEngine: GridEngine, inventoryContainer: Phaser.Types.Physics.Arcade.SpriteWithStaticBody, ui: UI) {
     super('game');
     this.hero = hero;
     this.entitiesMap = new Map();
@@ -31,8 +32,9 @@ class Game extends Phaser.Scene {
     this.getEntitiesMap = this.getEntitiesMap.bind(this);
     this.deleteEntityFromEntitiesMap = this.deleteEntityFromEntitiesMap.bind(this);
     this.moveEnemiesToHero = this.moveEnemiesToHero.bind(this);
-    this.ui = new UI();
+    this.ui = ui;
     this.sounds = {};
+    this.inventoryContainer = inventoryContainer;
   }
 
   preload() {
@@ -58,6 +60,7 @@ class Game extends Phaser.Scene {
     this.load.audio('startFight', 'assets/music/startFight.wav');
 
     // this.input.setDefaultCursor('url("assets/cursor/cursor-24x24.png"), pointer');
+    this.load.image('dump', 'assets/maps/dump.png');
   }
 
   create() {
@@ -67,6 +70,14 @@ class Game extends Phaser.Scene {
     // this.tintTiles(map);
     this.addSounds();
     this.createHero(map);
+    this.ui = new UI(this,
+    this.hero.addItemToInventory,
+    this.hero.inventory,
+    this.hero.deleteItemFromInventory,
+    this.hero.putOnArmor,
+    this.hero.takeOffArmor,
+    this.hero.isHeroInArmor);
+    this.hero.setUiProperty(this.ui);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
     this.hero.setPunchAnimation();
     this.hero.setShootAnimation();
@@ -78,9 +89,11 @@ class Game extends Phaser.Scene {
       const name = `${currentLevel.enemyName}${i + 1}`;
       this.createEnemy(name, map, 6, currentLevel.infoForCreateEnemies[name].size, currentLevel.infoForCreateEnemies[name].scale);
     }
-
+    this.placeObject();
+    this.setInventoryContainerListener();
     this.gridEngineInit(map);
-
+    const pos = this.gridEngine.getPosition('dump')
+    console.log(pos)
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, currentLevel.enemyAnims, defaultBehavior);
@@ -91,12 +104,19 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    this.ui.createUI(this);
-    this.ui.putMessageToConsole('Game loaded');
-    this.ui.updateHP(this.hero);
-    this.ui.updateAP(this.hero);
-    this.ui.updateWeapon(this.hero);
-    this.ui.setChangeWeaponListener(this.hero);
+    this.subscribeCharacterToChangeMoving();
+    //ui section
+    this.ui.createUI(this)
+    this.ui.putMessageToConsole('Game loaded')
+    this.ui.updateHP(this.hero)
+    this.ui.updateAP(this.hero)
+    this.ui.updateWeapon(this.hero)
+    this.ui.setInvButtonListener();
+    this.ui.setChangeWeaponListener(this.hero)
+    this.ui.setTakeAllButtonListener();
+    this.ui.setCloseExchangePanelButtonListener();
+    this.ui.setCloseInventoryPanelButtonListener();
+    this.ui.setArmorContainerListener();
   }
 
   addSounds() {
@@ -164,6 +184,11 @@ class Game extends Phaser.Scene {
           offsetY: 42,
           walkingAnimationEnabled: false,
           speed: 7,
+        },
+        {
+          id: 'dump',
+          sprite: this.inventoryContainer,
+          startPosition: { x: 72, y: 48 },
         },
       ],
       numberOfDirections: 4
@@ -437,6 +462,23 @@ class Game extends Phaser.Scene {
         }
       }
     }
+  }
+
+  placeObject() {
+    this.inventoryContainer = this.physics.add.staticSprite(0, 0, 'dump');
+  }
+
+  setInventoryContainerListener() {
+    this.inventoryContainer.setInteractive().on('pointerdown', (pointer: Phaser.Types.Input.Keyboard.CursorKeys, localX: number, localY: number, event: Event) => {
+      event.stopPropagation();
+      const heroPosition = this.gridEngine.getPosition('hero');
+      const inventoryContainerPosition = this.gridEngine.getPosition('dump');
+      const isXPositionRight = ((inventoryContainerPosition.x - 2) <= heroPosition.x && (inventoryContainerPosition.x + 2) >= heroPosition.x);
+      const iYPositionRight = ((inventoryContainerPosition.y - 2) <= heroPosition.y && (inventoryContainerPosition.y + 2) >= heroPosition.y)
+      if (iYPositionRight && isXPositionRight) {
+        this.ui.showExchangePanel();
+      }
+    }, this);
   }
 }
 

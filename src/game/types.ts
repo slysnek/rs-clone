@@ -5,15 +5,15 @@ import Enemy from './enemy';
 export type gridEngineType = {
   characters: {
     id: string;
-    sprite: Hero | Enemy;
-    startPosition: {
+    sprite: Hero | Enemy | Phaser.Types.Physics.Arcade.SpriteWithStaticBody;
+    startPosition?: {
       x: number;
       y: number;
     };
-    offsetX: number;
-    offsetY: number;
-    walkingAnimationEnabled: boolean;
-    speed: number;
+    offsetX?: number;
+    offsetY?: number;
+    walkingAnimationEnabled?: boolean;
+    speed?: number;
     charLayer?: string;
   }[];
   numberOfDirections: number;
@@ -58,5 +58,12 @@ export type StopAnimations = {
     upLeft: {
       stopFrame: number;
     }
+  }
+}
+
+export type thingsContainerItemsType = {
+  [item: string]: {
+    src: string;
+    quantity: number
   }
 }

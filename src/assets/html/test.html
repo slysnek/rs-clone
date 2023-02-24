@@ -26,7 +26,41 @@
   <div class="hp-element">
     <span class="hp">?</span>
   </div>
-  <div class="right-pan"></div>
+  <div class="right-pan">
+    <div class="inv-button-container">
+      <div class="inv-button"></div>
+    </div>
+  </div>
+</div>
+<div class="inventory-panel hide">
+  <div class="woman-image-container inventory-version">
+    <img class="woman-gif inventory-gif">
+  </div>
+  <div class="inventory-panel-img">
+    <div class="inventory-things"></div>
+    <div class="armor-container">
+      <img class="armor-image">
+    </div>
+    <div class="fists-container">
+      <img src="../assets/weapons/fist.png">
+    </div>
+    <div class="pistol-container">
+      <img src="../assets/weapons/blade.png">
+    </div>
+    <div class="close-inventory-button"></div>
+  </div>
+</div>
+<div class="exchange-items-panel hide">
+  <div class="woman-image-container exchange-panel-version">
+    <img class="woman-gif exchange-gif">
+  </div>
+  <div class="exchange-items-panel-img">
+    <div class="storage-img-container"></div>
+    <div class="hero-things"></div>
+    <div class="inventory-container-things"></div>
+    <div class="take-all-button"></div>
+    <div class="close-exchange-panel-button"></div>
+  </div>
 </div>
 <style>
   * {
@@ -176,9 +210,174 @@
   }
 
   .right-pan {
+    position: relative;
     height: 100%;
     width: 229px;
     background-image: url(../assets/ui-elements/right-pan.png);
     background-size: cover;
+  }
+  .inv-button-container{
+    position: absolute;
+    height: 22px;
+    width: 34px;
+    left: 20px;
+    top: 6px;
+    z-index: 20;
+  }
+  .inv-button{
+    height: 100%;
+    width: 100%;
+    background-image: url(../assets/ui-elements/inv-button.png);
+    background-size: cover;
+  }
+  .hide{
+    display: none;
+  }
+  .exchange-items-panel, .inventory-panel{
+    width: 527px;
+    height: 377px;
+    position: absolute;
+  }
+  .exchange-items-panel-img{
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background-image: url(../assets/ui-elements/exchange-panel.png);
+    background-size: cover;
+  }
+  .inventory-container-things{
+    width: 55px;
+    height: 290px;
+    position: absolute;
+    top: 42px;
+    left: 300px;
+  }
+  .hero-things{
+    width: 55px;
+    height: 290px;
+    position: absolute;
+    top: 42px;
+    left: 185px;
+  }
+  .thing-container{
+    width: 55px;
+    position: relative;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .thing-img{
+    width: 100%;
+    height: 100%;
+  }
+  .thing-quantity{
+    position: absolute;
+    color: white;
+    top: 0px;
+    left: 0px;
+  }
+  .inventory-panel-img{
+    height: 100%;
+    width: 100%;
+    background-image: url(../assets/ui-elements/inventory-panel.png);
+    background-size: cover;
+  }
+  .take-all-button{
+    width: 35px;
+    height: 40px;
+    position: absolute;
+    top: 207px;
+    left: 436px;
+  }
+  .close-exchange-panel-button{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 329px;
+    left: 475px;
+  }
+  .storage-img-container{
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 62px;
+    left: 428px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .storage-img{
+    width: 100%;
+  }
+  .inventory-things{
+    width: 60px;
+    height: 307px;
+    position: absolute;
+    top: 48px;
+    left: 51px;
+  }
+  .armor-container{
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 196px;
+    left: 166px;
+  }
+  .fists-container{
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 307px;
+    left: 166px;
+  }
+  .fists-container > img{
+    width: 90%;
+  }
+  .pistol-container{
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 307px;
+    left: 264px;
+  }
+  .pistol-container > img{
+    width: 90%;
+  }
+  .close-inventory-button{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 344px;
+    left: 460px;
+  }
+  .woman-image-container{
+    width: 62px;
+    height: 91px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 20;
+  }
+  .inventory-version{
+    top: 44px;
+    left: 187px;
+  }
+  .exchange-panel-version{
+    top: 41px;
+    left: 46px;
+  }
+  .woman-gif{
+    height: 100%;
   }
 </style>

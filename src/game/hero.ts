@@ -7,6 +7,7 @@ import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
 import { attack, randomIntFromInterval } from './utils';
 import UI from './ui';
+import { thingsContainerItemsType } from './types';
 
 class Hero extends Entity {
   gridEngine: GridEngine;
@@ -19,7 +20,9 @@ class Hero extends Entity {
   deleteEntityFromEntitiesMap: (entityKey: string) => void;
   moveEnemiesToHero: (heroPos: Position) => void;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
-  ui: UI
+  ui: UI;
+  inventory: thingsContainerItemsType;
+  isHeroInArmor: boolean;
 
   constructor(scene: Phaser.Scene,
     texture: string,
@@ -47,6 +50,18 @@ class Hero extends Entity {
     this.moveEnemiesToHero = moveEnemiesToHero;
     this.ui = ui;
     this.sounds = sounds;
+    this.inventory = {
+      pistol: {
+        src: '../assets/ui-elements/inventory/pistol-03.png',
+        quantity: 1
+      },
+    };
+    this.addItemToInventory = this.addItemToInventory.bind(this);
+    this.deleteItemFromInventory = this.deleteItemFromInventory.bind(this);
+    this.isHeroInArmor = false;
+  }
+
+  setUiProperty(ui: UI){
     this.ui = ui;
   }
 
@@ -243,6 +258,22 @@ class Hero extends Entity {
   playDeathAnimation() {
     this.anims.play('death');
     this.deleteEntityFromEntitiesMap(this.id);
+  }
+
+  addItemToInventory(itemName: string, item: { src: string; quantity: number }) {
+    this.inventory[itemName] = item;
+  }
+
+  deleteItemFromInventory(itemName: string) {
+    delete this.inventory[itemName];
+  }
+
+  putOnArmor() {
+    this.isHeroInArmor = true;
+  }
+
+  takeOffArmor() {
+    this.isHeroInArmor = false;
   }
 }
 
