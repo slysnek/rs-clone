@@ -32,7 +32,7 @@
     </div>
   </div>
 </div>
-<div class="next-level-button">
+<div class="next-level-button unavailable">
   Next Level
 </div>
 <div class="inventory-panel hide">
@@ -384,6 +384,24 @@
     height: 100%;
   }
   .next-level-button{
-    
+    width: 59px;
+    height: 47px;
+    text-align: center;
+    border-radius: 5px;
+    position: absolute;
+    top: 33px;
+    left: 1014px;
+  }
+  .next-level-button:hover{
+    cursor: pointer;
+  }
+  .unavailable{
+    border: #706828 solid 1px;
+    color: #706828;
+  }
+  .available{
+    border: #A48830 solid 1px;
+    color: #A48830;
+    transition: 3s;
   }
 </style>

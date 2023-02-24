@@ -16,10 +16,6 @@ export class Dialogue extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image(
-      'background',
-      '../assets/dialogue_assets/dialogue-background.png'
-    );
     this.load.html('dialogue', '/assets/html/dialogue.html');
   }
 
