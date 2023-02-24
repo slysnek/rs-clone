@@ -9,7 +9,8 @@ import { scorpionAnims,
   offsetCoordForScorpions,
   startPositionsForHeroMap1,
   startPositionsForHeroMap2,
-  startPositionsForHeroMap3} from "./constants"
+  startPositionsForHeroMap3} from "./constants";
+import { DialogueKey } from './dialogue';
 
 export type level = {
   enemyAnims: typeof scorpionAnims | typeof deathClawAnims | typeof ghoulAnims,
@@ -83,4 +84,9 @@ export function setCurrentLevel(level: level){
   currentLevel = level;
 }
 
+export function setCurrentDialogue(dialogue: DialogueKey){
+  currentDialogue = dialogue;
+}
+
 export let currentLevel: level;
+export let currentDialogue: DialogueKey;

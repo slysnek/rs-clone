@@ -1,5 +1,5 @@
 import { windowSize } from './constants';
-import Dialogue from './dialogue';
+import { Dialogue } from './dialogue';
 
 const dialogueConfig = {
   type: Phaser.WEBGL,
