@@ -472,10 +472,10 @@ class Game extends Phaser.Scene {
     this.inventoryContainer.setInteractive().on('pointerdown', (pointer: Phaser.Types.Input.Keyboard.CursorKeys, localX: number, localY: number, event: Event) => {
       event.stopPropagation();
       const heroPosition = this.gridEngine.getPosition('hero');
-      const invContainerPosition = this.gridEngine.getPosition('dump');
-      const w1 = ((invContainerPosition.x - 2) <= heroPosition.x && (invContainerPosition.x + 2) >= heroPosition.x);
-      const w2 = ((invContainerPosition.y - 2) <= heroPosition.y && (invContainerPosition.y + 2) >= heroPosition.y)
-      if (w1 && w2) {
+      const inventoryContainerPosition = this.gridEngine.getPosition('dump');
+      const isXPositionRight = ((inventoryContainerPosition.x - 2) <= heroPosition.x && (inventoryContainerPosition.x + 2) >= heroPosition.x);
+      const iYPositionRight = ((inventoryContainerPosition.y - 2) <= heroPosition.y && (inventoryContainerPosition.y + 2) >= heroPosition.y)
+      if (iYPositionRight && isXPositionRight) {
         this.ui.showExchangePanel();
       }
     }, this);
