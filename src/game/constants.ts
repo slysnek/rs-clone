@@ -204,6 +204,208 @@ export const heroAnims = {
   },
 };
 
+export const heroAnimsInArmor = {
+  walk: {
+    upRight: {
+      startFrame: 319,
+      endFrame: 326,
+      stopFrame: 329,
+    },
+    downRight: {
+      startFrame: 330,
+      endFrame: 337,
+      stopFrame: 340,
+    },
+    downLeft: {
+      startFrame: 341,
+      endFrame: 348,
+      stopFrame: 351,
+    },
+    upLeft: {
+      startFrame: 352,
+      endFrame: 359,
+      stopFrame: 362,
+    },
+  },
+  damageWithFist:{
+    upRight: {
+      startFrame: 363,
+      endFrame: 368,
+      stopFrame: 368,
+    },
+    downRight: {
+      startFrame: 374,
+      endFrame: 379,
+      stopFrame: 379,
+    },
+    downLeft: {
+      startFrame: 385,
+      endFrame: 390,
+      stopFrame: 390,
+    },
+    upLeft: {
+      startFrame: 396,
+      endFrame: 401,
+      stopFrame: 401,
+    },
+  },
+  fists: {
+    upRight: {
+      startFrame: 407,
+      endFrame: 415,
+      stopFrame: 329,
+    },
+    downRight: {
+      startFrame: 418,
+      endFrame: 426,
+      stopFrame: 340,
+    },
+    downLeft: {
+      startFrame: 429,
+      endFrame: 437,
+      stopFrame: 352,
+    },
+    upLeft: {
+      startFrame: 440,
+      endFrame: 448,
+      stopFrame: 362,
+    },
+  },
+  getPistol: {
+    upRight: {
+      startFrame: 451,
+      endFrame: 455,
+      stopFrame: 455,
+    },
+    downRight: {
+      startFrame: 462,
+      endFrame: 466,
+      stopFrame: 466,
+    },
+    downLeft: {
+      startFrame: 473,
+      endFrame: 477,
+      stopFrame: 477,
+    },
+    upLeft: {
+      startFrame: 484,
+      endFrame: 487,
+      stopFrame: 487,
+    },
+  },
+  hidePistol: {
+    upRight: {
+      startFrame: 455,
+      endFrame: 461,
+      stopFrame: 461,
+    },
+    downRight: {
+      startFrame: 466,
+      endFrame: 472,
+      stopFrame: 471,
+    },
+    downLeft: {
+      startFrame: 477,
+      endFrame: 483,
+      stopFrame: 483,
+    },
+    upLeft: {
+      startFrame: 488,
+      endFrame: 493,
+      stopFrame: 493,
+    },
+  },
+  walkWithPistol: {
+    upRight: {
+      startFrame: 494,
+      endFrame: 501,
+      stopFrame: 504,
+    },
+    downRight: {
+      startFrame: 505,
+      endFrame: 512,
+      stopFrame: 515,
+    },
+    downLeft: {
+      startFrame: 516,
+      endFrame: 523,
+      stopFrame: 526,
+    },
+    upLeft: {
+      startFrame: 527,
+      endFrame: 534,
+      stopFrame: 537,
+    },
+  },
+  // здесь остановилась
+  pistol: {
+    upRight: {
+      startFrame: 538,
+      endFrame: 548,
+      stopFrame: 538,
+    },
+    downRight: {
+      startFrame: 549,
+      endFrame: 559,
+      stopFrame: 549,
+    },
+    downLeft: {
+      startFrame: 560,
+      endFrame: 570,
+      stopFrame: 560,
+    },
+    upLeft: {
+      startFrame: 561,
+      endFrame: 571,
+      stopFrame: 561,
+    },
+  },
+  damageWithPistol:{
+    upRight: {
+      startFrame: 572,
+      endFrame: 577,
+      stopFrame: 577,
+    },
+    downRight: {
+      startFrame: 583,
+      endFrame: 588,
+      stopFrame: 583,
+    },
+    downLeft: {
+      startFrame: 594,
+      endFrame: 599,
+      stopFrame: 594,
+    },
+    upLeft: {
+      startFrame: 605,
+      endFrame: 610,
+      stopFrame: 605,
+    },
+  },
+  death: {
+    upRight: {
+      startFrame: 611,
+      endFrame: 619,
+      stopFrame: 619,
+    },
+    downRight: {
+      startFrame: 611,
+      endFrame: 619,
+      stopFrame: 619,
+    },
+    downLeft: {
+      startFrame: 611,
+      endFrame: 619,
+      stopFrame: 619,
+    },
+    upLeft: {
+      startFrame: 611,
+      endFrame: 619,
+      stopFrame: 619,
+    },
+  },
+};
+
 export const scorpionAnims = {
   walk: {
     upRight: {
