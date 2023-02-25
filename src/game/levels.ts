@@ -23,7 +23,9 @@ export type level = {
   spriteSheetsSizes: { frameWidth: number, frameHeight: number },
   map: string,
   tiles: string,
-  heroStartCoords: { x: number, y: number }
+  heroStartCoords: { x: number, y: number },
+  thingsInStorage: { [key: string]: {src: string, quantity: number} },
+  storage: { key: string, src: string, position: {x: number, y: number} },
 }
 
 export const level1 = {
@@ -41,7 +43,26 @@ export const level1 = {
   spriteSheetsSizes: { frameWidth: 50, frameHeight: 100 },
   map: 'currentMap',
   tiles: 'tiles-02',
-  heroStartCoords: startPositionsForHeroMap1
+  heroStartCoords: startPositionsForHeroMap1,
+  thingsInStorage: {
+    armor: {
+      src: '../assets/ui-elements/inventory/armor.png',
+      quantity: 1
+    },
+    bullets: {
+      src: '../assets/ui-elements/inventory/bullets.png',
+      quantity: 3
+    },
+    cookie: {
+      src: '../assets/ui-elements/inventory/cookie.png',
+      quantity: 2
+    },
+  },
+  storage: {
+    key: 'barrel',
+    src: 'assets/maps/barrel.png',
+    position: { x: 72, y: 48 }
+  }
 };
 
 export const level2 = {
@@ -59,7 +80,22 @@ export const level2 = {
   spriteSheetsSizes: { frameWidth: 106, frameHeight: 135 },
   map: 'map1',
   tiles: 'maptiles2-01-01',
-  heroStartCoords: startPositionsForHeroMap2
+  heroStartCoords: startPositionsForHeroMap2,
+  thingsInStorage: {
+    healPowder: {
+      src: '../assets/ui-elements/inventory/healpwdr.png',
+      quantity: 1
+    },
+    bullets: {
+      src: '../assets/ui-elements/inventory/bullets.png',
+      quantity: 4
+    },
+  },
+  storage: {
+    key: 'fridge',
+    src: 'assets/maps/fridge.png',
+    position: { x: 58, y: 90 }
+  }
 };
 
 export const level3 = {
@@ -77,7 +113,22 @@ export const level3 = {
   spriteSheetsSizes: { frameWidth: 120, frameHeight: 118 },
   map: 'map3',
   tiles: 'gas-spritesheet',
-  heroStartCoords: startPositionsForHeroMap3  
+  heroStartCoords: startPositionsForHeroMap3,
+  thingsInStorage: {
+    stimulant: {
+      src: '../assets/ui-elements/inventory/stimx.png',
+      quantity: 1
+    },
+    bullets: {
+      src: '../assets/ui-elements/inventory/bullets.png',
+      quantity: 4
+    },
+  },
+  storage: {
+    key: 'wash-machine',
+    src: 'assets/maps/wash-machine.png',
+    position: { x: 72, y: 48 }
+  }
 }
 
 export function setCurrentLevel(level: level){

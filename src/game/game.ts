@@ -114,7 +114,7 @@ class Game extends Phaser.Scene {
     this.load.audio('startFight', 'assets/music/startFight.wav');
 
     // this.input.setDefaultCursor('url("assets/cursor/cursor-24x24.png"), pointer');
-    this.load.image('dump', 'assets/maps/dump.png');
+    this.load.image(currentLevel.storage.key, currentLevel.storage.src);
   }
 
   create() {
@@ -237,9 +237,9 @@ class Game extends Phaser.Scene {
           speed: 7,
         },
         {
-          id: 'dump',
+          id: currentLevel.storage.key,
           sprite: this.inventoryContainer,
-          startPosition: { x: 72, y: 48 },
+          startPosition: currentLevel.storage.position,
         },
       ],
       numberOfDirections: 4
@@ -516,16 +516,16 @@ class Game extends Phaser.Scene {
   }
 
   placeObject() {
-    this.inventoryContainer = this.physics.add.staticSprite(0, 0, 'dump');
+    this.inventoryContainer = this.physics.add.staticSprite(0, 0, currentLevel.storage.key);
   }
 
   setInventoryContainerListener() {
     this.inventoryContainer.setInteractive().on('pointerdown', (pointer: Phaser.Types.Input.Keyboard.CursorKeys, localX: number, localY: number, event: Event) => {
       event.stopPropagation();
       const heroPosition = this.gridEngine.getPosition('hero');
-      const inventoryContainerPosition = this.gridEngine.getPosition('dump');
-      const isXPositionRight = ((inventoryContainerPosition.x - 2) <= heroPosition.x && (inventoryContainerPosition.x + 2) >= heroPosition.x);
-      const iYPositionRight = ((inventoryContainerPosition.y - 2) <= heroPosition.y && (inventoryContainerPosition.y + 2) >= heroPosition.y)
+      const inventoryContainerPosition = this.gridEngine.getPosition(currentLevel.storage.key);
+      const isXPositionRight = ((inventoryContainerPosition.x - 1) <= heroPosition.x && (inventoryContainerPosition.x + 1) >= heroPosition.x);
+      const iYPositionRight = ((inventoryContainerPosition.y - 1) <= heroPosition.y && (inventoryContainerPosition.y + 1) >= heroPosition.y)
       if (iYPositionRight && isXPositionRight) {
         this.ui.showExchangePanel();
       }
