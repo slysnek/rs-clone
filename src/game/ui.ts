@@ -5,7 +5,7 @@ import Hero from "./hero";
 import { thingsContainerItemsType } from './types';
 import inventory from './inventory';
 import dialogueConfig from '../game/dialogue-config';
-import { currentMode, levelMode, gameMode, setNewLevelForGame, currentLevel } from '../game/levels';
+import { currentMode, levelMode, gameMode, setNewLevelForGame, currentLevel, saveHeroInventory } from '../game/levels';
 import appView from "..";
 
 // const storageItems: thingsContainerItemsType = {
@@ -128,6 +128,7 @@ export default class UI {
         if(setNewLevelForGame() === 'finish'){
           appView.showMenu();
         } else {
+          saveHeroInventory(this.heroInventory);
           new Phaser.Game(dialogueConfig);
         }
       }

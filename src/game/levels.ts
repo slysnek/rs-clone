@@ -11,6 +11,8 @@ import { scorpionAnims,
   startPositionsForHeroMap2,
   startPositionsForHeroMap3} from "./constants";
 import { DialogueKey } from './dialogue';
+import inventory from "./inventory";
+import { thingsContainerItemsType } from './types';
 
 export type level = {
   enemyAnims: typeof scorpionAnims | typeof deathClawAnims | typeof ghoulAnims,
@@ -26,6 +28,7 @@ export type level = {
   heroStartCoords: { x: number, y: number },
   thingsInStorage: { [key: string]: {src: string, quantity: number} },
   storage: { key: string, src: string, position: {x: number, y: number} },
+  heroInventory: { [key: string]: {src: string, quantity: number} },
 }
 
 export const level1 = {
@@ -46,15 +49,15 @@ export const level1 = {
   heroStartCoords: startPositionsForHeroMap1,
   thingsInStorage: {
     armor: {
-      src: '../assets/ui-elements/inventory/armor.png',
+      src: inventory.armor.src,
       quantity: 1
     },
     bullets: {
-      src: '../assets/ui-elements/inventory/bullets.png',
+      src: inventory.bullets.src,
       quantity: 3
     },
     cookie: {
-      src: '../assets/ui-elements/inventory/cookie.png',
+      src: inventory.cookie.src,
       quantity: 2
     },
   },
@@ -62,7 +65,17 @@ export const level1 = {
     key: 'barrel',
     src: 'assets/maps/barrel.png',
     position: { x: 72, y: 48 }
-  }
+  },
+  heroInventory: {  
+    pistol: {
+      src: inventory.pistol.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventory.bullets.src,
+      quantity: 3
+    },
+  },
 };
 
 export const level2 = {
@@ -83,11 +96,11 @@ export const level2 = {
   heroStartCoords: startPositionsForHeroMap2,
   thingsInStorage: {
     healPowder: {
-      src: '../assets/ui-elements/inventory/healpwdr.png',
+      src: inventory.healPowder.src,
       quantity: 1
     },
     bullets: {
-      src: '../assets/ui-elements/inventory/bullets.png',
+      src: inventory.bullets.src,
       quantity: 4
     },
   },
@@ -95,7 +108,17 @@ export const level2 = {
     key: 'fridge',
     src: 'assets/maps/fridge.png',
     position: { x: 58, y: 90 }
-  }
+  },
+  heroInventory: {  
+    pistol: {
+      src: inventory.pistol.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventory.bullets.src,
+      quantity: 3
+    },
+  },
 };
 
 export const level3 = {
@@ -116,11 +139,11 @@ export const level3 = {
   heroStartCoords: startPositionsForHeroMap3,
   thingsInStorage: {
     stimulant: {
-      src: '../assets/ui-elements/inventory/stimx.png',
+      src: inventory.stimulant.src,
       quantity: 1
     },
     bullets: {
-      src: '../assets/ui-elements/inventory/bullets.png',
+      src: inventory.bullets.src,
       quantity: 4
     },
   },
@@ -128,8 +151,25 @@ export const level3 = {
     key: 'wash-machine',
     src: 'assets/maps/wash-machine.png',
     position: { x: 72, y: 48 }
-  }
+  },
+  heroInventory: {  
+    pistol: {
+      src: inventory.pistol.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventory.bullets.src,
+      quantity: 3
+    },
+  },
 }
+
+export function saveHeroInventory(currentHeroInventoryState: thingsContainerItemsType){
+    for (const i in currentHeroInventoryState){
+      currentLevel.heroInventory[i] = currentHeroInventoryState[i];
+    }
+    console.log(currentLevel.heroInventory)
+  }
 
 export function setCurrentLevel(level: level){
   currentLevel = level;

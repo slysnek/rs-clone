@@ -8,6 +8,7 @@ import Weapon from './weapon'
 import { attack, randomIntFromInterval } from './utils';
 import UI from './ui';
 import { thingsContainerItemsType } from './types';
+import { currentLevel } from "./levels";
 
 class Hero extends Entity {
   gridEngine: GridEngine;
@@ -50,12 +51,7 @@ class Hero extends Entity {
     this.moveEnemiesToHero = moveEnemiesToHero;
     this.ui = ui;
     this.sounds = sounds;
-    this.inventory = {
-      pistol: {
-        src: '../assets/ui-elements/inventory/pistol-03.png',
-        quantity: 1
-      },
-    };
+    this.inventory = currentLevel.heroInventory;
     this.addItemToInventory = this.addItemToInventory.bind(this);
     this.deleteItemFromInventory = this.deleteItemFromInventory.bind(this);
     this.isHeroInArmor = false;
