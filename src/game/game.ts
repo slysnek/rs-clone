@@ -38,6 +38,60 @@ class Game extends Phaser.Scene {
   }
 
   preload() {
+    //loading screen
+    const progressBar = this.add.graphics();
+    const progressBox = this.add.graphics();
+    progressBox.fillStyle(0x222222, 0.8);
+    progressBox.fillRect(100, windowSize.windowHeight / 2, windowSize.windowWidth - 200, 50);
+
+    const loadingText = this.make.text({
+      x: 100,
+      y: windowSize.windowHeight / 2 - 50,
+      text: 'Loading...',
+      style: {
+        font: '28px monospace',
+        fontFamily: 'Fallout Font',
+        color: '#3cf800'
+      }
+    });
+
+    const percentText = this.make.text({
+      x: windowSize.windowWidth / 2,
+      y: windowSize.windowHeight / 2 + 10,
+      text: '0%',
+      style: {
+        font: '28px monospace',
+        color: '#3cf800'
+      }
+    });
+
+    const assetText = this.make.text({
+      x: 100,
+      y: windowSize.windowHeight / 2 + 55,
+      text: '',
+      style: {
+        font: '20px monospace',
+        color: 'white'
+      }
+    });
+
+    this.load.on('progress', function (value: number) {
+      progressBar.clear();
+      progressBar.fillStyle(0x3cf800, 1);
+      progressBar.fillRect(100, windowSize.windowHeight / 2, (windowSize.windowWidth - 200) * value, 50);
+      percentText.setText((value * 100).toFixed(1) + '%');
+    });
+
+    this.load.on('fileprogress', function (file: { key: string; }) {
+      assetText.setText('Loading asset: ' + file.key);
+    });
+    this.load.on('complete', function () {
+      progressBar.destroy();
+      progressBox.destroy();
+      loadingText.destroy();
+      percentText.destroy();
+    });
+
     this.load.tilemapTiledJSON('map', `assets/maps/${currentLevel.map}.json`);
     this.load.image('tiles', `assets/maps/${currentLevel.tiles}.png`);
     this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
