@@ -5,6 +5,8 @@ import Hero from "./hero";
 import { thingsContainerItemsType } from './types';
 import inventory from './inventory';
 import dialogueConfig from '../game/dialogue-config';
+import { currentMode, levelMode, gameMode, setNewLevelForGame } from '../game/levels';
+import appView from "..";
 
 const storageItems: thingsContainerItemsType = {
   armor: {
@@ -115,8 +117,20 @@ export default class UI {
 
   setNextLevelButtonListener(){
     this.nextLevelButton?.addEventListener('click', () => {
-      this.scene.sys.game.destroy(true);
-      new Phaser.Game(dialogueConfig);
+      if(currentMode === levelMode){
+        // appView.destroyGame();
+        this.scene.sys.game.destroy(true);
+        appView.showMenu();
+      } else if(currentMode === gameMode){
+        // appView.destroyGame();
+        this.scene.sys.plugins.removeScenePlugin('gridEngine');
+        this.scene.sys.game.destroy(true);
+        if(setNewLevelForGame() === 'finish'){
+          appView.showMenu();
+        } else {
+          new Phaser.Game(dialogueConfig);
+        }
+      }
     })
   }
 

@@ -88,5 +88,26 @@ export function setCurrentDialogue(dialogue: DialogueKey){
   currentDialogue = dialogue;
 }
 
+export function setCurrentMode(mode: string){
+  currentMode = mode;
+}
+
+export function setNewLevelForGame(){
+  const currentLevelIndex = levels.indexOf(currentLevel);
+  const currentDialogueIndex = dialogues.indexOf(currentDialogue);
+  if(currentDialogueIndex === 2 && currentLevelIndex === 2){
+    return 'finish'; 
+  }
+  currentLevel = levels[currentLevelIndex + 1];
+  currentDialogue = dialogues[currentDialogueIndex + 1];
+}
+
+const levels: level[] = [level1, level2, level3];
+const dialogues: DialogueKey[] = ["dialogue-1", "dialogue-2", "dialogue-3"];
+
+export const levelMode = 'levelMode';
+export const gameMode = 'gameMode';
+
 export let currentLevel: level;
 export let currentDialogue: DialogueKey;
+export let currentMode: string;
