@@ -16,6 +16,7 @@ import dialogueConfig from '../game/dialogue-config';
 import { footer } from '../assets/components/footer';
 import { popUp } from '../assets/components/menu pop-up';
 import { tutorial } from '../assets/components/tutorial';
+import { settings } from '../assets/components/settings';
 
 
 class AppView {
@@ -30,6 +31,7 @@ class AppView {
   settings: HTMLButtonElement;
   howToPlay: HTMLButtonElement;
   title: HTMLElement;
+  audio: HTMLAudioElement;
 
   constructor() {
     this.controller = new AppController();
@@ -43,15 +45,17 @@ class AppView {
     this.settings = this.createMenuButton('Settings');
     this.howToPlay = this.createMenuButton('How to play');
     this.game = null;
+    this.audio = new Audio;
   }
 
   addMenuElements() {
-    //title
+    //title and audio
     const buttonsWrapper = document.createElement('div');
     buttonsWrapper.classList.add('button-wrapper');
     this.title.textContent = 'Fallout Clone';
     this.title.classList.add('title');
-    //add buttons and footer
+    this.audio.classList.add('audio')
+    //add buttons, footer and audio
     buttonsWrapper.append(this.newGameButton);
     buttonsWrapper.append(this.level1Button);
     buttonsWrapper.append(this.level2Button);
@@ -61,6 +65,7 @@ class AppView {
     this.menu.append(this.title);
     this.menu.append(buttonsWrapper);
     this.menu.append(footer);
+    this.menu.append(this.audio);
   }
 
   createMenuButton(text: string) {
@@ -69,10 +74,6 @@ class AppView {
     button.textContent = text;
     return button;
   }
-
-  /*   addFooter(){
-  
-    } */
 
   setButtonsListeners() {
     this.level1Button.addEventListener('click', () => {
@@ -92,9 +93,16 @@ class AppView {
       this.game = new Phaser.Game(dialogueConfig);
     });
     this.settings.addEventListener('click', ()=>{
+      if(tutorial){
+        tutorial.remove()
+      }
       this.menu.append(popUp)
+      popUp.appendChild(settings)
     })
     this.howToPlay.addEventListener('click', ()=>{
+      if(settings){
+        settings.remove()
+      }
       this.menu.append(popUp)
       popUp.appendChild(tutorial)
     })

@@ -171,15 +171,15 @@ body {
   transition: 0.3s;
 }
 
-.cross:hover{
+.cross:hover {
   transform: translateY(-3px);
 }
 
-.main-list{
+.main-list {
   list-style-position: inside;
 }
 
-.main-list-item{
+.main-list-item {
   font-size: 24px;
   text-decoration: dotted;
 }
@@ -187,7 +187,58 @@ body {
 .tutorial-wrapper {
   font-size: 20px;
 }
+
 .tutorial-wrapper > p {
   font-size: 24px;
   margin: 16px;
 }
+
+.audio-wrapper{
+  background-color: $font-color;
+  padding: 8px;
+  width: 250px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.audio-wrapper p {
+  color: black;
+  font-size: 24px;
+}
+
+.play{
+  background-image: url(../img/play.svg);
+  background-size: cover;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pause{
+  background-image: url(../img/pause.svg);
+  background-size: cover;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+input[type="range"] {
+  appearance: none;
+  background: black;
+  cursor: pointer;
+  width: 100px;
+  height: 6px;
+}
+/* input::-webkit-slider-thumb{
+  -webkit-appearance: none; 
+  appearance: none;
+  background-color: $font-color;
+  height: 12px;
+  width: 12px;    
+  border: 1px solid black;
+} */
