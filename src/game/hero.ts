@@ -200,6 +200,7 @@ class Hero extends Entity {
       enemy.updateHealthPoints(damage);
       if (enemy.healthPoints <= 0) {
         enemy.playDeathAnimation();
+        this.drawBattleTiles();
       }
       this.ui.putMessageToConsole(`Hero hits enemy: -${damage} health`);
     } else {
@@ -309,16 +310,17 @@ class Hero extends Entity {
   }
 
   // TODO: вынести цвета в константы enemyTileColor и weaponRangeColor
+  // TODO: альфа-канал или разные цвета
   // ? сделать публичным?
   clearColoredTiles() {
     const heroCoords = this.gridEngine.getPosition(this.id);
     const weaponsMaxRangeDoubled = Math.max(this.mainWeapon.maxRange, this.secondaryWeapon.maxRange) * 2;
-    for (let i = 1; i <= weaponsMaxRangeDoubled; i++) {
-      this.tintTile(this.map, heroCoords.x + i, heroCoords.y, 0xffffff, 1);
-      this.tintTile(this.map, heroCoords.x - i, heroCoords.y, 0xffffff, 1);
-      this.tintTile(this.map, heroCoords.x, heroCoords.y + i, 0xffffff, 1);
-      this.tintTile(this.map, heroCoords.x, heroCoords.y - i, 0xffffff, 1);
-    }
+    // for (let i = 1; i <= weaponsMaxRangeDoubled; i++) {
+    //   this.tintTile(this.map, heroCoords.x + i, heroCoords.y, 0xffffff, 1);
+    //   this.tintTile(this.map, heroCoords.x - i, heroCoords.y, 0xffffff, 1);
+    //   this.tintTile(this.map, heroCoords.x, heroCoords.y + i, 0xffffff, 1);
+    //   this.tintTile(this.map, heroCoords.x, heroCoords.y - i, 0xffffff, 1);
+    // }
 
     for (let x = 0; x <= weaponsMaxRangeDoubled; x++) {
       for (let y = 0; y <= weaponsMaxRangeDoubled; y++) {
@@ -339,7 +341,7 @@ class Hero extends Entity {
   }
 
   // ! rename
-  _drawWeaponDistanceTiles() {
+  private _drawWeaponDistanceTiles() {
     // this.currentWeapon.maxRange;
     // this.gridEngine.isBlocked()
     // if (fightMode)
@@ -355,7 +357,7 @@ class Hero extends Entity {
     }
   }
 
-  _drawHittableEnemiesTiles() {
+  private _drawHittableEnemiesTiles() {
     this.getEntitiesMap().forEach((entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         const enemyCoords = this.gridEngine.getPosition(entityKey);
