@@ -5,7 +5,7 @@ import Enemy from "./enemy";
 import { damageFromHero, lostActionPointsForHero } from './battlePoints';
 import { heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
-import { attack, randomIntFromInterval } from './utils';
+import { attack, manhattanDist, randomIntFromInterval } from './utils';
 import UI from './ui';
 import { thingsContainerItemsType } from './types';
 
@@ -61,7 +61,7 @@ class Hero extends Entity {
     this.isHeroInArmor = false;
   }
 
-  setUiProperty(ui: UI){
+  setUiProperty(ui: UI) {
     this.ui = ui;
   }
 
@@ -74,6 +74,8 @@ class Hero extends Entity {
       gridMouseCoords.y = Math.round(gridMouseCoords.y);
 
       const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
+
+      // clickedTile.alpha = 0.85;
       // clickedTile.tint = 0xff7a4a;
 
       // attack if fight mode and enough AP
@@ -102,25 +104,13 @@ class Hero extends Entity {
     }, this);
   }
 
-  isAllEnemiesIdle() {
-    let isAllIdle = true;
-    const entitiesMap = this.getEntitiesMap();
-    entitiesMap.forEach((entityValue, entityKey) => {
-      if (!entityKey.match(/^hero/i)) {
-        if (this.gridEngine.isMoving(entityKey)) {
-          isAllIdle = false;
-        }
-      }
-    });
-    return isAllIdle;
-  }
-
   changeWeapon() {
     if (this.currentWeapon.name === this.mainWeapon.name) this.currentWeapon = this.secondaryWeapon;
     else this.currentWeapon = this.mainWeapon;
     this.behavior = this.currentWeapon.name === 'pistol' ? 'walkWithPistol' : 'walk';
     this.changeAnimationWithWeapon(this.behavior);
     this.sounds.changeWeapon.play();
+    this.drawBattleTiles(); // !
   }
 
   setPunchAnimation() {
@@ -217,16 +207,6 @@ class Hero extends Entity {
     }
   }
 
-  isAllEnemiesDead(){
-    const entitiesMap = this.getEntitiesMap();
-    if(entitiesMap.size === 1){
-      this.fightMode = false;
-      this.currentActionPoints = 10;
-      this.ui.makeNextLevelButtonAvailable();
-      this.ui.setNextLevelButtonListener();
-    }
-  }
-
   private _decreaseHeroAPOnAttack() {
     const lostPoints = lostActionPointsForHero[this.currentWeapon.name];
     this.updateActionPoints(lostPoints);
@@ -244,6 +224,30 @@ class Hero extends Entity {
       });
     }
     this.moveEnemiesToHero(this.gridEngine.getPosition(this.id));
+  }
+
+  isAllEnemiesIdle() {
+    let isAllIdle = true;
+    const entitiesMap = this.getEntitiesMap();
+    entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        if (this.gridEngine.isMoving(entityKey)) {
+          isAllIdle = false;
+        }
+      }
+    });
+    return isAllIdle;
+  }
+
+  isAllEnemiesDead() {
+    const entitiesMap = this.getEntitiesMap();
+    if (entitiesMap.size === 1) {
+      this.fightMode = false;
+      this.currentActionPoints = 10;
+      this.ui.makeNextLevelButtonAvailable();
+      this.ui.setNextLevelButtonListener();
+      this.clearColoredTiles();
+    }
   }
 
   makeStep() {
@@ -286,6 +290,89 @@ class Hero extends Entity {
 
   takeOffArmor() {
     this.isHeroInArmor = false;
+  }
+
+  // TODO: сделать выделение тайлов на первой картинке с альфа каналом и другим цветом,
+  // чтобы было едва видно и оставить красную подсветку под врагами
+  // единственный вопрос что будет если они наложатся друг на друга
+  // ? разбить метод на draw и clear если не получится подчищать при движении?
+  // TODO: ! переназвать attack в isAbleToAttack
+
+  // TODO: в entity сделать _fightMode, в Hero и Enemy - fightMode prop
+  // в enemy простой, в hero на отслеживание смены состояния
+  drawBattleTiles() {
+    if (this.fightMode) {
+      this.clearColoredTiles();
+      this._drawWeaponDistanceTiles();
+      this._drawHittableEnemiesTiles();
+    }
+  }
+
+  // TODO: вынести цвета в константы enemyTileColor и weaponRangeColor
+  // ? сделать публичным?
+  clearColoredTiles() {
+    const heroCoords = this.gridEngine.getPosition(this.id);
+    const weaponsMaxRangeDoubled = Math.max(this.mainWeapon.maxRange, this.secondaryWeapon.maxRange) * 2;
+    for (let i = 1; i <= weaponsMaxRangeDoubled; i++) {
+      this.tintTile(this.map, heroCoords.x + i, heroCoords.y, 0xffffff, 1);
+      this.tintTile(this.map, heroCoords.x - i, heroCoords.y, 0xffffff, 1);
+      this.tintTile(this.map, heroCoords.x, heroCoords.y + i, 0xffffff, 1);
+      this.tintTile(this.map, heroCoords.x, heroCoords.y - i, 0xffffff, 1);
+    }
+
+    for (let x = 0; x <= weaponsMaxRangeDoubled; x++) {
+      for (let y = 0; y <= weaponsMaxRangeDoubled; y++) {
+        if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x + x, heroCoords.y + y) <= weaponsMaxRangeDoubled) {
+          this.tintTile(this.map, heroCoords.x + x, heroCoords.y + y, 0xffffff);
+        }
+        if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x - x, heroCoords.y + y) <= weaponsMaxRangeDoubled) {
+          this.tintTile(this.map, heroCoords.x - x, heroCoords.y + y, 0xffffff);
+        }
+        if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x + x, heroCoords.y - y) <= weaponsMaxRangeDoubled) {
+          this.tintTile(this.map, heroCoords.x + x, heroCoords.y - y, 0xffffff);
+        }
+        if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x - x, heroCoords.y - y) <= weaponsMaxRangeDoubled) {
+          this.tintTile(this.map, heroCoords.x - x, heroCoords.y - y, 0xffffff);
+        }
+      }
+    }
+  }
+
+  // ! rename
+  _drawWeaponDistanceTiles() {
+    // this.currentWeapon.maxRange;
+    // this.gridEngine.isBlocked()
+    // if (fightMode)
+
+    // ? вынести в аргументы?
+    const heroCoords = this.gridEngine.getPosition(this.id);
+
+    for (let i = 1; i <= this.currentWeapon.maxRange; i++) {
+      this.tintTile(this.map, heroCoords.x + i, heroCoords.y, 0xaf2462);
+      this.tintTile(this.map, heroCoords.x - i, heroCoords.y, 0xaf2462);
+      this.tintTile(this.map, heroCoords.x, heroCoords.y + i, 0xaf2462);
+      this.tintTile(this.map, heroCoords.x, heroCoords.y - i, 0xaf2462);
+    }
+  }
+
+  _drawHittableEnemiesTiles() {
+    this.getEntitiesMap().forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        const enemyCoords = this.gridEngine.getPosition(entityKey);
+        const heroCoords = this.gridEngine.getPosition(this.id);
+        const HeroAnimationDirection = attack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
+        if (HeroAnimationDirection) {
+          this.tintTile(this.map, enemyCoords.x, enemyCoords.y, 0x4a4aff);
+        }
+      }
+    });
+  }
+
+  tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number, alpha = 1) {
+    for (const element of tilemap.layers) {
+      element.tilemapLayer.layer.data[row][col].tint = color;
+      element.tilemapLayer.layer.data[row][col].alpha = alpha;
+    }
   }
 }
 

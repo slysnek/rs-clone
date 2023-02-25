@@ -114,6 +114,9 @@ class Game extends Phaser.Scene {
     this.ui.setCloseExchangePanelButtonListener();
     this.ui.setCloseInventoryPanelButtonListener();
     this.ui.setArmorContainerListener();
+
+    
+    this.hero.drawBattleTiles();
   }
 
   addSounds() {
@@ -220,12 +223,16 @@ class Game extends Phaser.Scene {
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
       entity.anims.play(direction);
+      if (charId.match(/^hero/i)) {
+        this.hero.clearColoredTiles();
+      }
     });
 
     this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
       entity.anims.stop();
       entity.setFrame(entity.getStopFrame(direction, charId));
+      this.hero.drawBattleTiles();
     });
 
     this.gridEngine.directionChanged().subscribe(({ charId, direction }) => {
@@ -293,10 +300,13 @@ class Game extends Phaser.Scene {
 
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
-
+          if (enemy.currentActionPoints <= 0) {
+            this.gridEngine.stopMovement(charId);
+          }
           if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0 && enemy.fightMode) {
             if (this.isEnemyStaysNearHero(enemy)) {
               enemy.attackHero(this.hero);
+              this.hero.drawBattleTiles();
               this.hero.refreshActionPoints();
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
@@ -326,6 +336,7 @@ class Game extends Phaser.Scene {
         if (!this.gridEngine.isMoving(enemyKey) && enemyObj.currentActionPoints > 0 && enemyObj.fightMode) {
           if (this.isEnemyStaysNearHero(enemyObj)) {
             enemyObj.attackHero(this.hero);
+            this.hero.drawBattleTiles();
             this.hero.refreshActionPoints();
           } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
@@ -340,6 +351,7 @@ class Game extends Phaser.Scene {
         if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
           && !this.gridEngine.isMoving(enemyKey) && enemyObj.fightMode) {
           enemyObj.attackHero(this.hero);
+          this.hero.drawBattleTiles();
           this.gridEngine.stopMovement(enemyKey);
           this.hero.refreshActionPoints();
         }

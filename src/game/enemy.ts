@@ -109,12 +109,12 @@ class Enemy extends Entity {
   }
 
   private _dealDamageToHero(hero: Hero) {
+    this.currentActionPoints = 0;
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
     if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();
     }
-    this.currentActionPoints = 0;
     this.ui.updateHP(hero);
     this.ui.putMessageToConsole(`Enemy attacks hero: -${damage} health`);
   }
