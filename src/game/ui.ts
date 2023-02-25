@@ -118,11 +118,10 @@ export default class UI {
   setNextLevelButtonListener(){
     this.nextLevelButton?.addEventListener('click', () => {
       if(currentMode === levelMode){
-        // appView.destroyGame();
+        this.scene.sys.plugins.removeScenePlugin('gridEngine');
         this.scene.sys.game.destroy(true);
         appView.showMenu();
       } else if(currentMode === gameMode){
-        // appView.destroyGame();
         this.scene.sys.plugins.removeScenePlugin('gridEngine');
         this.scene.sys.game.destroy(true);
         if(setNewLevelForGame() === 'finish'){
