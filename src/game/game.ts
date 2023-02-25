@@ -92,8 +92,6 @@ class Game extends Phaser.Scene {
     this.placeObject();
     this.setInventoryContainerListener();
     this.gridEngineInit(map);
-    const pos = this.gridEngine.getPosition('dump')
-    console.log(pos)
     this.entitiesMap.forEach((entityValue, entityKey) => {
       if (!entityKey.match(/^hero/i)) {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, currentLevel.enemyAnims, defaultBehavior);
@@ -103,7 +101,6 @@ class Game extends Phaser.Scene {
       }
     });
     this.hero.setPointerDownListener(map);
-    this.subscribeCharacterToChangeMoving();
     this.subscribeCharacterToChangeMoving();
     //ui section
     this.ui.createUI(this)
@@ -283,7 +280,7 @@ class Game extends Phaser.Scene {
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
             this.enableFightMode();
             this.moveEnemiesToHero(enterTile);
-            console.log('fightMode = true');
+            // console.log('fightMode = true');
             this.ui.updateHP(this.hero);
           }
         }
@@ -297,7 +294,7 @@ class Game extends Phaser.Scene {
               this.hero.refreshActionPoints();
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
-              console.log('moveEnemiesToHero 1:');
+              // console.log('moveEnemiesToHero 1:');
 
             }
           }
@@ -309,7 +306,7 @@ class Game extends Phaser.Scene {
   }
 
   moveEnemiesToHero(targetPos: Position) {
-    console.log('moveEnemiesToHero:');
+    // console.log('moveEnemiesToHero:');
     const emptyTilesAroundHero: Array<Position> = this.getEmptyPositionsArrNearObject(targetPos as Entity);
     const closestEnemiesAroundHero: Array<string> = [];
 

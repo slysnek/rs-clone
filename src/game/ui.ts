@@ -4,6 +4,9 @@ import Game from "./game";
 import Hero from "./hero";
 import { thingsContainerItemsType } from './types';
 import inventory from './inventory';
+import dialogueConfig from '../game/dialogue-config';
+import { currentMode, levelMode, gameMode, setNewLevelForGame } from '../game/levels';
+import appView from "..";
 
 const storageItems: thingsContainerItemsType = {
   armor: {
@@ -40,6 +43,7 @@ export default class UI {
   isHeroInArmor: boolean;
   inventoryGif: HTMLImageElement | null;
   exchangeGif: HTMLImageElement | null;
+  nextLevelButton: HTMLButtonElement | null;
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -69,6 +73,7 @@ export default class UI {
     this.armorImage = null;
     this.inventoryGif = null;
     this.exchangeGif = null;
+    this.nextLevelButton = null;
   }
 
   findElementsForInventoryLogic() {
@@ -84,6 +89,7 @@ export default class UI {
     this.armorImage = this.armorFieldContainer?.querySelector('.armor-image') as HTMLImageElement;
     this.inventoryGif = document.querySelector('.inventory-gif') as HTMLImageElement;
     this.exchangeGif = document.querySelector('.exchange-gif') as HTMLImageElement;
+    this.nextLevelButton = document.querySelector('.next-level-button') as HTMLButtonElement;
   }
 
   createUI(scene: Game) {
@@ -102,6 +108,30 @@ export default class UI {
     storageItemsImage.src = storageItemsImageSrc;
     storageItemsImage.classList.add('storage-img');
     storageItemsImageContainer?.append(storageItemsImage);
+  }
+
+  makeNextLevelButtonAvailable(){
+    this.nextLevelButton?.classList.remove('unavailable');
+    this.nextLevelButton?.classList.add('available');
+  }
+
+  setNextLevelButtonListener(){
+    this.nextLevelButton?.addEventListener('click', () => {
+      if(currentMode === levelMode){
+        // appView.destroyGame();
+        this.scene.sys.game.destroy(true);
+        appView.showMenu();
+      } else if(currentMode === gameMode){
+        // appView.destroyGame();
+        this.scene.sys.plugins.removeScenePlugin('gridEngine');
+        this.scene.sys.game.destroy(true);
+        if(setNewLevelForGame() === 'finish'){
+          appView.showMenu();
+        } else {
+          new Phaser.Game(dialogueConfig);
+        }
+      }
+    })
   }
 
   updateHP(hero: Hero) {

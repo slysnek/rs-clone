@@ -192,6 +192,7 @@ class Hero extends Entity {
       this._dealDamageToEnemy(enemy);
       this._decreaseHeroAPOnAttack();
       this._isHeroEndTurn();
+      this.isAllEnemiesDead();
     }
   }
 
@@ -213,6 +214,16 @@ class Hero extends Entity {
       this.ui.putMessageToConsole(`Hero hits enemy: -${damage} health`);
     } else {
       this.ui.putMessageToConsole(`Hero misses the attack`);
+    }
+  }
+
+  isAllEnemiesDead(){
+    const entitiesMap = this.getEntitiesMap();
+    if(entitiesMap.size === 1){
+      this.fightMode = false;
+      this.currentActionPoints = 10;
+      this.ui.makeNextLevelButtonAvailable();
+      this.ui.setNextLevelButtonListener();
     }
   }
 
@@ -240,6 +251,7 @@ class Hero extends Entity {
       const lostPoints = lostActionPointsForHero.step;
       this.updateActionPoints(lostPoints);
       this.ui.updateAP(this);
+      this.isAllEnemiesDead();
     }
   }
 

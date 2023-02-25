@@ -2,23 +2,20 @@ import Phaser from 'phaser';
 import { windowSize } from './constants';
 import config from './config';
 import { options } from './dialogue-states';
+import { currentDialogue } from './levels';
 
-type DialogueKey = keyof typeof options;
+export type DialogueKey = keyof typeof options;
 type StateKey = keyof typeof options[DialogueKey];
 
-class Dialogue extends Phaser.Scene {
+export class Dialogue extends Phaser.Scene {
   currentDialogue: DialogueKey;
 
   constructor() {
     super('dialogue');
-    this.currentDialogue = 'dialogue-3'; //need to change this to change the dialogue
+    this.currentDialogue = currentDialogue; //need to change this to change the dialogue
   }
 
   preload() {
-    this.load.image(
-      'background',
-      '../assets/dialogue_assets/dialogue-background.png'
-    );
     this.load.html('dialogue', '/assets/html/dialogue.html');
   }
 
@@ -75,4 +72,3 @@ class Dialogue extends Phaser.Scene {
   }
 }
 
-export default Dialogue;
