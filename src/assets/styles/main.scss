@@ -134,3 +134,29 @@ body {
 .github-link:hover {
   color: $font-hover;
 }
+
+.pop-up {
+  position: relative;
+  top: -360px;
+  left: 249px;
+  width: calc(100% - 300px);
+  height: calc(100% - 318px);
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid $font-color;
+}
+
+.cross {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-image: url(../img/cross.svg);
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cross:hover{
+  transform: translateY(-3px);
+}

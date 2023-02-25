@@ -14,6 +14,8 @@ import {
 } from '../game/levels';
 import dialogueConfig from '../game/dialogue-config';
 import { footer } from '../assets/components/footer';
+import { popUp } from '../assets/components/menu pop-up';
+
 
 class AppView {
   body: HTMLElement;
@@ -43,11 +45,12 @@ class AppView {
   }
 
   addMenuElements() {
+    //title
     const buttonsWrapper = document.createElement('div');
     buttonsWrapper.classList.add('button-wrapper');
     this.title.textContent = 'Fallout Clone';
     this.title.classList.add('title');
-
+    //add buttons and footer
     buttonsWrapper.append(this.newGameButton);
     buttonsWrapper.append(this.level1Button);
     buttonsWrapper.append(this.level2Button);
@@ -87,6 +90,9 @@ class AppView {
       setCurrentMode(gameMode);
       this.game = new Phaser.Game(dialogueConfig);
     });
+    this.settings.addEventListener('click', ()=>{
+      this.menu.append(popUp)
+    })
   }
 
   setLevelButtonsListener(currentLevel: level) {
