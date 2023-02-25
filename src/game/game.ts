@@ -139,6 +139,13 @@ class Game extends Phaser.Scene {
 
   update() {
     this.hero.moveHeroByArrows();
+    this.sortEntitiesByDepth();
+  }
+
+  sortEntitiesByDepth() {
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      entityValue.setDepth(entityValue.y + this.gridEngine.getOffsetY(entityKey));
+    });
   }
 
   buildMap() {
@@ -280,7 +287,6 @@ class Game extends Phaser.Scene {
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
             this.enableFightMode();
             this.moveEnemiesToHero(enterTile);
-            // console.log('fightMode = true');
             this.ui.updateHP(this.hero);
           }
         }
@@ -294,8 +300,6 @@ class Game extends Phaser.Scene {
               this.hero.refreshActionPoints();
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
-              // console.log('moveEnemiesToHero 1:');
-
             }
           }
         }
@@ -306,7 +310,6 @@ class Game extends Phaser.Scene {
   }
 
   moveEnemiesToHero(targetPos: Position) {
-    // console.log('moveEnemiesToHero:');
     const emptyTilesAroundHero: Array<Position> = this.getEmptyPositionsArrNearObject(targetPos as Entity);
     const closestEnemiesAroundHero: Array<string> = [];
 

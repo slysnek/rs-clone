@@ -523,6 +523,6 @@ export const offsetCoordForGhouls: { [key: string]: { x: number, y: number } } =
 };
 
 export const offsetCoordForDeathClaw: { [key: string]: { x: number, y: number } } = {
-  big: { x: 0, y: 10 },
+  big: { x: 0, y: 5 },
   small: { x: 0, y: 0 },
 };
