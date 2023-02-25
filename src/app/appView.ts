@@ -15,6 +15,7 @@ import {
 import dialogueConfig from '../game/dialogue-config';
 import { footer } from '../assets/components/footer';
 import { popUp } from '../assets/components/menu pop-up';
+import { tutorial } from '../assets/components/tutorial';
 
 
 class AppView {
@@ -92,6 +93,10 @@ class AppView {
     });
     this.settings.addEventListener('click', ()=>{
       this.menu.append(popUp)
+    })
+    this.howToPlay.addEventListener('click', ()=>{
+      this.menu.append(popUp)
+      popUp.appendChild(tutorial)
     })
   }
 

@@ -136,6 +136,7 @@ body {
 }
 
 .pop-up {
+  padding: 20px;
   position: relative;
   top: -360px;
   left: 249px;
@@ -143,6 +144,19 @@ body {
   height: calc(100% - 318px);
   background-color: rgba(0, 0, 0, 0.6);
   border: 1px solid $font-color;
+  overflow: auto;
+}
+
+.pop-up::-webkit-scrollbar {
+  width: 7px;
+}
+
+.pop-up::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.pop-up::-webkit-scrollbar-thumb {
+  background-color: $font-color;
 }
 
 .cross {
@@ -159,4 +173,21 @@ body {
 
 .cross:hover{
   transform: translateY(-3px);
+}
+
+.main-list{
+  list-style-position: inside;
+}
+
+.main-list-item{
+  font-size: 24px;
+  text-decoration: dotted;
+}
+
+.tutorial-wrapper {
+  font-size: 20px;
+}
+.tutorial-wrapper > p {
+  font-size: 24px;
+  margin: 16px;
 }
