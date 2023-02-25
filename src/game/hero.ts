@@ -269,7 +269,11 @@ class Hero extends Entity {
   }
 
   addItemToInventory(itemName: string, item: { src: string; quantity: number }) {
-    this.inventory[itemName] = item;
+    if(this.inventory[itemName]){
+      this.inventory[itemName].quantity = this.inventory[itemName].quantity + item.quantity;
+    } else {
+      this.inventory[itemName] = item;
+    }
   }
 
   deleteItemFromInventory(itemName: string) {
