@@ -3,7 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine, Position } from 'grid-engine';
 import Enemy from "./enemy";
 import { damageFromHero, lostActionPointsForHero } from './battlePoints';
-import { colors, heroAnims, oppositeDirections } from "./constants";
+import { colors, oppositeDirections } from "./constants";
 import Weapon from './weapon'
 import { isAbleToAnimateAttack, manhattanDist, randomIntFromInterval } from './utils';
 import UI from './ui';
@@ -419,6 +419,7 @@ class Hero extends Entity {
       element.tilemapLayer.layer.data[row][col].tint = color;
       element.tilemapLayer.layer.data[row][col].alpha = alpha;
     }
+  }
 }
 
 export default Hero;

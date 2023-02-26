@@ -3,9 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
 import { oppositeDirections } from "./constants";
 import Hero from "./hero";
-import { attack } from "./utils";
 import { isAbleToAnimateAttack } from "./utils";
-import { damageFromScorpion } from "./battlePoints";
 import { currentLevel } from "./levels";
 import UI from "./ui";
 
