@@ -13,7 +13,7 @@ function getDirectionTo(entityA: coords, entityB: coords) {
   }
 }
 
-function isAttackPossible(entityA: coords, entityB: coords) {
+function _isAttackPossible(entityA: coords, entityB: coords) {
   if (entityA.x !== entityB.x && entityA.y !== entityB.y) {
     return false;
   }
@@ -25,13 +25,13 @@ function getDistance(entityA: coords, entityB: coords) {
 }
 
 function isAttackInRange(entityA: coords, entityB: coords, attackRange: number) {
-  if (isAttackPossible(entityA, entityB)) {
+  if (_isAttackPossible(entityA, entityB)) {
     return getDistance(entityA, entityB) <= attackRange;
   }
   return false;
 }
 
-export function attack(entityA: coords, entityB: coords, range: number) {
+export function isAbleToAnimateAttack(entityA: coords, entityB: coords, range: number) {
   if (isAttackInRange(entityA, entityB, range)) {
     return getDirectionTo(entityA, entityB);
   } else {
