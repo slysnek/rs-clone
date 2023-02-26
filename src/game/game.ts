@@ -46,9 +46,6 @@ class Game extends Phaser.Scene {
     for (let i = 0; i < currentLevel.enemyQuantity; i++) {
       this.load.spritesheet(`${currentLevel.enemyName}${i + 1}`, `assets/spritesheets/${currentLevel.enemySpriteSheet}.png`, currentLevel.spriteSheetsSizes);
     }
-    // this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
-    // this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
-    // this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
     this.load.html('ui', '/assets/html/test.html');
 
     this._preloadSounds();
@@ -114,17 +111,18 @@ class Game extends Phaser.Scene {
   }
 
   private _preloadSounds() {
+    // hero gets damage
+    this.load.audio('heroDamageFromEnemy', currentLevel.enemySounds.heroDamageFromEnemy.src);
+    // enemy attack sound
+    this.load.audio('enemyPunch', currentLevel.enemySounds.enemyPunch.src);
+    // enemy gets damage
+    this.load.audio('enemyDamage', currentLevel.enemySounds.enemyDamage.src);
+    // enemy dies
+    this.load.audio('enemyDeath', currentLevel.enemySounds.enemyDeath.src);
+    console.log(currentLevel.enemySounds.enemyDeath.src);
     // hero sounds
     this.load.audio('fistsAttack', 'assets/sounds/heroSounds/fistsAttack.wav');
     this.load.audio('pistolAttack', 'assets/sounds/heroSounds/pistolAttack.wav');
-    // hero gets damage
-    this.load.audio('heroDamageFromEnemy', 'assets/sounds/heroSounds/heroDamageFromRadScorpion.wav');
-    // enemy attack sound
-    this.load.audio('enemyPunch', 'assets/sounds/radScorpionSounds/radScorpionPunch.wav');
-    // enemy gets damage
-    this.load.audio('enemyDamage', 'assets/sounds/radScorpionSounds/radScorpionDamage.wav');
-    // enemy dies
-    this.load.audio('enemyDeath', 'assets/sounds/radScorpionSounds/radScorpionDeath.wav');
     // ui sounds
     this.load.audio('changeWeapon', 'assets/sounds/uiSounds/changeWeapon.wav');
     this.load.audio('startFight', 'assets/sounds/uiSounds/startFight.wav');
@@ -178,17 +176,17 @@ class Game extends Phaser.Scene {
   }
 
   private _createSounds() {
-    // hero sounds
-    this.sounds.fists = this.sound.add('fistsAttack', { volume: 3 });
-    this.sounds.pistol = this.sound.add('pistolAttack', { volume: 2 });
     // hero gets damage
-    this.sounds.heroDamageFromEnemy = this.sound.add('heroDamageFromEnemy');
+    this.sounds.heroDamageFromEnemy = this.sound.add('heroDamageFromEnemy', { volume: 1 });
     // enemy attack sound
     this.sounds.enemyPunch = this.sound.add('enemyPunch', { volume: 1 });
     // enemy gets damage
     this.sounds.enemyDamage = this.sound.add('enemyDamage', { volume: 1 });
     // enemy dies
     this.sounds.enemyDeath = this.sound.add('enemyDeath', { volume: 1 });
+    // hero sounds
+    this.sounds.fists = this.sound.add('fistsAttack', { volume: 3 });
+    this.sounds.pistol = this.sound.add('pistolAttack', { volume: 2 });
     // ui sounds
     this.sounds.changeWeapon = this.sound.add('changeWeapon', { volume: 2 });
     this.sounds.startFight = this.sound.add('startFight', { volume: 6 });
