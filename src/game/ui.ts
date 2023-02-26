@@ -191,11 +191,25 @@ export default class UI {
     }
   }
 
+  setEndTurnListener(hero: Hero){
+    const endTurnButton = document.querySelector('.end-turn') as HTMLElement;
+    endTurnButton.addEventListener('click', () => {
+      console.log('hello');
+
+    })
+  }
+
   updateWeapon(hero: Hero) {
     const weapon = document.querySelector('.weapon') as HTMLElement;
     const weaponName = document.querySelector('.weapon-name') as HTMLElement;
+    const weaponDamage = document.querySelector('.weapon-damage') as HTMLElement;
+    const weaponAccuracy = document.querySelector('.weapon-accuracy') as HTMLElement;
+    const weaponRange = document.querySelector('.weapon-range') as HTMLElement;
     weapon.style.background = `url(${hero.currentWeapon.image}) no-repeat`;
     weaponName.textContent = hero.currentWeapon.name;
+    weaponDamage.textContent = `Damage: ${hero.currentWeapon.attack.toString()}`;
+    weaponAccuracy.textContent = `Accuracy: ${hero.currentWeapon._minAccuracy.toString()}-${hero.currentWeapon._maxAccuracy.toString()}%`
+    weaponRange.textContent = `Range: ${hero.currentWeapon.maxRange.toString()}`;
   }
 
   setChangeWeaponListener(hero: Hero) {
