@@ -1,25 +1,34 @@
 // import { Tilemaps } from "phaser";
-import { windowSize } from "./constants";
+import { heroAnimsWithoutArmor, heroAnimsInArmor, windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
-import { thingsContainerItemsType } from './types';
+import { Animations, thingsContainerItemsType } from './types';
 import inventory from './inventory';
 import dialogueConfig from '../game/dialogue-config';
-import { currentMode, levelMode, gameMode, setNewLevelForGame } from '../game/levels';
+import { 
+  currentMode,
+  levelMode,
+  gameMode,
+  setNewLevelForGame,
+  currentLevel,
+  saveHeroInventory,
+  setHeroHealthPoints,
+  setArmorState,
+  setCurrentHeroAnims,
+  setDefaultValuesForHero } from '../game/levels';
 import appView from "..";
 
-const storageItems: thingsContainerItemsType = {
-  armor: {
-    src: '../assets/ui-elements/inventory/armor.png',
-    quantity: 1
-  },
-  bullets: {
-    src: '../assets/ui-elements/inventory/bullets.png',
-    quantity: 10
-  },
-};
+// const storageItems: thingsContainerItemsType = {
+//   armor: {
+//     src: '../assets/ui-elements/inventory/armor.png',
+//     quantity: 1
+//   },
+//   bullets: {
+//     src: '../assets/ui-elements/inventory/bullets.png',
+//     quantity: 10
+//   },
+// };
 
-const storageItemsImageSrc = 'assets/maps/dump.png';
 const womanInVaultSuitGifSrc = 'assets/ui-elements/gifs/in-vault-suit.gif';
 const womanInArmorGifSrc = 'assets/ui-elements/gifs/in-armor.gif'
 
@@ -40,10 +49,16 @@ export default class UI {
   armorImage: HTMLImageElement | null;
   putOnArmor: () => void;
   takeOffArmor: () => void;
-  isHeroInArmor: boolean;
   inventoryGif: HTMLImageElement | null;
   exchangeGif: HTMLImageElement | null;
   nextLevelButton: HTMLButtonElement | null;
+  storageItemsImageSrc: string;
+  changeArmorAnimations: (currentAnims: Animations) => void;
+  getHeroHealthPoints: () => number;
+  getHeroArmorState: () => boolean;
+  getHeroAnims: () => Animations;
+  addArmorHealthPoints: () => void;
+  deleteArmorHealthPoints: () => void
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -51,13 +66,18 @@ export default class UI {
     deleteItemFromInventory: (itemName: string) => void,
     putOnArmor: () => void,
     takeOffArmor: () => void,
-    isHeroInArmor: boolean) {
+    changeArmorAnimations: (currentAnims: Animations) => void,
+    getHeroHealthPoints: () => number,
+    getHeroArmorState: () => boolean,
+    getHeroAnims: () => Animations,
+    addArmorHealthPoints: () => void,
+    deleteArmorHealthPoints: () => void) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
     this.putOnArmor = putOnArmor;
     this.takeOffArmor = takeOffArmor;
-    this.isHeroInArmor = isHeroInArmor;
+    this.changeArmorAnimations = changeArmorAnimations;
     this.inventoryPanel = null;
     this.exchangePanel = null;
     this.heroThingsBlock = null;
@@ -74,6 +94,12 @@ export default class UI {
     this.inventoryGif = null;
     this.exchangeGif = null;
     this.nextLevelButton = null;
+    this.storageItemsImageSrc = currentLevel.storage.src;
+    this.getHeroHealthPoints = getHeroHealthPoints;
+    this.getHeroArmorState = getHeroArmorState;
+    this.getHeroAnims = getHeroAnims;
+    this.addArmorHealthPoints = addArmorHealthPoints;
+    this.deleteArmorHealthPoints = deleteArmorHealthPoints;
   }
 
   findElementsForInventoryLogic() {
@@ -105,9 +131,12 @@ export default class UI {
     (this.inventoryPanel as HTMLElement).style.left = `${left}px`;
     const storageItemsImageContainer = document.querySelector('.storage-img-container');
     const storageItemsImage = document.createElement('img');
-    storageItemsImage.src = storageItemsImageSrc;
+    storageItemsImage.src = this.storageItemsImageSrc;
     storageItemsImage.classList.add('storage-img');
     storageItemsImageContainer?.append(storageItemsImage);
+    if(this.getHeroArmorState()){
+      (this.armorImage as HTMLImageElement).src = inventory.armor.src
+    }
   }
 
   makeNextLevelButtonAvailable(){
@@ -124,9 +153,15 @@ export default class UI {
       } else if(currentMode === gameMode){
         this.scene.sys.plugins.removeScenePlugin('gridEngine');
         this.scene.sys.game.destroy(true);
-        if(setNewLevelForGame() === 'finish'){
+        const isGameFinished = setNewLevelForGame();
+        if(isGameFinished){
+          setDefaultValuesForHero();
           appView.showMenu();
         } else {
+          setCurrentHeroAnims(this.getHeroAnims());
+          setArmorState(this.getHeroArmorState());
+          saveHeroInventory(this.heroInventory);
+          setHeroHealthPoints(this.getHeroHealthPoints());
           new Phaser.Game(dialogueConfig);
         }
       }
@@ -191,7 +226,7 @@ export default class UI {
   }
 
   addGif(gifElement: HTMLImageElement) {
-    if (this.isHeroInArmor) {
+    if (this.getHeroArmorState()) {
       gifElement.src = womanInArmorGifSrc;
     } else {
       gifElement.src = womanInVaultSuitGifSrc;
@@ -213,11 +248,11 @@ export default class UI {
   }
 
   addItemsToStorage(itemName: string, item: { src: string; quantity: number }) {
-    storageItems[itemName] = item;
+    currentLevel.thingsInStorage[itemName] = item;
   }
 
   deleteItemsFromStorage(itemName: string) {
-    delete storageItems[itemName];
+    delete currentLevel.thingsInStorage[itemName];
   }
 
   cleanExchangeWindowFields() {
@@ -249,9 +284,11 @@ export default class UI {
         thingContainerParent?.removeChild(thingContainer);
         (this.armorImage as HTMLImageElement).src = inventory.armor.src;
         this.putOnArmor();
+        this.addArmorHealthPoints();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.deleteItemFromInventory('armor');
+        this.changeArmorAnimations(heroAnimsInArmor);
       } else if (itemName === 'bullets') {
         console.log(itemName);
       } else if (itemName === 'cookie') {
@@ -266,15 +303,18 @@ export default class UI {
 
   setArmorContainerListener() {
     this.armorFieldContainer?.addEventListener('click', () => {
-      if (!this.isHeroInArmor) {
+      if (!this.getHeroArmorState()) {
         return;
       } else {
-        this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
+        const armorThingContainer = this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
+        this.addListenerToThingContainerInInventory(armorThingContainer, 'armor');
         (this.armorImage as HTMLImageElement).src = '';
         this.takeOffArmor();
+        this.deleteArmorHealthPoints();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.addItemToInventory('armor', inventory.armor);
+        this.changeArmorAnimations(heroAnimsWithoutArmor);
       }
     })
   }
@@ -306,7 +346,7 @@ export default class UI {
     thingContainer.addEventListener('click', () => {
       const thingContainerParent = thingContainer.parentElement;
       if (thingContainerParent?.classList.contains('inventory-container-things')) {
-        this.addItemToInventory(itemName, storageItems[itemName]);
+        this.addItemToInventory(itemName, currentLevel.thingsInStorage[itemName]);
         this.deleteItemsFromStorage(itemName);
       } else if (thingContainerParent?.classList.contains('hero-things')) {
         this.addItemsToStorage(itemName, this.heroInventory[itemName]);
@@ -314,24 +354,24 @@ export default class UI {
       }
       this.cleanExchangeWindowFields();
       this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
-      this.drawThings(storageItems, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
+      this.drawThings(currentLevel.thingsInStorage, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
     });
   }
 
   addThingsToInventoryContainer() {
     this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
-    this.drawThings(storageItems, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
+    this.drawThings(currentLevel.thingsInStorage, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
   }
 
   setTakeAllButtonListener() {
     this.takeAllButton?.addEventListener('click', () => {
-      for (const item in storageItems) {
-        this.addItemToInventory(item, storageItems[item]);
+      for (const item in currentLevel.thingsInStorage) {
+        this.addItemToInventory(item, currentLevel.thingsInStorage[item]);
         this.deleteItemsFromStorage(item);
       }
       this.cleanExchangeWindowFields();
       this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
-      this.drawThings(storageItems, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
+      this.drawThings(currentLevel.thingsInStorage, this.inventoryContainerThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);
     })
   }
 

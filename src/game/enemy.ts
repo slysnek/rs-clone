@@ -3,6 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
 import { oppositeDirections } from "./constants";
 import Hero from "./hero";
+import { attack } from "./utils";
 import { isAbleToAnimateAttack } from "./utils";
 import { damageFromScorpion } from "./battlePoints";
 import { currentLevel } from "./levels";
@@ -109,8 +110,8 @@ class Enemy extends Entity {
   }
 
   private _dealDamageToHero(hero: Hero) {
-    this.currentActionPoints = 0;
-    const damage = damageFromScorpion['punch'];
+  this.currentActionPoints = 0;
+    const damage = currentLevel.damageFromEnemy['punch'];
     hero.updateHealthPoints(damage);
     if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();

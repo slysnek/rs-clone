@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine, Position } from 'grid-engine';
-import { windowSize, heroAnims } from './constants';
+import { windowSize } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
@@ -94,7 +94,7 @@ class Game extends Phaser.Scene {
 
     this.load.tilemapTiledJSON('map', `assets/maps/${currentLevel.map}.json`);
     this.load.image('tiles', `assets/maps/${currentLevel.tiles}.png`);
-    this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
+    this.load.spritesheet('hero', 'assets/spritesheets/hero-all-anims.png', { frameWidth: 75, frameHeight: 133 });
     for (let i = 0; i < currentLevel.enemyQuantity; i++) {
       this.load.spritesheet(`${currentLevel.enemyName}${i + 1}`, `assets/spritesheets/${currentLevel.enemySpriteSheet}.png`, currentLevel.spriteSheetsSizes);
     }
@@ -114,7 +114,7 @@ class Game extends Phaser.Scene {
     this.load.audio('startFight', 'assets/music/startFight.wav');
 
     // this.input.setDefaultCursor('url("assets/cursor/cursor-24x24.png"), pointer');
-    this.load.image('dump', 'assets/maps/dump.png');
+    this.load.image(currentLevel.storage.key, currentLevel.storage.src);
   }
 
   create() {
@@ -130,14 +130,19 @@ class Game extends Phaser.Scene {
     this.hero.deleteItemFromInventory,
     this.hero.putOnArmor,
     this.hero.takeOffArmor,
-    this.hero.isHeroInArmor);
+    this.hero.changeArmorAnimations,
+    this.hero.getHeroHealthPoints,
+    this.hero.getHeroArmorState,
+    this.hero.getHeroAnims,
+    this.hero.addArmorHealthPoints,
+    this.hero.deleteArmorHealthPoints);
     this.hero.setUiProperty(this.ui);
-    this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
-    this.hero.setPunchAnimation();
-    this.hero.setShootAnimation();
-    this.hero.setGetHidePistolAnimation();
-    this.hero.setDamageAnimation();
-    this.hero.setDeathAnimation();
+    this.hero.setFramesForEntityAnimations(this.hero, 'hero', currentLevel.heroAnims, defaultBehavior);
+    this.hero.setPunchAnimation(currentLevel.heroAnims);
+    this.hero.setShootAnimation(currentLevel.heroAnims);
+    this.hero.setGetHidePistolAnimation(currentLevel.heroAnims);
+    this.hero.setDamageAnimation(currentLevel.heroAnims);
+    this.hero.setDeathAnimation(currentLevel.heroAnims);
     this.createCamera();
     for (let i = 0; i < currentLevel.enemyQuantity; i++) {
       const name = `${currentLevel.enemyName}${i + 1}`;
@@ -214,13 +219,13 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.sounds, this.ui));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, currentLevel.heroHealthPoints, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.sounds, this.ui));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size = 'big', scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds, this.ui));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, currentLevel.enemyHealthPoints, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds, this.ui));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
@@ -244,9 +249,9 @@ class Game extends Phaser.Scene {
           speed: 7,
         },
         {
-          id: 'dump',
+          id: currentLevel.storage.key,
           sprite: this.inventoryContainer,
-          startPosition: { x: 72, y: 48 },
+          startPosition: currentLevel.storage.position,
         },
       ],
       numberOfDirections: 4
@@ -528,16 +533,16 @@ class Game extends Phaser.Scene {
   }
 
   placeObject() {
-    this.inventoryContainer = this.physics.add.staticSprite(0, 0, 'dump');
+    this.inventoryContainer = this.physics.add.staticSprite(0, 0, currentLevel.storage.key);
   }
 
   setInventoryContainerListener() {
     this.inventoryContainer.setInteractive().on('pointerdown', (pointer: Phaser.Types.Input.Keyboard.CursorKeys, localX: number, localY: number, event: Event) => {
       event.stopPropagation();
       const heroPosition = this.gridEngine.getPosition('hero');
-      const inventoryContainerPosition = this.gridEngine.getPosition('dump');
-      const isXPositionRight = ((inventoryContainerPosition.x - 2) <= heroPosition.x && (inventoryContainerPosition.x + 2) >= heroPosition.x);
-      const iYPositionRight = ((inventoryContainerPosition.y - 2) <= heroPosition.y && (inventoryContainerPosition.y + 2) >= heroPosition.y)
+      const inventoryContainerPosition = this.gridEngine.getPosition(currentLevel.storage.key);
+      const isXPositionRight = ((inventoryContainerPosition.x - 1) <= heroPosition.x && (inventoryContainerPosition.x + 1) >= heroPosition.x);
+      const iYPositionRight = ((inventoryContainerPosition.y - 1) <= heroPosition.y && (inventoryContainerPosition.y + 1) >= heroPosition.y)
       if (iYPositionRight && isXPositionRight) {
         this.ui.showExchangePanel();
       }

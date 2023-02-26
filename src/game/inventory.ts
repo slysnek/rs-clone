@@ -19,6 +19,10 @@ const inventory = {
     src: '../assets/ui-elements/inventory/stimx.png',
     quantity: 10
   },
+  pistol: {
+    src: '../assets/ui-elements/inventory/pistol-03.png',
+    quantity: 1
+  }
 };
 
 export default inventory;
