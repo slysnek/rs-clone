@@ -38,6 +38,26 @@ class Game extends Phaser.Scene {
   }
 
   preload() {
+    this._preloadLoadBar();
+
+    this.load.tilemapTiledJSON('map', `assets/maps/${currentLevel.map}.json`);
+    this.load.image('tiles', `assets/maps/${currentLevel.tiles}.png`);
+    this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
+    for (let i = 0; i < currentLevel.enemyQuantity; i++) {
+      this.load.spritesheet(`${currentLevel.enemyName}${i + 1}`, `assets/spritesheets/${currentLevel.enemySpriteSheet}.png`, currentLevel.spriteSheetsSizes);
+    }
+    // this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
+    // this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
+    // this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
+    this.load.html('ui', '/assets/html/test.html');
+
+    this._preloadSounds();
+
+    // this.input.setDefaultCursor('url("assets/cursor/cursor-24x24.png"), pointer');
+    this.load.image('dump', 'assets/maps/dump.png');
+  }
+
+  private _preloadLoadBar() {
     //loading screen
     const progressBar = this.add.graphics();
     const progressBox = this.add.graphics();
@@ -91,35 +111,20 @@ class Game extends Phaser.Scene {
       loadingText.destroy();
       percentText.destroy();
     });
-
-    this.load.tilemapTiledJSON('map', `assets/maps/${currentLevel.map}.json`);
-    this.load.image('tiles', `assets/maps/${currentLevel.tiles}.png`);
-    this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
-    for (let i = 0; i < currentLevel.enemyQuantity; i++) {
-      this.load.spritesheet(`${currentLevel.enemyName}${i + 1}`, `assets/spritesheets/${currentLevel.enemySpriteSheet}.png`, currentLevel.spriteSheetsSizes);
-    }
-    // this.load.spritesheet('scorpion1', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
-    // this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
-    // this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
-    this.load.html('ui', '/assets/html/test.html');
-
-    this._preloadSounds();
-
-    // this.input.setDefaultCursor('url("assets/cursor/cursor-24x24.png"), pointer');
-    this.load.image('dump', 'assets/maps/dump.png');
   }
 
   private _preloadSounds() {
-    // this.load.audio('heroTurn', 'assets/sounds/heroSounds/heroTurn.wav');
-    // this.load.audio('enemyTurn', 'assets/sounds/enemyGeneralSounds/enemyTurn.wav');
-
     // hero sounds
     this.load.audio('fistsAttack', 'assets/sounds/heroSounds/fistsAttack.wav');
     this.load.audio('pistolAttack', 'assets/sounds/heroSounds/pistolAttack.wav');
     // hero gets damage
-    this.load.audio('heroDamageFromGhoul', 'assets/sounds/heroSounds/heroDamageFromGhoul.wav');
-    this.load.audio('heroDamageFromRadScorpion', 'assets/sounds/heroSounds/heroDamageFromRadScorpion.wav');
-    this.load.audio('heroDamageFromDeathClaw', 'assets/sounds/heroSounds/heroDamageFromDeathClaw.wav');
+    this.load.audio('heroDamageFromEnemy', 'assets/sounds/heroSounds/heroDamageFromRadScorpion.wav');
+    // enemy attack sound
+    this.load.audio('enemyPunch', 'assets/sounds/radScorpionSounds/radScorpionPunch.wav');
+    // enemy gets damage
+    this.load.audio('enemyDamage', 'assets/sounds/radScorpionSounds/radScorpionDamage.wav');
+    // enemy dies
+    this.load.audio('enemyDeath', 'assets/sounds/radScorpionSounds/radScorpionDeath.wav');
     // ui sounds
     this.load.audio('changeWeapon', 'assets/sounds/uiSounds/changeWeapon.wav');
     this.load.audio('startFight', 'assets/sounds/uiSounds/startFight.wav');
@@ -128,18 +133,6 @@ class Game extends Phaser.Scene {
     this.load.audio('openChest', 'assets/sounds/uiSounds/openChest.wav');
     this.load.audio('stimpak', 'assets/sounds/uiSounds/stimpak.wav');
     this.load.audio('beer', 'assets/sounds/uiSounds/beer.wav');
-    // enemy attack sound
-    this.load.audio('radScorpionPunch', 'assets/sounds/radScorpionSounds/radScorpionPunch.wav');
-    this.load.audio('ghoulPunch', 'assets/sounds/ghoulSounds/ghoulPunch.wav');
-    this.load.audio('deathClawPunch', 'assets/sounds/deathClawSounds/deathClawPunch.wav');
-    // enemy gets damage
-    this.load.audio('radScorpionDamage', 'assets/sounds/radScorpionSounds/radScorpionDamage.wav');
-    this.load.audio('ghoulDamage', 'assets/sounds/ghoulSounds/ghoulDamage.wav');
-    this.load.audio('deathClawDamage', 'assets/sounds/deathClawSounds/deathClawDamage.wav');
-    // enemy dies
-    this.load.audio('radScorpionDeath', 'assets/sounds/radScorpionSounds/radScorpionDeath.wav');
-    this.load.audio('ghoulDeath', 'assets/sounds/ghoulSounds/ghoulDeath.wav');
-    this.load.audio('deathClawDeath', 'assets/sounds/deathClawSounds/deathClawDeath.wav');
   }
 
   create() {
@@ -196,17 +189,17 @@ class Game extends Phaser.Scene {
   }
 
   private _createSounds() {
-    // this.sounds.heroAttack = this.sound.add('heroTurn'); // Hero turn
-    // this.sounds.enemyAttack = this.sound.add('enemyTurn'); // Enemy turn
-    
     // hero sounds
     this.sounds.fists = this.sound.add('fistsAttack', { volume: 3 });
     this.sounds.pistol = this.sound.add('pistolAttack', { volume: 2 });
     // hero gets damage
-    this.sounds.heroDamageFromRadScorpion = this.sound.add('heroDamageFromRadScorpion');
-    // this.sounds.heroDamageFromGhoul = this.sound.add('heroDamageFromGhoul', { volume: 1 });
-    // this.sounds.heroDamageDeathClaw = this.sound.add('heroDamageFromDeathClaw', { volume: 1 });
-
+    this.sounds.heroDamageFromEnemy = this.sound.add('heroDamageFromEnemy');
+    // enemy attack sound
+    this.sounds.enemyPunch = this.sound.add('enemyPunch', { volume: 1 });
+    // enemy gets damage
+    this.sounds.enemyDamage = this.sound.add('enemyDamage', { volume: 1 });
+    // enemy dies
+    this.sounds.enemyDeath = this.sound.add('enemyDeath', { volume: 1 });
     // ui sounds
     this.sounds.changeWeapon = this.sound.add('changeWeapon', { volume: 2 });
     this.sounds.startFight = this.sound.add('startFight', { volume: 6 });
@@ -215,12 +208,6 @@ class Game extends Phaser.Scene {
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });
     this.sounds.stimpak = this.sound.add('stimpak', { volume: 0.75 });
     this.sounds.beer = this.sound.add('beer', { volume: 3 });
-    // enemy attack sound
-    this.sounds.radScorpionPunch = this.sound.add('radScorpionPunch', { volume: 1 });
-    // enemy gets damage
-    this.sounds.radScorpionDamage = this.sound.add('radScorpionDamage', { volume: 1 });
-    // enemy dies
-    this.sounds.radScorpionDeath = this.sound.add('radScorpionDeath', { volume: 1 });
   }
 
   deleteEntityFromEntitiesMap(entityKey: string) {

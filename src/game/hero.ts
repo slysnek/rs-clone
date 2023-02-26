@@ -204,7 +204,7 @@ class Hero extends Entity {
     this.sounds[this.currentWeapon.name].play();
     enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
     // this.currentWeapon.name === 'fists' ? this.sounds.fistsAttack.play() : this.sounds.pistolAttack.play();
-    this.sounds.radScorpionDamage.play();
+    this.sounds.enemyDamage.play();
   }
 
   private _dealDamageToEnemy(enemy: Enemy) {
