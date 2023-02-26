@@ -174,18 +174,7 @@ class Game extends Phaser.Scene {
     });
     this.hero.setPointerDownListener(map);
     this.subscribeCharacterToChangeMoving();
-    //ui section
-    this.ui.createUI(this)
-    this.ui.putMessageToConsole('Game loaded')
-    this.ui.updateHP(this.hero)
-    this.ui.updateAP(this.hero)
-    this.ui.updateWeapon(this.hero)
-    this.ui.setInvButtonListener();
-    this.ui.setChangeWeaponListener(this.hero)
-    this.ui.setTakeAllButtonListener();
-    this.ui.setCloseExchangePanelButtonListener();
-    this.ui.setCloseInventoryPanelButtonListener();
-    this.ui.setArmorContainerListener();
+    this._createUI();
   }
 
   private _createSounds() {
@@ -208,6 +197,20 @@ class Game extends Phaser.Scene {
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });
     this.sounds.stimpak = this.sound.add('stimpak', { volume: 0.75 });
     this.sounds.beer = this.sound.add('beer', { volume: 3 });
+  }
+
+  private _createUI() {
+    this.ui.createUI(this)
+    this.ui.putMessageToConsole('Game loaded')
+    this.ui.updateHP(this.hero)
+    this.ui.updateAP(this.hero)
+    this.ui.updateWeapon(this.hero)
+    this.ui.setInvButtonListener();
+    this.ui.setChangeWeaponListener(this.hero)
+    this.ui.setTakeAllButtonListener();
+    this.ui.setCloseExchangePanelButtonListener();
+    this.ui.setCloseInventoryPanelButtonListener();
+    this.ui.setArmorContainerListener();
   }
 
   deleteEntityFromEntitiesMap(entityKey: string) {
