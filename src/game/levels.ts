@@ -17,6 +17,23 @@ import inventory from "./inventory";
 import { Animations, thingsContainerItemsType } from './types';
 import { damageFromGhoul, damageFromScorpion, damageFromDeathClaw, ghoulHealthPoints, scorpionHealthPoints, deathClawHealthPoints } from './battlePoints';
 
+const defaultInventory = {
+  pistol: {
+    src: inventory.pistol.src,
+    quantity: 1
+  },
+  bullets: {
+    src: inventory.bullets.src,
+    quantity: 3
+  },
+}
+
+const defaultHeroAnims = heroAnimsWithoutArmor;
+
+const defaultHeroHealthPoints = 25;
+
+const defaultIsHeroInArmor = false;
+
 export type level = {
   enemyAnims: typeof scorpionAnims | typeof deathClawAnims | typeof ghoulAnims,
   enemyQuantity: number,
@@ -76,19 +93,10 @@ export const level1 = {
     src: 'assets/maps/barrel.png',
     position: { x: 72, y: 48 }
   },
-  heroInventory: {  
-    pistol: {
-      src: inventory.pistol.src,
-      quantity: 1
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 3
-    },
-  },
-  heroAnims: heroAnimsWithoutArmor,
-  heroHealthPoints: 25,
-  isHeroInArmor: false
+  heroInventory: defaultInventory,
+  heroAnims: defaultHeroAnims,
+  heroHealthPoints: defaultHeroHealthPoints,
+  isHeroInArmor: defaultIsHeroInArmor
 };
 
 export const level2 = {
@@ -124,19 +132,10 @@ export const level2 = {
     src: 'assets/maps/fridge.png',
     position: { x: 58, y: 90 }
   },
-  heroInventory: {  
-    pistol: {
-      src: inventory.pistol.src,
-      quantity: 1
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 3
-    },
-  },
-  heroAnims: heroAnimsWithoutArmor,
-  heroHealthPoints: 25,
-  isHeroInArmor: false
+  heroInventory: defaultInventory,
+  heroAnims: defaultHeroAnims,
+  heroHealthPoints: defaultHeroHealthPoints,
+  isHeroInArmor: defaultIsHeroInArmor
 };
 
 export const level3 = {
@@ -172,19 +171,10 @@ export const level3 = {
     src: 'assets/maps/wash-machine.png',
     position: { x: 72, y: 48 }
   },
-  heroInventory: {  
-    pistol: {
-      src: inventory.pistol.src,
-      quantity: 1
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 3
-    },
-  },
-  heroAnims: heroAnimsWithoutArmor,
-  heroHealthPoints: 25,
-  isHeroInArmor: false,
+  heroInventory: defaultInventory,
+  heroAnims: defaultHeroAnims,
+  heroHealthPoints: defaultHeroHealthPoints,
+  isHeroInArmor: defaultIsHeroInArmor
 }
 
 export function saveHeroInventory(currentHeroInventoryState: thingsContainerItemsType){
@@ -226,6 +216,15 @@ export function setArmorState(isHeroInArmor: boolean){
 
 export function setCurrentHeroAnims(currentHeroAnims: Animations){
   currentLevel.heroAnims = currentHeroAnims;
+}
+
+export function setDefaultValuesForHero(){
+  levels.forEach((level) => {
+    level.heroInventory = defaultInventory;
+    level.heroAnims = defaultHeroAnims;
+    level.heroHealthPoints = defaultHeroHealthPoints;
+    level.isHeroInArmor = defaultIsHeroInArmor;
+  })
 }
 
 const levels: level[] = [level1, level2, level3];

@@ -14,7 +14,8 @@ import {
   saveHeroInventory,
   setHeroHealthPoints,
   setArmorState,
-  setCurrentHeroAnims } from '../game/levels';
+  setCurrentHeroAnims,
+  setDefaultValuesForHero } from '../game/levels';
 import appView from "..";
 
 // const storageItems: thingsContainerItemsType = {
@@ -154,6 +155,7 @@ export default class UI {
         this.scene.sys.game.destroy(true);
         const isGameFinished = setNewLevelForGame();
         if(isGameFinished){
+          setDefaultValuesForHero();
           appView.showMenu();
         } else {
           setCurrentHeroAnims(this.getHeroAnims());
