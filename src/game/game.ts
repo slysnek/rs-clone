@@ -94,7 +94,7 @@ class Game extends Phaser.Scene {
 
     this.load.tilemapTiledJSON('map', `assets/maps/${currentLevel.map}.json`);
     this.load.image('tiles', `assets/maps/${currentLevel.tiles}.png`);
-    this.load.spritesheet('hero', 'assets/spritesheets/woman-13-spritesheet.png', { frameWidth: 75, frameHeight: 133 });
+    this.load.spritesheet('hero', 'assets/spritesheets/hero-all-anims.png', { frameWidth: 75, frameHeight: 133 });
     for (let i = 0; i < currentLevel.enemyQuantity; i++) {
       this.load.spritesheet(`${currentLevel.enemyName}${i + 1}`, `assets/spritesheets/${currentLevel.enemySpriteSheet}.png`, currentLevel.spriteSheetsSizes);
     }
@@ -130,14 +130,15 @@ class Game extends Phaser.Scene {
     this.hero.deleteItemFromInventory,
     this.hero.putOnArmor,
     this.hero.takeOffArmor,
-    this.hero.isHeroInArmor);
+    this.hero.isHeroInArmor,
+    this.hero.changeToAnimationsInArmor);
     this.hero.setUiProperty(this.ui);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
-    this.hero.setPunchAnimation();
-    this.hero.setShootAnimation();
-    this.hero.setGetHidePistolAnimation();
-    this.hero.setDamageAnimation();
-    this.hero.setDeathAnimation();
+    this.hero.setPunchAnimation(currentLevel.heroAnims);
+    this.hero.setShootAnimation(currentLevel.heroAnims);
+    this.hero.setGetHidePistolAnimation(currentLevel.heroAnims);
+    this.hero.setDamageAnimation(currentLevel.heroAnims);
+    this.hero.setDeathAnimation(currentLevel.heroAnims);
     this.createCamera();
     for (let i = 0; i < currentLevel.enemyQuantity; i++) {
       const name = `${currentLevel.enemyName}${i + 1}`;

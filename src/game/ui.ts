@@ -1,8 +1,8 @@
 // import { Tilemaps } from "phaser";
-import { windowSize } from "./constants";
+import { heroAnimsInArmor, windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
-import { thingsContainerItemsType } from './types';
+import { Animations, thingsContainerItemsType } from './types';
 import inventory from './inventory';
 import dialogueConfig from '../game/dialogue-config';
 import { currentMode, levelMode, gameMode, setNewLevelForGame, currentLevel, saveHeroInventory } from '../game/levels';
@@ -44,6 +44,7 @@ export default class UI {
   exchangeGif: HTMLImageElement | null;
   nextLevelButton: HTMLButtonElement | null;
   storageItemsImageSrc: string;
+  changeToAnimationsInArmor: (currentAnims: Animations) => void;
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -51,13 +52,15 @@ export default class UI {
     deleteItemFromInventory: (itemName: string) => void,
     putOnArmor: () => void,
     takeOffArmor: () => void,
-    isHeroInArmor: boolean) {
+    isHeroInArmor: boolean,
+    changeToAnimationsInArmor: (currentAnims: Animations) => void) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
     this.putOnArmor = putOnArmor;
     this.takeOffArmor = takeOffArmor;
     this.isHeroInArmor = isHeroInArmor;
+    this.changeToAnimationsInArmor = changeToAnimationsInArmor;
     this.inventoryPanel = null;
     this.exchangePanel = null;
     this.heroThingsBlock = null;
@@ -254,6 +257,7 @@ export default class UI {
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.deleteItemFromInventory('armor');
+        this.changeToAnimationsInArmor(heroAnimsInArmor);
       } else if (itemName === 'bullets') {
         console.log(itemName);
       } else if (itemName === 'cookie') {

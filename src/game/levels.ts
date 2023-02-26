@@ -1,4 +1,6 @@
-import { scorpionAnims,
+import { 
+  heroAnims,
+  scorpionAnims,
   deathClawAnims,
   ghoulAnims,
   startPositionsForScorpions,
@@ -12,7 +14,7 @@ import { scorpionAnims,
   startPositionsForHeroMap3} from "./constants";
 import { DialogueKey } from './dialogue';
 import inventory from "./inventory";
-import { thingsContainerItemsType } from './types';
+import { Animations, thingsContainerItemsType } from './types';
 
 export type level = {
   enemyAnims: typeof scorpionAnims | typeof deathClawAnims | typeof ghoulAnims,
@@ -29,6 +31,7 @@ export type level = {
   thingsInStorage: { [key: string]: {src: string, quantity: number} },
   storage: { key: string, src: string, position: {x: number, y: number} },
   heroInventory: { [key: string]: {src: string, quantity: number} },
+  heroAnims: Animations
 }
 
 export const level1 = {
@@ -76,6 +79,7 @@ export const level1 = {
       quantity: 3
     },
   },
+  heroAnims: heroAnims,
 };
 
 export const level2 = {
@@ -119,6 +123,7 @@ export const level2 = {
       quantity: 3
     },
   },
+  heroAnims: heroAnims,
 };
 
 export const level3 = {
@@ -162,6 +167,7 @@ export const level3 = {
       quantity: 3
     },
   },
+  heroAnims: heroAnims,
 }
 
 export function saveHeroInventory(currentHeroInventoryState: thingsContainerItemsType){
