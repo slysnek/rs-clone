@@ -113,12 +113,15 @@ class Enemy extends Entity {
   private _attackHeroAnimation(hero: Hero, enemyAnimationDirection: "up-right" | "down-left" | "up-left" | "down-right" | "" | undefined) {
     this.anims.play(`${this.attackBehavior}_${enemyAnimationDirection}`);
     hero.play(`damage-${hero.currentWeapon.name}_${oppositeDirections.get(enemyAnimationDirection)}`);
+    this.sounds.enemyPunch.play();
   }
 
   private _dealDamageToHero(hero: Hero) {
     this.currentActionPoints = 0;
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
+    this.sounds.heroDamageFromEnemy.play();
+
     if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();
     }
@@ -129,6 +132,7 @@ class Enemy extends Entity {
   playDeathAnimation() {
     this.anims.play('death');
     this.deleteEntityFromEntitiesMap(this.id);
+    this.sounds.enemyDeath.play();
   }
 }
 

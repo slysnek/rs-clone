@@ -201,10 +201,8 @@ class Hero extends Entity {
 
   private _attackEnemyAnimation(enemy: Enemy, HeroAnimationDirection: "up-right" | "down-left" | "up-left" | "down-right" | "" | undefined) {
     this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
-    this.sounds[this.currentWeapon.name].play();
     enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
-    // this.currentWeapon.name === 'fists' ? this.sounds.fistsAttack.play() : this.sounds.pistolAttack.play();
-    this.sounds.enemyDamage.play();
+    this.sounds[this.currentWeapon.name].play();
   }
 
   private _dealDamageToEnemy(enemy: Enemy) {
@@ -212,6 +210,7 @@ class Hero extends Entity {
     if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
       const damage = damageFromHero[this.currentWeapon.name];
       enemy.updateHealthPoints(damage);
+      this.sounds.enemyDamage.play();
       if (enemy.healthPoints <= 0) {
         enemy.playDeathAnimation();
         this.drawBattleTiles();

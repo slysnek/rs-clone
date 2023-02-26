@@ -204,17 +204,17 @@ class Game extends Phaser.Scene {
     this.sounds.itemMove = this.sound.add('itemMove', { volume: 2 });
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });
     this.sounds.stimpak = this.sound.add('stimpak', { volume: 0.75 });
-    this.sounds.beer = this.sound.add('beer', { volume: 3 });
+    this.sounds.beer = this.sound.add('beer', { volume: 4 });
   }
 
   private _createUI() {
-    this.ui.createUI(this)
-    this.ui.putMessageToConsole('Game loaded')
-    this.ui.updateHP(this.hero)
-    this.ui.updateAP(this.hero)
-    this.ui.updateWeapon(this.hero)
+    this.ui.createUI(this);
+    this.ui.putMessageToConsole('Game loaded');
+    this.ui.updateHP(this.hero);
+    this.ui.updateAP(this.hero);
+    this.ui.updateWeapon(this.hero);
     this.ui.setInvButtonListener();
-    this.ui.setChangeWeaponListener(this.hero)
+    this.ui.setChangeWeaponListener(this.hero);
     this.ui.setTakeAllButtonListener();
     this.ui.setCloseExchangePanelButtonListener();
     this.ui.setCloseInventoryPanelButtonListener();
@@ -342,21 +342,21 @@ class Game extends Phaser.Scene {
             `positionChangeStarted:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
+          if (this.hero.currentActionPoints) {
+            this.hero.makeStep();
+          }
           if (this.hero.currentActionPoints <= 0) {
             this.gridEngine.stopMovement(charId);
             this.refreshAllEnemiesActionPoints();
           }
-          if (this.hero.currentActionPoints) {
-            this.hero.makeStep();
-          }
         }
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
-          if (enemy.currentActionPoints <= 0) {
-            this.gridEngine.stopMovement(charId);
-          }
           if (enemy.currentActionPoints) {
             enemy.makeStep();
+          }
+          if (enemy.currentActionPoints <= 0) {
+            this.gridEngine.stopMovement(charId);
           }
           if (this.isAllEnemiesLostActionPoints()) {
             this.hero.refreshActionPoints();
@@ -395,8 +395,8 @@ class Game extends Phaser.Scene {
           if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0 && enemy.fightMode) {
             if (this.isEnemyStaysNearHero(enemy)) {
               enemy.attackHero(this.hero);
-              this.hero.refreshActionPoints();
               this.hero.drawBattleTiles();
+              this.hero.refreshActionPoints();
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
             }
@@ -425,8 +425,8 @@ class Game extends Phaser.Scene {
         if (!this.gridEngine.isMoving(enemyKey) && enemyObj.currentActionPoints > 0 && enemyObj.fightMode) {
           if (this.isEnemyStaysNearHero(enemyObj)) {
             enemyObj.attackHero(this.hero);
-            this.hero.refreshActionPoints();
             this.hero.drawBattleTiles();
+            this.hero.refreshActionPoints();
           } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
           }
@@ -439,10 +439,10 @@ class Game extends Phaser.Scene {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
         if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
           && !this.gridEngine.isMoving(enemyKey) && enemyObj.fightMode) {
-          this.gridEngine.stopMovement(enemyKey);
           enemyObj.attackHero(this.hero);
-          this.hero.refreshActionPoints();
           this.hero.drawBattleTiles();
+          this.gridEngine.stopMovement(enemyKey);
+          this.hero.refreshActionPoints();
         }
         enemyObj.clearTimer();
         enemyObj.currentActionPoints = 0;
