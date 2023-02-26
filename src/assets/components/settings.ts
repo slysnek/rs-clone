@@ -19,7 +19,7 @@ const audio = new Audio();
 const menu = document.querySelector('.menu') as HTMLElement;
 menu.appendChild(audio);
 
-audio.src = '../../assets/music/test_music.mp3';
+audio.src = '../../assets/sounds/test_music.mp3';
 audio.volume = 0.3;
 audio.loop = true;
 audio.classList.add('audio');
