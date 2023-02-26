@@ -526,3 +526,9 @@ export const offsetCoordForDeathClaw: { [key: string]: { x: number, y: number } 
   big: { x: 0, y: 5 },
   small: { x: 0, y: 0 },
 };
+
+export const colors: { [key: string]: number } = {
+  WEAPON_RANGE: 0xaf2462,
+  ENEMY_TILE: 0x4a4aff,
+  TRANSPARENT: 0xffffff,
+}

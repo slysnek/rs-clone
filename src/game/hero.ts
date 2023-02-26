@@ -3,7 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine, Position } from 'grid-engine';
 import Enemy from "./enemy";
 import { damageFromHero, lostActionPointsForHero } from './battlePoints';
-import { heroAnims, oppositeDirections } from "./constants";
+import { colors, heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
 import { attack, manhattanDist, randomIntFromInterval } from './utils';
 import UI from './ui';
@@ -309,51 +309,38 @@ class Hero extends Entity {
     }
   }
 
-  // TODO: вынести цвета в константы enemyTileColor и weaponRangeColor
   // TODO: альфа-канал или разные цвета
-  // ? сделать публичным?
   clearColoredTiles() {
     const heroCoords = this.gridEngine.getPosition(this.id);
     const weaponsMaxRangeDoubled = Math.max(this.mainWeapon.maxRange, this.secondaryWeapon.maxRange) * 2;
-    // for (let i = 1; i <= weaponsMaxRangeDoubled; i++) {
-    //   this.tintTile(this.map, heroCoords.x + i, heroCoords.y, 0xffffff, 1);
-    //   this.tintTile(this.map, heroCoords.x - i, heroCoords.y, 0xffffff, 1);
-    //   this.tintTile(this.map, heroCoords.x, heroCoords.y + i, 0xffffff, 1);
-    //   this.tintTile(this.map, heroCoords.x, heroCoords.y - i, 0xffffff, 1);
-    // }
 
     for (let x = 0; x <= weaponsMaxRangeDoubled; x++) {
       for (let y = 0; y <= weaponsMaxRangeDoubled; y++) {
         if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x + x, heroCoords.y + y) <= weaponsMaxRangeDoubled) {
-          this.tintTile(this.map, heroCoords.x + x, heroCoords.y + y, 0xffffff);
+          this.tintTile(this.map, heroCoords.x + x, heroCoords.y + y, colors.TRANSPARENT);
         }
         if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x - x, heroCoords.y + y) <= weaponsMaxRangeDoubled) {
-          this.tintTile(this.map, heroCoords.x - x, heroCoords.y + y, 0xffffff);
+          this.tintTile(this.map, heroCoords.x - x, heroCoords.y + y, colors.TRANSPARENT);
         }
         if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x + x, heroCoords.y - y) <= weaponsMaxRangeDoubled) {
-          this.tintTile(this.map, heroCoords.x + x, heroCoords.y - y, 0xffffff);
+          this.tintTile(this.map, heroCoords.x + x, heroCoords.y - y, colors.TRANSPARENT);
         }
         if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x - x, heroCoords.y - y) <= weaponsMaxRangeDoubled) {
-          this.tintTile(this.map, heroCoords.x - x, heroCoords.y - y, 0xffffff);
+          this.tintTile(this.map, heroCoords.x - x, heroCoords.y - y, colors.TRANSPARENT);
         }
       }
     }
   }
 
-  // ! rename
   private _drawWeaponDistanceTiles() {
-    // this.currentWeapon.maxRange;
-    // this.gridEngine.isBlocked()
-    // if (fightMode)
-
     // ? вынести в аргументы?
     const heroCoords = this.gridEngine.getPosition(this.id);
 
     for (let i = 1; i <= this.currentWeapon.maxRange; i++) {
-      this.tintTile(this.map, heroCoords.x + i, heroCoords.y, 0xaf2462);
-      this.tintTile(this.map, heroCoords.x - i, heroCoords.y, 0xaf2462);
-      this.tintTile(this.map, heroCoords.x, heroCoords.y + i, 0xaf2462);
-      this.tintTile(this.map, heroCoords.x, heroCoords.y - i, 0xaf2462);
+      this.tintTile(this.map, heroCoords.x + i, heroCoords.y, colors.WEAPON_RANGE);
+      this.tintTile(this.map, heroCoords.x - i, heroCoords.y, colors.WEAPON_RANGE);
+      this.tintTile(this.map, heroCoords.x, heroCoords.y + i, colors.WEAPON_RANGE);
+      this.tintTile(this.map, heroCoords.x, heroCoords.y - i, colors.WEAPON_RANGE);
     }
   }
 
@@ -364,12 +351,13 @@ class Hero extends Entity {
         const heroCoords = this.gridEngine.getPosition(this.id);
         const HeroAnimationDirection = attack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
         if (HeroAnimationDirection) {
-          this.tintTile(this.map, enemyCoords.x, enemyCoords.y, 0x4a4aff);
+          this.tintTile(this.map, enemyCoords.x, enemyCoords.y, colors.ENEMY_TILE);
         }
       }
     });
   }
 
+  // ? private
   tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number, alpha = 1) {
     for (const element of tilemap.layers) {
       element.tilemapLayer.layer.data[row][col].tint = color;
