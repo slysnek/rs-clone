@@ -193,6 +193,13 @@ class Game extends Phaser.Scene {
 
   update() {
     this.hero.moveHeroByArrows();
+    this.sortEntitiesByDepth();
+  }
+
+  sortEntitiesByDepth() {
+    this.entitiesMap.forEach((entityValue, entityKey) => {
+      entityValue.setDepth(entityValue.y + this.gridEngine.getOffsetY(entityKey));
+    });
   }
 
   buildMap() {
@@ -267,12 +274,16 @@ class Game extends Phaser.Scene {
     this.gridEngine.movementStarted().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
       entity.anims.play(direction);
+      if (charId.match(/^hero/i)) {
+        this.hero.clearColoredTiles();
+      }
     });
 
     this.gridEngine.movementStopped().subscribe(({ charId, direction }) => {
       const entity = this.entitiesMap.get(charId) as Hero | Enemy;
       entity.anims.stop();
       entity.setFrame(entity.getStopFrame(direction, charId));
+      this.hero.drawBattleTiles();
     });
 
     this.gridEngine.directionChanged().subscribe(({ charId, direction }) => {
@@ -334,22 +345,22 @@ class Game extends Phaser.Scene {
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
             this.enableFightMode();
             this.moveEnemiesToHero(enterTile);
-            // console.log('fightMode = true');
             this.ui.updateHP(this.hero);
           }
         }
 
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
-
+          if (enemy.currentActionPoints <= 0) {
+            this.gridEngine.stopMovement(charId);
+          }
           if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0 && enemy.fightMode) {
             if (this.isEnemyStaysNearHero(enemy)) {
               enemy.attackHero(this.hero);
+              this.hero.drawBattleTiles();
               this.hero.refreshActionPoints();
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
-              // console.log('moveEnemiesToHero 1:');
-
             }
           }
         }
@@ -360,7 +371,6 @@ class Game extends Phaser.Scene {
   }
 
   moveEnemiesToHero(targetPos: Position) {
-    // console.log('moveEnemiesToHero:');
     const emptyTilesAroundHero: Array<Position> = this.getEmptyPositionsArrNearObject(targetPos as Entity);
     const closestEnemiesAroundHero: Array<string> = [];
 
@@ -377,6 +387,7 @@ class Game extends Phaser.Scene {
         if (!this.gridEngine.isMoving(enemyKey) && enemyObj.currentActionPoints > 0 && enemyObj.fightMode) {
           if (this.isEnemyStaysNearHero(enemyObj)) {
             enemyObj.attackHero(this.hero);
+            this.hero.drawBattleTiles();
             this.hero.refreshActionPoints();
           } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
@@ -391,6 +402,7 @@ class Game extends Phaser.Scene {
         if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
           && !this.gridEngine.isMoving(enemyKey) && enemyObj.fightMode) {
           enemyObj.attackHero(this.hero);
+          this.hero.drawBattleTiles();
           this.gridEngine.stopMovement(enemyKey);
           this.hero.refreshActionPoints();
         }

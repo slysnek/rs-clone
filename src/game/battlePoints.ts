@@ -14,7 +14,7 @@ export const lostActionPointsForHero: { [attackType: string]: number } = {
 }
 
 export const damageFromHero: { [attackType: string]: number } = {
-  fists: 20,
+  fists: 5,
   pistol: 10,
 }
 

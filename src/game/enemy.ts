@@ -3,7 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine } from 'grid-engine';
 import { oppositeDirections } from "./constants";
 import Hero from "./hero";
-import { attack } from "./utils";
+import { isAbleToAnimateAttack } from "./utils";
 import { damageFromScorpion } from "./battlePoints";
 import { currentLevel } from "./levels";
 import UI from "./ui";
@@ -94,7 +94,7 @@ class Enemy extends Entity {
   attackHero(hero: Hero) {
     const heroCoords = this.gridEngine.getPosition(hero.id);
     const enemyCoords = this.gridEngine.getPosition(this.id);
-    const enemyAnimationDirection = attack(enemyCoords, heroCoords, this.maxRange);
+    const enemyAnimationDirection = isAbleToAnimateAttack(enemyCoords, heroCoords, this.maxRange);
     if (!enemyAnimationDirection) {
       return;
     } else {
@@ -109,12 +109,12 @@ class Enemy extends Entity {
   }
 
   private _dealDamageToHero(hero: Hero) {
+    this.currentActionPoints = 0;
     const damage = damageFromScorpion['punch'];
     hero.updateHealthPoints(damage);
     if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();
     }
-    this.currentActionPoints = 0;
     this.ui.updateHP(hero);
     this.ui.putMessageToConsole(`Enemy attacks hero: -${damage} health`);
   }
