@@ -24,6 +24,7 @@
     </div>
   </div>
   <div class="hp-element">
+    <div class="end-turn"></div>
     <span class="hp">?</span>
   </div>
   <div class="weapon-stats">
@@ -206,15 +207,24 @@
     position: relative;
     height: 100%;
     width: 52px;
-    background-image: url(../assets/ui-elements/hp-armor.png);
+    background-image: url(../assets/ui-elements/hp-end.png);
     background-size: cover;
+  }
+
+  .end-turn{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 18px;
+    cursor: pointer;
+    top: 30px;
   }
 
   .hp {
     position: absolute;
     color: white;
     left: 20px;
-    top: 39px;
+    top: 76px;
   }
 
   .weapon-stats{
@@ -424,16 +434,17 @@
     left: 52%;
     border: #3cf800 solid 1px;
     color: #3cf800;
-    background-color: rgb(68, 65, 65);
+    background-color: rgb(41, 40, 40);
+    cursor: pointer;
   }
   .next-level-button:hover{
-    cursor: pointer;
+    background-color: rgb(108, 108, 108);
   }
   .unavailable{
     visibility: hidden;
   }
   .available{
     visibility: visible;
-    transition: 3s;
+    transition: 0.4s;
   }
 </style>

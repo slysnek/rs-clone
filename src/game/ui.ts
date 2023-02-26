@@ -156,6 +156,14 @@ export default class UI {
     }
   }
 
+  setEndTurnListener(hero: Hero){
+    const endTurnButton = document.querySelector('.end-turn') as HTMLElement;
+    endTurnButton.addEventListener('click', () => {
+      console.log('hello');
+
+    })
+  }
+
   updateWeapon(hero: Hero) {
     const weapon = document.querySelector('.weapon') as HTMLElement;
     const weaponName = document.querySelector('.weapon-name') as HTMLElement;
