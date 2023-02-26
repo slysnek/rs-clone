@@ -4,7 +4,6 @@ import { GridEngine } from 'grid-engine';
 import { oppositeDirections } from "./constants";
 import Hero from "./hero";
 import { attack } from "./utils";
-import { damageFromScorpion } from "./battlePoints";
 import { currentLevel } from "./levels";
 import UI from "./ui";
 
@@ -109,7 +108,7 @@ class Enemy extends Entity {
   }
 
   private _dealDamageToHero(hero: Hero) {
-    const damage = damageFromScorpion['punch'];
+    const damage = currentLevel.damageFromEnemy['punch'];
     hero.updateHealthPoints(damage);
     if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();

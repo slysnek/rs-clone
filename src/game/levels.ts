@@ -15,6 +15,7 @@ import {
 import { DialogueKey } from './dialogue';
 import inventory from "./inventory";
 import { Animations, thingsContainerItemsType } from './types';
+import { damageFromGhoul, damageFromScorpion, damageFromDeathClaw } from './battlePoints';
 
 export type level = {
   enemyAnims: typeof scorpionAnims | typeof deathClawAnims | typeof ghoulAnims,
@@ -25,6 +26,7 @@ export type level = {
   enemyStartPositions: { [key: string]: { x: number, y: number } },
   enemyOffsetCoords: { [key: string]: { x: number, y: number } },
   spriteSheetsSizes: { frameWidth: number, frameHeight: number },
+  damageFromEnemy: { [attackType: string]: number },
   map: string,
   tiles: string,
   heroStartCoords: { x: number, y: number },
@@ -47,6 +49,7 @@ export const level1 = {
   enemyStartPositions: startPositionsForGhouls,
   enemyOffsetCoords: offsetCoordForGhouls,
   spriteSheetsSizes: { frameWidth: 50, frameHeight: 100 },
+  damageFromEnemy: damageFromGhoul,
   map: 'currentMap',
   tiles: 'tiles-02',
   heroStartCoords: startPositionsForHeroMap1,
@@ -95,6 +98,7 @@ export const level2 = {
   enemyStartPositions: startPositionsForScorpions,
   enemyOffsetCoords: offsetCoordForScorpions,
   spriteSheetsSizes: { frameWidth: 106, frameHeight: 135 },
+  damageFromEnemy: damageFromScorpion,
   map: 'map1',
   tiles: 'maptiles2-01-01',
   heroStartCoords: startPositionsForHeroMap2,
@@ -139,6 +143,7 @@ export const level3 = {
   enemyStartPositions: startPositionsForDeathClaw,
   enemyOffsetCoords: offsetCoordForDeathClaw,
   spriteSheetsSizes: { frameWidth: 120, frameHeight: 118 },
+  damageFromEnemy: damageFromDeathClaw,
   map: 'map3',
   tiles: 'gas-spritesheet',
   heroStartCoords: startPositionsForHeroMap3,
