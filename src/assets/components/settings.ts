@@ -41,6 +41,6 @@ playButton.addEventListener('click', () => {
   }
 });
 
-volumeInput.addEventListener('change', () => {
+volumeInput.addEventListener('input', () => {
   audio.volume = Number(volumeInput.value) / 100;
 });
