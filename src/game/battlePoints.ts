@@ -21,6 +21,10 @@ export const lostActionPointsForHero: { [attackType: string]: number } = {
   pistol: 4,
 }
 
+export const ghoulHealthPoints = 15;
+export const scorpionHealthPoints = 20;
+export const deathClawHealthPoints = 25;
+
 export const damageFromHero: { [attackType: string]: number } = {
   fists: 3,
   pistol: 10,

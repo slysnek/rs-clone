@@ -3,7 +3,7 @@ export const windowSize = {
   windowHeight: window.innerHeight
 }
 
-export const heroAnims = {
+export const heroAnimsWithoutArmor = {
   walk: {
     upRight: {
       startFrame: 0,

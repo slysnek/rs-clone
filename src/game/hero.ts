@@ -55,7 +55,12 @@ class Hero extends Entity {
     this.addItemToInventory = this.addItemToInventory.bind(this);
     this.deleteItemFromInventory = this.deleteItemFromInventory.bind(this);
     this.changeArmorAnimations = this.changeArmorAnimations.bind(this);
-    this.isHeroInArmor = false;
+    this.getHeroHealthPoints = this.getHeroHealthPoints.bind(this);
+    this.getHeroArmorState = this.getHeroArmorState.bind(this);
+    this.putOnArmor = this.putOnArmor.bind(this);
+    this.takeOffArmor = this.takeOffArmor.bind(this);
+    this.getHeroAnims = this.getHeroAnims.bind(this);
+    this.isHeroInArmor = currentLevel.isHeroInArmor;
   }
 
   setUiProperty(ui: UI){
@@ -330,6 +335,14 @@ class Hero extends Entity {
 
   takeOffArmor() {
     this.isHeroInArmor = false;
+  }
+
+  getHeroHealthPoints(){
+    return this.healthPoints;
+  }
+
+  getHeroArmorState(){
+    return this.isHeroInArmor;
   }
 }
 

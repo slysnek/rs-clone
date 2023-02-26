@@ -1,5 +1,5 @@
 import { 
-  heroAnims,
+  heroAnimsWithoutArmor,
   scorpionAnims,
   deathClawAnims,
   ghoulAnims,
@@ -15,7 +15,7 @@ import {
 import { DialogueKey } from './dialogue';
 import inventory from "./inventory";
 import { Animations, thingsContainerItemsType } from './types';
-import { damageFromGhoul, damageFromScorpion, damageFromDeathClaw } from './battlePoints';
+import { damageFromGhoul, damageFromScorpion, damageFromDeathClaw, ghoulHealthPoints, scorpionHealthPoints, deathClawHealthPoints } from './battlePoints';
 
 export type level = {
   enemyAnims: typeof scorpionAnims | typeof deathClawAnims | typeof ghoulAnims,
@@ -27,13 +27,16 @@ export type level = {
   enemyOffsetCoords: { [key: string]: { x: number, y: number } },
   spriteSheetsSizes: { frameWidth: number, frameHeight: number },
   damageFromEnemy: { [attackType: string]: number },
+  enemyHealthPoints: number,
   map: string,
   tiles: string,
   heroStartCoords: { x: number, y: number },
   thingsInStorage: { [key: string]: {src: string, quantity: number} },
   storage: { key: string, src: string, position: {x: number, y: number} },
   heroInventory: { [key: string]: {src: string, quantity: number} },
-  heroAnims: Animations
+  heroAnims: Animations,
+  heroHealthPoints: number,
+  isHeroInArmor: boolean
 }
 
 export const level1 = {
@@ -50,6 +53,7 @@ export const level1 = {
   enemyOffsetCoords: offsetCoordForGhouls,
   spriteSheetsSizes: { frameWidth: 50, frameHeight: 100 },
   damageFromEnemy: damageFromGhoul,
+  enemyHealthPoints: ghoulHealthPoints,
   map: 'currentMap',
   tiles: 'tiles-02',
   heroStartCoords: startPositionsForHeroMap1,
@@ -82,7 +86,9 @@ export const level1 = {
       quantity: 3
     },
   },
-  heroAnims: heroAnims,
+  heroAnims: heroAnimsWithoutArmor,
+  heroHealthPoints: 25,
+  isHeroInArmor: false
 };
 
 export const level2 = {
@@ -99,6 +105,7 @@ export const level2 = {
   enemyOffsetCoords: offsetCoordForScorpions,
   spriteSheetsSizes: { frameWidth: 106, frameHeight: 135 },
   damageFromEnemy: damageFromScorpion,
+  enemyHealthPoints: scorpionHealthPoints,
   map: 'map1',
   tiles: 'maptiles2-01-01',
   heroStartCoords: startPositionsForHeroMap2,
@@ -127,7 +134,9 @@ export const level2 = {
       quantity: 3
     },
   },
-  heroAnims: heroAnims,
+  heroAnims: heroAnimsWithoutArmor,
+  heroHealthPoints: 25,
+  isHeroInArmor: false
 };
 
 export const level3 = {
@@ -144,6 +153,7 @@ export const level3 = {
   enemyOffsetCoords: offsetCoordForDeathClaw,
   spriteSheetsSizes: { frameWidth: 120, frameHeight: 118 },
   damageFromEnemy: damageFromDeathClaw,
+  enemyHealthPoints: deathClawHealthPoints,
   map: 'map3',
   tiles: 'gas-spritesheet',
   heroStartCoords: startPositionsForHeroMap3,
@@ -172,7 +182,9 @@ export const level3 = {
       quantity: 3
     },
   },
-  heroAnims: heroAnims,
+  heroAnims: heroAnimsWithoutArmor,
+  heroHealthPoints: 25,
+  isHeroInArmor: false,
 }
 
 export function saveHeroInventory(currentHeroInventoryState: thingsContainerItemsType){
@@ -198,10 +210,22 @@ export function setNewLevelForGame(){
   const currentLevelIndex = levels.indexOf(currentLevel);
   const currentDialogueIndex = dialogues.indexOf(currentDialogue);
   if(currentDialogueIndex === 2 && currentLevelIndex === 2){
-    return 'finish'; 
+    return true; 
   }
   currentLevel = levels[currentLevelIndex + 1];
   currentDialogue = dialogues[currentDialogueIndex + 1];
+}
+
+export function setHeroHealthPoints(currentHealthPoints: number){
+  currentLevel.heroHealthPoints = currentHealthPoints;
+}
+
+export function setArmorState(isHeroInArmor: boolean){
+  currentLevel.isHeroInArmor = isHeroInArmor;
+}
+
+export function setCurrentHeroAnims(currentHeroAnims: Animations){
+  currentLevel.heroAnims = currentHeroAnims;
 }
 
 const levels: level[] = [level1, level2, level3];

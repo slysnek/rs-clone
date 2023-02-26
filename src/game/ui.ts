@@ -1,11 +1,20 @@
 // import { Tilemaps } from "phaser";
-import { heroAnims, heroAnimsInArmor, windowSize } from "./constants";
+import { heroAnimsWithoutArmor, heroAnimsInArmor, windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
 import { Animations, thingsContainerItemsType } from './types';
 import inventory from './inventory';
 import dialogueConfig from '../game/dialogue-config';
-import { currentMode, levelMode, gameMode, setNewLevelForGame, currentLevel, saveHeroInventory } from '../game/levels';
+import { 
+  currentMode,
+  levelMode,
+  gameMode,
+  setNewLevelForGame,
+  currentLevel,
+  saveHeroInventory,
+  setHeroHealthPoints,
+  setArmorState,
+  setCurrentHeroAnims } from '../game/levels';
 import appView from "..";
 
 // const storageItems: thingsContainerItemsType = {
@@ -39,12 +48,14 @@ export default class UI {
   armorImage: HTMLImageElement | null;
   putOnArmor: () => void;
   takeOffArmor: () => void;
-  isHeroInArmor: boolean;
   inventoryGif: HTMLImageElement | null;
   exchangeGif: HTMLImageElement | null;
   nextLevelButton: HTMLButtonElement | null;
   storageItemsImageSrc: string;
   changeArmorAnimations: (currentAnims: Animations) => void;
+  getHeroHealthPoints: () => number;
+  getHeroArmorState: () => boolean;
+  getHeroAnims: () => Animations
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -52,14 +63,15 @@ export default class UI {
     deleteItemFromInventory: (itemName: string) => void,
     putOnArmor: () => void,
     takeOffArmor: () => void,
-    isHeroInArmor: boolean,
-    changeArmorAnimations: (currentAnims: Animations) => void) {
+    changeArmorAnimations: (currentAnims: Animations) => void,
+    getHeroHealthPoints: () => number,
+    getHeroArmorState: () => boolean,
+    getHeroAnims: () => Animations) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
     this.putOnArmor = putOnArmor;
     this.takeOffArmor = takeOffArmor;
-    this.isHeroInArmor = isHeroInArmor;
     this.changeArmorAnimations = changeArmorAnimations;
     this.inventoryPanel = null;
     this.exchangePanel = null;
@@ -78,6 +90,9 @@ export default class UI {
     this.exchangeGif = null;
     this.nextLevelButton = null;
     this.storageItemsImageSrc = currentLevel.storage.src;
+    this.getHeroHealthPoints = getHeroHealthPoints;
+    this.getHeroArmorState = getHeroArmorState;
+    this.getHeroAnims = getHeroAnims;
   }
 
   findElementsForInventoryLogic() {
@@ -112,6 +127,9 @@ export default class UI {
     storageItemsImage.src = this.storageItemsImageSrc;
     storageItemsImage.classList.add('storage-img');
     storageItemsImageContainer?.append(storageItemsImage);
+    if(this.getHeroArmorState()){
+      (this.armorImage as HTMLImageElement).src = inventory.armor.src
+    }
   }
 
   makeNextLevelButtonAvailable(){
@@ -128,10 +146,14 @@ export default class UI {
       } else if(currentMode === gameMode){
         this.scene.sys.plugins.removeScenePlugin('gridEngine');
         this.scene.sys.game.destroy(true);
-        if(setNewLevelForGame() === 'finish'){
+        const isGameFinished = setNewLevelForGame();
+        if(isGameFinished){
           appView.showMenu();
         } else {
+          setCurrentHeroAnims(this.getHeroAnims());
+          setArmorState(this.getHeroArmorState());
           saveHeroInventory(this.heroInventory);
+          setHeroHealthPoints(this.getHeroHealthPoints());
           new Phaser.Game(dialogueConfig);
         }
       }
@@ -196,7 +218,7 @@ export default class UI {
   }
 
   addGif(gifElement: HTMLImageElement) {
-    if (this.isHeroInArmor) {
+    if (this.getHeroArmorState()) {
       gifElement.src = womanInArmorGifSrc;
     } else {
       gifElement.src = womanInVaultSuitGifSrc;
@@ -272,16 +294,17 @@ export default class UI {
 
   setArmorContainerListener() {
     this.armorFieldContainer?.addEventListener('click', () => {
-      if (!this.isHeroInArmor) {
+      if (!this.getHeroArmorState()) {
         return;
       } else {
-        this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
+        const armorThingContainer = this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
+        this.addListenerToThingContainerInInventory(armorThingContainer, 'armor');
         (this.armorImage as HTMLImageElement).src = '';
         this.takeOffArmor();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.addItemToInventory('armor', inventory.armor);
-        this.changeArmorAnimations(heroAnims);
+        this.changeArmorAnimations(heroAnimsWithoutArmor);
       }
     })
   }

@@ -1,6 +1,6 @@
 import Phaser, { Tilemaps } from 'phaser';
 import { GridEngine, Position } from 'grid-engine';
-import { windowSize, heroAnims } from './constants';
+import { windowSize } from './constants';
 import Enemy from './enemy';
 import Hero from './hero';
 import { gridEngineType } from './types';
@@ -130,10 +130,12 @@ class Game extends Phaser.Scene {
     this.hero.deleteItemFromInventory,
     this.hero.putOnArmor,
     this.hero.takeOffArmor,
-    this.hero.isHeroInArmor,
-    this.hero.changeArmorAnimations);
+    this.hero.changeArmorAnimations,
+    this.hero.getHeroHealthPoints,
+    this.hero.getHeroArmorState,
+    this.hero.getHeroAnims);
     this.hero.setUiProperty(this.ui);
-    this.hero.setFramesForEntityAnimations(this.hero, 'hero', heroAnims, defaultBehavior);
+    this.hero.setFramesForEntityAnimations(this.hero, 'hero', currentLevel.heroAnims, defaultBehavior);
     this.hero.setPunchAnimation(currentLevel.heroAnims);
     this.hero.setShootAnimation(currentLevel.heroAnims);
     this.hero.setGetHidePistolAnimation(currentLevel.heroAnims);
@@ -208,13 +210,13 @@ class Game extends Phaser.Scene {
   }
 
   createHero(map: Tilemaps.Tilemap) {
-    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, 20, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.sounds, this.ui));
+    this.hero = this.add.existing(new Hero(this, 'hero', this.gridEngine, map, this.cursors, currentLevel.heroHealthPoints, entitiesTotalActionPoints.hero, this.getEntitiesMap, this.deleteEntityFromEntitiesMap, this.moveEnemiesToHero, this.sounds, this.ui));
     this.hero.scale = 1.5;
     this.entitiesMap.set('hero', this.hero);
   }
 
   createEnemy(key: string, map: Tilemaps.Tilemap, battleRadius: number, size = 'big', scaleValue = 1) {
-    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, 15, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds, this.ui));
+    const enemy = this.add.existing(new Enemy(this, key, this.gridEngine, map, key, currentLevel.enemyHealthPoints, battleRadius, size, entitiesTotalActionPoints[currentLevel.enemyName], this.deleteEntityFromEntitiesMap, this.sounds, this.ui));
 
     this.entitiesMap.set(`${key}`, enemy);
     enemy.scale = scaleValue;
