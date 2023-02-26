@@ -3,9 +3,9 @@ import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine, Position } from 'grid-engine';
 import Enemy from "./enemy";
 import { damageFromHero, lostActionPointsForHero } from './battlePoints';
-import { oppositeDirections } from "./constants";
+import { colors, heroAnims, oppositeDirections } from "./constants";
 import Weapon from './weapon'
-import { attack, randomIntFromInterval } from './utils';
+import { isAbleToAnimateAttack, manhattanDist, randomIntFromInterval } from './utils';
 import UI from './ui';
 import { Animations, thingsContainerItemsType } from './types';
 import { currentLevel } from "./levels";
@@ -66,7 +66,7 @@ class Hero extends Entity {
     this.isHeroInArmor = currentLevel.isHeroInArmor;
   }
 
-  setUiProperty(ui: UI){
+  setUiProperty(ui: UI) {
     this.ui = ui;
   }
 
@@ -88,6 +88,8 @@ class Hero extends Entity {
       gridMouseCoords.y = Math.round(gridMouseCoords.y);
 
       const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
+
+      // clickedTile.alpha = 0.85;
       // clickedTile.tint = 0xff7a4a;
 
       // attack if fight mode and enough AP
@@ -116,25 +118,13 @@ class Hero extends Entity {
     }, this);
   }
 
-  isAllEnemiesIdle() {
-    let isAllIdle = true;
-    const entitiesMap = this.getEntitiesMap();
-    entitiesMap.forEach((entityValue, entityKey) => {
-      if (!entityKey.match(/^hero/i)) {
-        if (this.gridEngine.isMoving(entityKey)) {
-          isAllIdle = false;
-        }
-      }
-    });
-    return isAllIdle;
-  }
-
   changeWeapon() {
     if (this.currentWeapon.name === this.mainWeapon.name) this.currentWeapon = this.secondaryWeapon;
     else this.currentWeapon = this.mainWeapon;
     this.behavior = this.currentWeapon.name === 'pistol' ? 'walkWithPistol' : 'walk';
     this.changeAnimationWithWeapon(this.behavior);
     this.sounds.changeWeapon.play();
+    this.drawBattleTiles(); // !
   }
 
   setPunchAnimation(currentAnims: Animations) {
@@ -241,7 +231,7 @@ class Hero extends Entity {
   attackEnemy(enemy: Enemy) {
     const heroCoords = this.gridEngine.getPosition(this.id);
     const enemyCoords = this.gridEngine.getPosition(enemy.id);
-    const HeroAnimationDirection = attack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
+    const HeroAnimationDirection = isAbleToAnimateAttack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
     if (!HeroAnimationDirection) {
       return;
     } else {
@@ -267,20 +257,11 @@ class Hero extends Entity {
       enemy.updateHealthPoints(damage);
       if (enemy.healthPoints <= 0) {
         enemy.playDeathAnimation();
+        this.drawBattleTiles();
       }
       this.ui.putMessageToConsole(`Hero hits enemy: -${damage} health`);
     } else {
       this.ui.putMessageToConsole(`Hero misses the attack`);
-    }
-  }
-
-  isAllEnemiesDead(){
-    const entitiesMap = this.getEntitiesMap();
-    if(entitiesMap.size === 1){
-      this.fightMode = false;
-      this.currentActionPoints = 10;
-      this.ui.makeNextLevelButtonAvailable();
-      this.ui.setNextLevelButtonListener();
     }
   }
 
@@ -301,6 +282,30 @@ class Hero extends Entity {
       });
     }
     this.moveEnemiesToHero(this.gridEngine.getPosition(this.id));
+  }
+
+  isAllEnemiesIdle() {
+    let isAllIdle = true;
+    const entitiesMap = this.getEntitiesMap();
+    entitiesMap.forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        if (this.gridEngine.isMoving(entityKey)) {
+          isAllIdle = false;
+        }
+      }
+    });
+    return isAllIdle;
+  }
+
+  isAllEnemiesDead() {
+    const entitiesMap = this.getEntitiesMap();
+    if (entitiesMap.size === 1) {
+      this.fightMode = false;
+      this.currentActionPoints = 10;
+      this.ui.makeNextLevelButtonAvailable();
+      this.ui.setNextLevelButtonListener();
+      this.clearColoredTiles();
+    }
   }
 
   makeStep() {
@@ -348,7 +353,6 @@ class Hero extends Entity {
   takeOffArmor() {
     this.isHeroInArmor = false;
   }
-
   getHeroHealthPoints(){
     return this.healthPoints;
   }
@@ -356,6 +360,65 @@ class Hero extends Entity {
   getHeroArmorState(){
     return this.isHeroInArmor;
   }
+  drawBattleTiles() {
+    if (this.fightMode) {
+      this.clearColoredTiles();
+      this._drawWeaponDistanceTiles();
+      this._drawHittableEnemiesTiles();
+    }
+  }
+
+  clearColoredTiles() {
+    const heroCoords = this.gridEngine.getPosition(this.id);
+    const weaponsMaxRangeDoubled = Math.max(this.mainWeapon.maxRange, this.secondaryWeapon.maxRange) * 2;
+
+    for (let x = 0; x <= weaponsMaxRangeDoubled; x++) {
+      for (let y = 0; y <= weaponsMaxRangeDoubled; y++) {
+        if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x + x, heroCoords.y + y) <= weaponsMaxRangeDoubled) {
+          this._tintTile(this.map, heroCoords.x + x, heroCoords.y + y, colors.TRANSPARENT);
+        }
+        if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x - x, heroCoords.y + y) <= weaponsMaxRangeDoubled) {
+          this._tintTile(this.map, heroCoords.x - x, heroCoords.y + y, colors.TRANSPARENT);
+        }
+        if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x + x, heroCoords.y - y) <= weaponsMaxRangeDoubled) {
+          this._tintTile(this.map, heroCoords.x + x, heroCoords.y - y, colors.TRANSPARENT);
+        }
+        if (manhattanDist(heroCoords.x, heroCoords.y, heroCoords.x - x, heroCoords.y - y) <= weaponsMaxRangeDoubled) {
+          this._tintTile(this.map, heroCoords.x - x, heroCoords.y - y, colors.TRANSPARENT);
+        }
+      }
+    }
+  }
+
+  private _drawWeaponDistanceTiles() {
+    const heroCoords = this.gridEngine.getPosition(this.id);
+
+    for (let i = 1; i <= this.currentWeapon.maxRange; i++) {
+      this._tintTile(this.map, heroCoords.x + i, heroCoords.y, colors.WEAPON_RANGE);
+      this._tintTile(this.map, heroCoords.x - i, heroCoords.y, colors.WEAPON_RANGE);
+      this._tintTile(this.map, heroCoords.x, heroCoords.y + i, colors.WEAPON_RANGE);
+      this._tintTile(this.map, heroCoords.x, heroCoords.y - i, colors.WEAPON_RANGE);
+    }
+  }
+
+  private _drawHittableEnemiesTiles() {
+    this.getEntitiesMap().forEach((entityValue, entityKey) => {
+      if (!entityKey.match(/^hero/i)) {
+        const enemyCoords = this.gridEngine.getPosition(entityKey);
+        const heroCoords = this.gridEngine.getPosition(this.id);
+        const HeroAnimationDirection = isAbleToAnimateAttack(heroCoords, enemyCoords, this.currentWeapon.maxRange);
+        if (HeroAnimationDirection) {
+          this._tintTile(this.map, enemyCoords.x, enemyCoords.y, colors.ENEMY_TILE);
+        }
+      }
+    });
+  }
+
+  private _tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number, alpha = 1) {
+    for (const element of tilemap.layers) {
+      element.tilemapLayer.layer.data[row][col].tint = color;
+      element.tilemapLayer.layer.data[row][col].alpha = alpha;
+    }
 }
 
 export default Hero;

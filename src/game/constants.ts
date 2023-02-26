@@ -724,8 +724,16 @@ export const offsetCoordForGhouls: { [key: string]: { x: number, y: number } } =
 };
 
 export const offsetCoordForDeathClaw: { [key: string]: { x: number, y: number } } = {
-  big: { x: 0, y: 10 },
+  big: { x: 0, y: 5 },
   small: { x: 0, y: 0 },
 };
 
+
 export const armorHealthPoints = 15;
+
+export const colors: { [key: string]: number } = {
+  WEAPON_RANGE: 0xFF8A8A,
+  ENEMY_TILE: 0xFF0000,
+  TRANSPARENT: 0xFFFFFF,
+}
+
