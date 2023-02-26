@@ -727,3 +727,5 @@ export const offsetCoordForDeathClaw: { [key: string]: { x: number, y: number } 
   big: { x: 0, y: 10 },
   small: { x: 0, y: 0 },
 };
+
+export const armorHealthPoints = 15;

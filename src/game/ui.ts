@@ -55,7 +55,9 @@ export default class UI {
   changeArmorAnimations: (currentAnims: Animations) => void;
   getHeroHealthPoints: () => number;
   getHeroArmorState: () => boolean;
-  getHeroAnims: () => Animations
+  getHeroAnims: () => Animations;
+  addArmorHealthPoints: () => void;
+  deleteArmorHealthPoints: () => void
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -66,7 +68,9 @@ export default class UI {
     changeArmorAnimations: (currentAnims: Animations) => void,
     getHeroHealthPoints: () => number,
     getHeroArmorState: () => boolean,
-    getHeroAnims: () => Animations) {
+    getHeroAnims: () => Animations,
+    addArmorHealthPoints: () => void,
+    deleteArmorHealthPoints: () => void) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
@@ -93,6 +97,8 @@ export default class UI {
     this.getHeroHealthPoints = getHeroHealthPoints;
     this.getHeroArmorState = getHeroArmorState;
     this.getHeroAnims = getHeroAnims;
+    this.addArmorHealthPoints = addArmorHealthPoints;
+    this.deleteArmorHealthPoints = deleteArmorHealthPoints;
   }
 
   findElementsForInventoryLogic() {
@@ -276,6 +282,7 @@ export default class UI {
         thingContainerParent?.removeChild(thingContainer);
         (this.armorImage as HTMLImageElement).src = inventory.armor.src;
         this.putOnArmor();
+        this.addArmorHealthPoints();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.deleteItemFromInventory('armor');
@@ -301,6 +308,7 @@ export default class UI {
         this.addListenerToThingContainerInInventory(armorThingContainer, 'armor');
         (this.armorImage as HTMLImageElement).src = '';
         this.takeOffArmor();
+        this.deleteArmorHealthPoints();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.addItemToInventory('armor', inventory.armor);

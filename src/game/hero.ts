@@ -9,6 +9,7 @@ import { attack, randomIntFromInterval } from './utils';
 import UI from './ui';
 import { Animations, thingsContainerItemsType } from './types';
 import { currentLevel } from "./levels";
+import { armorHealthPoints } from './constants';
 
 class Hero extends Entity {
   gridEngine: GridEngine;
@@ -60,11 +61,22 @@ class Hero extends Entity {
     this.putOnArmor = this.putOnArmor.bind(this);
     this.takeOffArmor = this.takeOffArmor.bind(this);
     this.getHeroAnims = this.getHeroAnims.bind(this);
+    this.addArmorHealthPoints = this.addArmorHealthPoints.bind(this);
+    this.deleteArmorHealthPoints = this.deleteArmorHealthPoints.bind(this);
     this.isHeroInArmor = currentLevel.isHeroInArmor;
   }
 
   setUiProperty(ui: UI){
     this.ui = ui;
+  }
+
+  addArmorHealthPoints(){
+    this.healthPoints += armorHealthPoints;
+    this.ui.updateHP;
+  }
+
+  deleteArmorHealthPoints(){
+    this.healthPoints -= armorHealthPoints;
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {

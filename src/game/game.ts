@@ -133,7 +133,9 @@ class Game extends Phaser.Scene {
     this.hero.changeArmorAnimations,
     this.hero.getHeroHealthPoints,
     this.hero.getHeroArmorState,
-    this.hero.getHeroAnims);
+    this.hero.getHeroAnims,
+    this.hero.addArmorHealthPoints,
+    this.hero.deleteArmorHealthPoints);
     this.hero.setUiProperty(this.ui);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', currentLevel.heroAnims, defaultBehavior);
     this.hero.setPunchAnimation(currentLevel.heroAnims);
