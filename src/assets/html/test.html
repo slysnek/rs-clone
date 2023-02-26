@@ -26,6 +26,9 @@
   <div class="hp-element">
     <span class="hp">?</span>
   </div>
+  <div class="weapon-stats">
+
+  </div>
   <div class="right-pan">
     <div class="inv-button-container">
       <div class="inv-button"></div>
@@ -212,6 +215,25 @@
     top: 39px;
   }
 
+  .weapon-stats{
+    position: relative;
+    height: 100%;
+    padding-left: 27px;
+    padding-top: 21px;
+    width: 211px;
+    background-image: url(../assets/ui-elements/weapon-stats.png);
+    background-size: cover;
+  }
+
+  .console-messages-list {
+    list-style-position: inside;
+    color: #3cf800;
+    margin-right: 15px;
+    overflow-y: scroll;
+    height: 80%;
+    font-size: 12px;
+  }
+
   .right-pan {
     position: relative;
     height: 100%;
@@ -232,6 +254,7 @@
     width: 100%;
     background-image: url(../assets/ui-elements/inv-button.png);
     background-size: cover;
+    cursor: pointer;
   }
   .hide{
     display: none;
@@ -362,6 +385,7 @@
     position: absolute;
     top: 344px;
     left: 460px;
+    cursor: pointer;
   }
   .woman-image-container{
     width: 62px;
@@ -389,19 +413,20 @@
     text-align: center;
     border-radius: 5px;
     position: absolute;
-    top: 33px;
-    left: 1014px;
+    top: -61px;
+    left: 52%;
+    border: #3cf800 solid 1px;
+    color: #3cf800;
+    background-color: rgb(68, 65, 65);
   }
   .next-level-button:hover{
     cursor: pointer;
   }
   .unavailable{
-    border: #706828 solid 1px;
-    color: #706828;
+    visibility: hidden;
   }
   .available{
-    border: #A48830 solid 1px;
-    color: #A48830;
+    visibility: visible;
     transition: 3s;
   }
 </style>
