@@ -3,7 +3,7 @@ import Phaser, { Tilemaps } from 'phaser';
 import { Direction, GridEngine, Position } from 'grid-engine';
 import Enemy from "./enemy";
 import { damageFromHero, lostActionPointsForHero } from './battlePoints';
-import { heroAnims, oppositeDirections } from "./constants";
+import { oppositeDirections } from "./constants";
 import Weapon from './weapon'
 import { attack, randomIntFromInterval } from './utils';
 import UI from './ui';
@@ -54,7 +54,7 @@ class Hero extends Entity {
     this.inventory = currentLevel.heroInventory;
     this.addItemToInventory = this.addItemToInventory.bind(this);
     this.deleteItemFromInventory = this.deleteItemFromInventory.bind(this);
-    this.changeToAnimationsInArmor = this.changeToAnimationsInArmor.bind(this);
+    this.changeArmorAnimations = this.changeArmorAnimations.bind(this);
     this.isHeroInArmor = false;
   }
 
@@ -174,11 +174,11 @@ class Hero extends Entity {
     this.anims.remove('down-right');
     this.anims.remove('down-left');
     this.anims.remove('up-left');
-    this.setFramesForEntityAnimations(this, 'hero', heroAnims, behavior);
+    this.setFramesForEntityAnimations(this, 'hero', this.currentAnims as Animations, behavior);
     this.behavior === 'walk' ? this.anims.play(`hidePistol_${currentDirection}`) : this.anims.play(`getPistol_${currentDirection}`);
   }
 
-  changeToAnimationsInArmor(currentAnims: Animations){
+  changeArmorAnimations(currentAnims: Animations){
     this.currentAnims = currentAnims;
     this.removeAllAnims();
     this.setFramesForEntityAnimations(this, 'hero', currentAnims, 'walk');

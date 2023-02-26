@@ -1,5 +1,5 @@
 // import { Tilemaps } from "phaser";
-import { heroAnimsInArmor, windowSize } from "./constants";
+import { heroAnims, heroAnimsInArmor, windowSize } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
 import { Animations, thingsContainerItemsType } from './types';
@@ -44,7 +44,7 @@ export default class UI {
   exchangeGif: HTMLImageElement | null;
   nextLevelButton: HTMLButtonElement | null;
   storageItemsImageSrc: string;
-  changeToAnimationsInArmor: (currentAnims: Animations) => void;
+  changeArmorAnimations: (currentAnims: Animations) => void;
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -53,14 +53,14 @@ export default class UI {
     putOnArmor: () => void,
     takeOffArmor: () => void,
     isHeroInArmor: boolean,
-    changeToAnimationsInArmor: (currentAnims: Animations) => void) {
+    changeArmorAnimations: (currentAnims: Animations) => void) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
     this.putOnArmor = putOnArmor;
     this.takeOffArmor = takeOffArmor;
     this.isHeroInArmor = isHeroInArmor;
-    this.changeToAnimationsInArmor = changeToAnimationsInArmor;
+    this.changeArmorAnimations = changeArmorAnimations;
     this.inventoryPanel = null;
     this.exchangePanel = null;
     this.heroThingsBlock = null;
@@ -257,7 +257,7 @@ export default class UI {
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.deleteItemFromInventory('armor');
-        this.changeToAnimationsInArmor(heroAnimsInArmor);
+        this.changeArmorAnimations(heroAnimsInArmor);
       } else if (itemName === 'bullets') {
         console.log(itemName);
       } else if (itemName === 'cookie') {
@@ -281,6 +281,7 @@ export default class UI {
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.addItemToInventory('armor', inventory.armor);
+        this.changeArmorAnimations(heroAnims);
       }
     })
   }
