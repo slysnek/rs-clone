@@ -32,6 +32,13 @@ class Enemy extends Entity {
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
   ui: UI;
 
+  public get fightMode(): boolean {
+    return this._fightMode;
+  }
+  public set fightMode(v: boolean) {
+    this._fightMode = v;
+  }
+
   constructor(scene: Phaser.Scene,
     texture: string,
     gridEngine: GridEngine,

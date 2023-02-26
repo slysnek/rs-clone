@@ -102,19 +102,25 @@ class Game extends Phaser.Scene {
     // this.load.spritesheet('scorpion2', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
     // this.load.spritesheet('scorpion3', 'assets/spritesheets/scorpion-02.png', { frameWidth: 106, frameHeight: 135 });
     this.load.html('ui', '/assets/html/test.html');
+
+    // this._preloadAudio();
     this.load.audio('enemyAttack', 'assets/music/enemyAttack.wav');
     this.load.audio('changeWeapon', 'assets/music/changeWeapon.wav');
     this.load.audio('deathClawPunch', 'assets/music/deathClawPunch.wav');
     this.load.audio('heroAttack', 'assets/music/heroAttack.wav');
     this.load.audio('heroDamageFromGhoul', 'assets/music/heroDamageFromGhoul.wav');
     this.load.audio('heroDamageFromRadScorpion', 'assets/music/heroDamageFromRadScorpion.wav');
-    this.load.audio('fists', 'assets/music/fists.wav');
-    this.load.audio('pistol', 'assets/music/pistol.wav');
+    this.load.audio('fistsAttack', 'assets/music/fistsAttack.wav');
+    this.load.audio('pistolAttack', 'assets/music/pistolAttack.wav');
     this.load.audio('radScorpionDamage', 'assets/music/radScorpionDamage.wav');
     this.load.audio('startFight', 'assets/music/startFight.wav');
 
     // this.input.setDefaultCursor('url("assets/cursor/cursor-24x24.png"), pointer');
     this.load.image('dump', 'assets/maps/dump.png');
+  }
+
+  private _preloadAudio() {
+    //
   }
 
   create() {
@@ -151,7 +157,7 @@ class Game extends Phaser.Scene {
         entityValue.setFramesForEntityAnimations(entityValue, entityKey, currentLevel.enemyAnims, defaultBehavior);
         (entityValue as Enemy).setAttackAnimation();
         (entityValue as Enemy).setDamageAnimation();
-        (entityValue as Enemy).setEnemyWalkBehavior(entityKey/*, map*/);
+        (entityValue as Enemy).setEnemyWalkBehavior(entityKey);
       }
     });
     this.hero.setPointerDownListener(map);
@@ -177,10 +183,10 @@ class Game extends Phaser.Scene {
     this.sounds.heroAttack = this.sound.add('heroAttack');
     this.sounds.heroDamageFromGhoul = this.sound.add('heroDamageFromGhoul');
     this.sounds.heroDamageFromRadScorpion = this.sound.add('heroDamageFromRadScorpion');
-    this.sounds.fists = this.sound.add('fists');
-    this.sounds.pistol = this.sound.add('pistol');
-    this.sounds.radScorpionDamage = this.sound.add('radScorpionDamage');
-    this.sounds.startFight = this.sound.add('startFight');
+    this.sounds.fists = this.sound.add('fistsAttack', { volume: 3 });
+    this.sounds.pistol = this.sound.add('pistolAttack', { volume: 2 });
+    this.sounds.radScorpionDamage = this.sound.add('radScorpionDamage', { volume: 0.5 });
+    this.sounds.startFight = this.sound.add('startFight', { volume: 6 });
   }
 
   deleteEntityFromEntitiesMap(entityKey: string) {

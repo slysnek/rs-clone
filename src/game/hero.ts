@@ -24,6 +24,19 @@ class Hero extends Entity {
   inventory: thingsContainerItemsType;
   isHeroInArmor: boolean;
 
+  public get fightMode(): boolean {
+    return this._fightMode;
+  }
+  public set fightMode(v: boolean) {
+    if (this._fightMode !== v) {
+      if (v) {
+        this.sounds.startFight.play();
+      }
+      this._fightMode = v;
+    }
+  }
+
+
   constructor(scene: Phaser.Scene,
     texture: string,
     gridEngine: GridEngine,
@@ -110,7 +123,7 @@ class Hero extends Entity {
     this.behavior = this.currentWeapon.name === 'pistol' ? 'walkWithPistol' : 'walk';
     this.changeAnimationWithWeapon(this.behavior);
     this.sounds.changeWeapon.play();
-    this.drawBattleTiles(); // !
+    this.drawBattleTiles();
   }
 
   setPunchAnimation() {
@@ -190,6 +203,7 @@ class Hero extends Entity {
     this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
     this.sounds[this.currentWeapon.name].play();
     enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
+    // this.currentWeapon.name === 'fists' ? this.sounds.fistsAttack.play() : this.sounds.pistolAttack.play();
     this.sounds.radScorpionDamage.play();
   }
 
