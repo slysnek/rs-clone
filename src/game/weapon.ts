@@ -4,8 +4,8 @@ export default class Weapon {
   name: string;
   image: string;
   attack: number;
-  private _minAccuracy: number; // percents
-  private _maxAccuracy: number; // percents
+  _minAccuracy: number; // percents
+  _maxAccuracy: number; // percents
   private _accuracy: number; // percents
   maxRange: number;
 

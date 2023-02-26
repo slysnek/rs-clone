@@ -24,7 +24,13 @@
     </div>
   </div>
   <div class="hp-element">
+    <div class="end-turn"></div>
     <span class="hp">?</span>
+  </div>
+  <div class="weapon-stats">
+    <p class="weapon-accuracy"></p>
+    <p class="weapon-damage"></p>
+    <p class="weapon-range"></p>
   </div>
   <div class="right-pan">
     <div class="inv-button-container">
@@ -48,7 +54,7 @@
       <img src="../assets/weapons/fist.png">
     </div>
     <div class="pistol-container">
-      <img src="../assets/weapons/blade.png">
+      <img src="../assets/weapons/pistol-03.png">
     </div>
     <div class="close-inventory-button"></div>
   </div>
@@ -201,15 +207,48 @@
     position: relative;
     height: 100%;
     width: 52px;
-    background-image: url(../assets/ui-elements/hp-armor.png);
+    background-image: url(../assets/ui-elements/hp-end.png);
     background-size: cover;
+  }
+
+  .end-turn{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 18px;
+    cursor: pointer;
+    top: 30px;
   }
 
   .hp {
     position: absolute;
     color: white;
     left: 20px;
-    top: 39px;
+    top: 76px;
+  }
+
+  .weapon-stats{
+    position: relative;
+    height: 100%;
+    padding-left: 27px;
+    padding-top: 21px;
+    width: 211px;
+    background-image: url(../assets/ui-elements/weapon-stats.png);
+    background-size: cover;
+  }
+
+  .weapon-stats > p{
+    color: #3cf800;
+    font-size: 12px;
+  }
+
+  .console-messages-list {
+    list-style-position: inside;
+    color: #3cf800;
+    margin-right: 15px;
+    overflow-y: scroll;
+    height: 80%;
+    font-size: 12px;
   }
 
   .right-pan {
@@ -232,6 +271,7 @@
     width: 100%;
     background-image: url(../assets/ui-elements/inv-button.png);
     background-size: cover;
+    cursor: pointer;
   }
   .hide{
     display: none;
@@ -362,6 +402,7 @@
     position: absolute;
     top: 344px;
     left: 460px;
+    cursor: pointer;
   }
   .woman-image-container{
     width: 62px;
@@ -389,19 +430,21 @@
     text-align: center;
     border-radius: 5px;
     position: absolute;
-    top: 33px;
-    left: 1014px;
-  }
-  .next-level-button:hover{
+    top: -61px;
+    left: 52%;
+    border: #3cf800 solid 1px;
+    color: #3cf800;
+    background-color: rgb(41, 40, 40);
     cursor: pointer;
   }
+  .next-level-button:hover{
+    background-color: rgb(108, 108, 108);
+  }
   .unavailable{
-    border: #706828 solid 1px;
-    color: #706828;
+    visibility: hidden;
   }
   .available{
-    border: #A48830 solid 1px;
-    color: #A48830;
-    transition: 3s;
+    visibility: visible;
+    transition: 0.4s;
   }
 </style>

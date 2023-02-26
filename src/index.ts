@@ -1,7 +1,8 @@
 // import Phaser from 'phaser';
 // import config from './game/config';
 import AppView from './app/appView';
-import './style/main.scss';
+import './assets/styles/main.scss';
+import './assets/styles/fonts.scss';
 
 const appView = new AppView();
 appView.run();

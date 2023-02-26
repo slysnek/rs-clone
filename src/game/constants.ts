@@ -3,7 +3,7 @@ export const windowSize = {
   windowHeight: window.innerHeight
 }
 
-export const heroAnims = {
+export const heroAnimsWithoutArmor = {
   walk: {
     upRight: {
       startFrame: 0,
@@ -200,6 +200,207 @@ export const heroAnims = {
       startFrame: 308,
       endFrame: 313,
       stopFrame: 313,
+    },
+  },
+};
+
+export const heroAnimsInArmor = {
+  walk: {
+    upRight: {
+      startFrame: 319,
+      endFrame: 326,
+      stopFrame: 329,
+    },
+    downRight: {
+      startFrame: 330,
+      endFrame: 337,
+      stopFrame: 340,
+    },
+    downLeft: {
+      startFrame: 341,
+      endFrame: 348,
+      stopFrame: 351,
+    },
+    upLeft: {
+      startFrame: 352,
+      endFrame: 359,
+      stopFrame: 362,
+    },
+  },
+  damageWithFist:{
+    upRight: {
+      startFrame: 363,
+      endFrame: 368,
+      stopFrame: 368,
+    },
+    downRight: {
+      startFrame: 374,
+      endFrame: 379,
+      stopFrame: 379,
+    },
+    downLeft: {
+      startFrame: 385,
+      endFrame: 390,
+      stopFrame: 390,
+    },
+    upLeft: {
+      startFrame: 396,
+      endFrame: 401,
+      stopFrame: 401,
+    },
+  },
+  fists: {
+    upRight: {
+      startFrame: 407,
+      endFrame: 415,
+      stopFrame: 329,
+    },
+    downRight: {
+      startFrame: 418,
+      endFrame: 426,
+      stopFrame: 340,
+    },
+    downLeft: {
+      startFrame: 429,
+      endFrame: 437,
+      stopFrame: 352,
+    },
+    upLeft: {
+      startFrame: 440,
+      endFrame: 448,
+      stopFrame: 362,
+    },
+  },
+  getPistol: {
+    upRight: {
+      startFrame: 451,
+      endFrame: 455,
+      stopFrame: 455,
+    },
+    downRight: {
+      startFrame: 462,
+      endFrame: 466,
+      stopFrame: 466,
+    },
+    downLeft: {
+      startFrame: 473,
+      endFrame: 477,
+      stopFrame: 477,
+    },
+    upLeft: {
+      startFrame: 484,
+      endFrame: 487,
+      stopFrame: 487,
+    },
+  },
+  hidePistol: {
+    upRight: {
+      startFrame: 455,
+      endFrame: 461,
+      stopFrame: 461,
+    },
+    downRight: {
+      startFrame: 466,
+      endFrame: 472,
+      stopFrame: 471,
+    },
+    downLeft: {
+      startFrame: 477,
+      endFrame: 483,
+      stopFrame: 483,
+    },
+    upLeft: {
+      startFrame: 488,
+      endFrame: 494,
+      stopFrame: 494,
+    },
+  },
+  walkWithPistol: {
+    upRight: {
+      startFrame: 495,
+      endFrame: 502,
+      stopFrame: 505,
+    },
+    downRight: {
+      startFrame: 506,
+      endFrame: 513,
+      stopFrame: 516,
+    },
+    downLeft: {
+      startFrame: 517,
+      endFrame: 524,
+      stopFrame: 527,
+    },
+    upLeft: {
+      startFrame: 528,
+      endFrame: 535,
+      stopFrame: 538,
+    },
+  },
+  pistol: {
+    upRight: {
+      startFrame: 539,
+      endFrame: 549,
+      stopFrame: 539,
+    },
+    downRight: {
+      startFrame: 550,
+      endFrame: 560,
+      stopFrame: 550,
+    },
+    downLeft: {
+      startFrame: 561,
+      endFrame: 571,
+      stopFrame: 561,
+    },
+    upLeft: {
+      startFrame: 572,
+      endFrame: 582,
+      stopFrame: 572,
+    },
+  },
+  damageWithPistol:{
+    upRight: {
+      startFrame: 583,
+      endFrame: 588,
+      stopFrame: 583,
+    },
+    downRight: {
+      startFrame: 594,
+      endFrame: 599,
+      stopFrame: 594,
+    },
+    downLeft: {
+      startFrame: 605,
+      endFrame: 610,
+      stopFrame: 605,
+    },
+    upLeft: {
+      startFrame: 616,
+      endFrame: 621,
+      stopFrame: 616,
+    },
+  },
+  death: {
+    upRight: {
+      startFrame: 627,
+      endFrame: 635,
+      stopFrame: 635,
+    },
+    downRight: {
+      startFrame: 627,
+      endFrame: 635,
+      stopFrame: 635,
+    },
+    downLeft: {
+      startFrame: 627,
+      endFrame: 635,
+      stopFrame: 635,
+    },
+    upLeft: {
+      startFrame: 627,
+      endFrame: 635,
+      stopFrame: 635,
     },
   },
 };
@@ -527,8 +728,12 @@ export const offsetCoordForDeathClaw: { [key: string]: { x: number, y: number } 
   small: { x: 0, y: 0 },
 };
 
+
+export const armorHealthPoints = 15;
+
 export const colors: { [key: string]: number } = {
   WEAPON_RANGE: 0xFF8A8A,
   ENEMY_TILE: 0xFF0000,
   TRANSPARENT: 0xFFFFFF,
 }
+

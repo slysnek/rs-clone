@@ -1,5 +1,6 @@
 import Phaser from "phaser";
-import { heroAnims, scorpionAnims, deathClawAnims, ghoulAnims } from "./constants";
+import { scorpionAnims, deathClawAnims, ghoulAnims } from "./constants";
+import { currentLevel } from "./levels";
 import { Animations, StopAnimations } from "./types";
 import Weapon from './weapon'
 
@@ -14,7 +15,7 @@ class Entity extends Phaser.GameObjects.Sprite {
   totalActionPoints: number;
   mainWeapon: Weapon;
   behavior: string;
-
+  currentAnims: Animations;
   constructor(scene: Phaser.Scene, texture: string, healthPoints: number, totalActionPoints: number) {
     super(scene, 0, 0, texture);
     this.scene = scene;
@@ -25,6 +26,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     this.currentActionPoints = totalActionPoints;
     this.mainWeapon = new Weapon('nothing', '', 0, 0, 0, 0);
     this.behavior = defaultBehavior;
+    this.currentAnims = currentLevel.heroAnims;
   }
 
   updateHealthPoints(damage: number) {
@@ -41,6 +43,14 @@ class Entity extends Phaser.GameObjects.Sprite {
 
   turnOnFightMode() {
     this._fightMode = true;
+  }
+
+  updateAnims(newAnims: Animations){
+    this.currentAnims = newAnims;
+  }
+
+  getHeroAnims(){
+    return this.currentAnims;
   }
 
   createEntityAnimation(direction: string, entityName: string, startFrame: number, endFrame: number, repeat: number) {
@@ -87,7 +97,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     const ghoulRegex = /^ghoul/i;
 
     if (entityKey.match(heroRegex)) {
-      entityAnims = heroAnims;
+      entityAnims = (this.currentAnims as Animations);
     }
     if (entityKey.match(scorpionRegex)) {
       entityAnims = scorpionAnims;
