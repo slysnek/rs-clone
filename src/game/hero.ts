@@ -26,6 +26,19 @@ class Hero extends Entity {
   inventory: thingsContainerItemsType;
   isHeroInArmor: boolean;
 
+  public get fightMode(): boolean {
+    return this._fightMode;
+  }
+  public set fightMode(v: boolean) {
+    if (this._fightMode !== v) {
+      if (v) {
+        this.sounds.startFight.play();
+      }
+      this._fightMode = v;
+    }
+  }
+
+
   constructor(scene: Phaser.Scene,
     texture: string,
     gridEngine: GridEngine,
@@ -124,7 +137,7 @@ class Hero extends Entity {
     this.behavior = this.currentWeapon.name === 'pistol' ? 'walkWithPistol' : 'walk';
     this.changeAnimationWithWeapon(this.behavior);
     this.sounds.changeWeapon.play();
-    this.drawBattleTiles(); // !
+    this.drawBattleTiles();
   }
 
   setPunchAnimation(currentAnims: Animations) {
@@ -245,9 +258,8 @@ class Hero extends Entity {
 
   private _attackEnemyAnimation(enemy: Enemy, HeroAnimationDirection: "up-right" | "down-left" | "up-left" | "down-right" | "" | undefined) {
     this.anims.play(`${this.currentWeapon.name}_${HeroAnimationDirection}`);
-    this.sounds[this.currentWeapon.name].play();
     enemy.play(`damage_${oppositeDirections.get(HeroAnimationDirection)}`);
-    this.sounds.radScorpionDamage.play();
+    this.sounds[this.currentWeapon.name].play();
   }
 
   private _dealDamageToEnemy(enemy: Enemy) {
@@ -255,6 +267,7 @@ class Hero extends Entity {
     if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
       const damage = damageFromHero[this.currentWeapon.name];
       enemy.updateHealthPoints(damage);
+      this.sounds.enemyDamage.play();
       if (enemy.healthPoints <= 0) {
         enemy.playDeathAnimation();
         this.drawBattleTiles();
@@ -332,6 +345,7 @@ class Hero extends Entity {
   playDeathAnimation() {
     this.anims.play('death');
     this.deleteEntityFromEntitiesMap(this.id);
+    this.sounds.heroDeath.play();
   }
 
   addItemToInventory(itemName: string, item: { src: string; quantity: number }) {

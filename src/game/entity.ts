@@ -9,7 +9,8 @@ const defaultBehavior = 'walk';
 class Entity extends Phaser.GameObjects.Sprite {
   key: string;
   healthPoints: number;
-  fightMode: boolean;
+  // fightMode: boolean;
+  _fightMode: boolean;
   currentActionPoints: number;
   totalActionPoints: number;
   mainWeapon: Weapon;
@@ -20,7 +21,7 @@ class Entity extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.key = '';
     this.healthPoints = healthPoints;
-    this.fightMode = false;
+    this._fightMode = false;
     this.totalActionPoints = totalActionPoints;
     this.currentActionPoints = totalActionPoints;
     this.mainWeapon = new Weapon('nothing', '', 0, 0, 0, 0);
@@ -41,7 +42,7 @@ class Entity extends Phaser.GameObjects.Sprite {
   }
 
   turnOnFightMode() {
-    this.fightMode = true;
+    this._fightMode = true;
   }
 
   updateAnims(newAnims: Animations){

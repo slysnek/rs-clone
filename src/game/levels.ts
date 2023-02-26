@@ -1,4 +1,4 @@
-import { 
+import {
   heroAnimsWithoutArmor,
   scorpionAnims,
   deathClawAnims,
@@ -11,7 +11,8 @@ import {
   offsetCoordForScorpions,
   startPositionsForHeroMap1,
   startPositionsForHeroMap2,
-  startPositionsForHeroMap3} from "./constants";
+  startPositionsForHeroMap3
+} from "./constants";
 import { DialogueKey } from './dialogue';
 import inventory from "./inventory";
 import { Animations, thingsContainerItemsType } from './types';
@@ -38,7 +39,7 @@ export type level = {
   enemyAnims: typeof scorpionAnims | typeof deathClawAnims | typeof ghoulAnims,
   enemyQuantity: number,
   enemyName: string,
-  infoForCreateEnemies: { [key: string]: {name: string, size: string, scale: number} },
+  infoForCreateEnemies: { [key: string]: { name: string, size: string, scale: number } },
   enemySpriteSheet: string,
   enemyStartPositions: { [key: string]: { x: number, y: number } },
   enemyOffsetCoords: { [key: string]: { x: number, y: number } },
@@ -48,9 +49,27 @@ export type level = {
   map: string,
   tiles: string,
   heroStartCoords: { x: number, y: number },
-  thingsInStorage: { [key: string]: {src: string, quantity: number} },
-  storage: { key: string, src: string, position: {x: number, y: number} },
-  heroInventory: { [key: string]: {src: string, quantity: number} },
+  enemySounds: {
+    heroDamageFromEnemy: {
+      volume: number;
+      src: string;
+    };
+    enemyPunch: {
+      volume: number;
+      src: string;
+    },
+    enemyDamage: {
+      volume: number;
+      src: string;
+    },
+    enemyDeath: {
+      volume: number;
+      src: string;
+    },
+  },
+  thingsInStorage: { [key: string]: { src: string, quantity: number } },
+  storage: { key: string, src: string, position: { x: number, y: number } },
+  heroInventory: { [key: string]: { src: string, quantity: number } },
   heroAnims: Animations,
   heroHealthPoints: number,
   isHeroInArmor: boolean
@@ -60,9 +79,9 @@ export const level1 = {
   enemyAnims: ghoulAnims,
   enemyName: 'ghoul',
   infoForCreateEnemies: {
-    ghoul1: {name: 'ghoul1', size: 'big', scale: 1.5},
-    ghoul2: {name: 'ghoul2', size: 'big', scale: 1.5},
-    ghoul3: {name: 'ghoul3', size: 'big', scale: 1.5},
+    ghoul1: { name: 'ghoul1', size: 'big', scale: 1.5 },
+    ghoul2: { name: 'ghoul2', size: 'big', scale: 1.5 },
+    ghoul3: { name: 'ghoul3', size: 'big', scale: 1.5 },
   },
   enemyQuantity: 3,
   enemySpriteSheet: 'ghoul_01',
@@ -74,6 +93,24 @@ export const level1 = {
   map: 'currentMap',
   tiles: 'tiles-02',
   heroStartCoords: startPositionsForHeroMap1,
+  enemySounds: {
+    heroDamageFromEnemy: {
+      src: 'assets/sounds/heroSounds/heroDamageFromGhoul.wav',
+      volume: 1,
+    },
+    enemyPunch: {
+      src: 'assets/sounds/ghoulSounds/ghoulPunch.wav',
+      volume: 1,
+    },
+    enemyDamage: {
+      src: 'assets/sounds/ghoulSounds/ghoulDamage.wav',
+      volume: 1,
+    },
+    enemyDeath: {
+      src: 'assets/sounds/ghoulSounds/ghoulDeath.wav',
+      volume: 1,
+    }
+  },
   thingsInStorage: {
     armor: {
       src: inventory.armor.src,
@@ -103,9 +140,9 @@ export const level2 = {
   enemyAnims: scorpionAnims,
   enemyName: 'scorpion',
   infoForCreateEnemies: {
-    scorpion1: {name: 'scorpion1', size: 'big', scale: 1},
-    scorpion2: {name: 'scorpion2', size: 'small', scale: 0.75},
-    scorpion3: {name: 'scorpion3', size: 'small', scale: 0.75},
+    scorpion1: { name: 'scorpion1', size: 'big', scale: 1 },
+    scorpion2: { name: 'scorpion2', size: 'small', scale: 0.75 },
+    scorpion3: { name: 'scorpion3', size: 'small', scale: 0.75 },
   },
   enemyQuantity: 3,
   enemySpriteSheet: 'scorpion-02',
@@ -117,6 +154,24 @@ export const level2 = {
   map: 'map1',
   tiles: 'maptiles2-01-01',
   heroStartCoords: startPositionsForHeroMap2,
+  enemySounds: {
+    heroDamageFromEnemy: {
+      src: 'assets/sounds/heroSounds/heroDamageFromRadScorpion.wav',
+      volume: 1,
+    },
+    enemyPunch: {
+      src: 'assets/sounds/radScorpionSounds/radScorpionPunch.wav',
+      volume: 1,
+    },
+    enemyDamage: {
+      src: 'assets/sounds/radScorpionSounds/radScorpionDamage.wav',
+      volume: 1,
+    },
+    enemyDeath: {
+      src: 'assets/sounds/radScorpionSounds/radScorpionDeath.wav',
+      volume: 1,
+    }
+  },
   thingsInStorage: {
     healPowder: {
       src: inventory.healPowder.src,
@@ -142,9 +197,9 @@ export const level3 = {
   enemyAnims: deathClawAnims,
   enemyName: 'deathClaw',
   infoForCreateEnemies: {
-    deathClaw1: {name: 'deathClaw1', size: 'big', scale: 1},
-    deathClaw2: {name: 'deathClaw2', size: 'small', scale: 0.75},
-    deathClaw3: {name: 'deathClaw3', size: 'small', scale: 0.75},
+    deathClaw1: { name: 'deathClaw1', size: 'big', scale: 1 },
+    deathClaw2: { name: 'deathClaw2', size: 'small', scale: 0.75 },
+    deathClaw3: { name: 'deathClaw3', size: 'small', scale: 0.75 },
   },
   enemyQuantity: 2,
   enemySpriteSheet: 'deathclaw-spritesheet',
@@ -156,6 +211,24 @@ export const level3 = {
   map: 'map3',
   tiles: 'gas-spritesheet',
   heroStartCoords: startPositionsForHeroMap3,
+  enemySounds: {
+    heroDamageFromEnemy: {
+      src: 'assets/sounds/heroSounds/heroDamageFromDeathClaw.wav',
+      volume: 1,
+    },
+    enemyPunch: {
+      src: 'assets/sounds/deathClawSounds/deathClawPunch.wav',
+      volume: 1,
+    },
+    enemyDamage: {
+      src: 'assets/sounds/deathClawSounds/deathClawDamage.wav',
+      volume: 1,
+    },
+    enemyDeath: {
+      src: 'assets/sounds/deathClawSounds/deathClawDeath.wav',
+      volume: 1,
+    }
+  },
   thingsInStorage: {
     stimulant: {
       src: inventory.stimulant.src,
@@ -177,48 +250,47 @@ export const level3 = {
   isHeroInArmor: defaultIsHeroInArmor
 }
 
-export function saveHeroInventory(currentHeroInventoryState: thingsContainerItemsType){
-    for (const i in currentHeroInventoryState){
-      currentLevel.heroInventory[i] = currentHeroInventoryState[i];
-    }
-    console.log(currentLevel.heroInventory)
+export function saveHeroInventory(currentHeroInventoryState: thingsContainerItemsType) {
+  for (const i in currentHeroInventoryState) {
+    currentLevel.heroInventory[i] = currentHeroInventoryState[i];
   }
+}
 
-export function setCurrentLevel(level: level){
+export function setCurrentLevel(level: level) {
   currentLevel = level;
 }
 
-export function setCurrentDialogue(dialogue: DialogueKey){
+export function setCurrentDialogue(dialogue: DialogueKey) {
   currentDialogue = dialogue;
 }
 
-export function setCurrentMode(mode: string){
+export function setCurrentMode(mode: string) {
   currentMode = mode;
 }
 
-export function setNewLevelForGame(){
+export function setNewLevelForGame() {
   const currentLevelIndex = levels.indexOf(currentLevel);
   const currentDialogueIndex = dialogues.indexOf(currentDialogue);
   if(currentDialogueIndex === 2 && currentLevelIndex === 2){
-    return true; 
+    return true;
   }
   currentLevel = levels[currentLevelIndex + 1];
   currentDialogue = dialogues[currentDialogueIndex + 1];
 }
 
-export function setHeroHealthPoints(currentHealthPoints: number){
+export function setHeroHealthPoints(currentHealthPoints: number) {
   currentLevel.heroHealthPoints = currentHealthPoints;
 }
 
-export function setArmorState(isHeroInArmor: boolean){
+export function setArmorState(isHeroInArmor: boolean) {
   currentLevel.isHeroInArmor = isHeroInArmor;
 }
 
-export function setCurrentHeroAnims(currentHeroAnims: Animations){
+export function setCurrentHeroAnims(currentHeroAnims: Animations) {
   currentLevel.heroAnims = currentHeroAnims;
 }
 
-export function setDefaultValuesForHero(){
+export function setDefaultValuesForHero() {
   levels.forEach((level) => {
     level.heroInventory = defaultInventory;
     level.heroAnims = defaultHeroAnims;
