@@ -289,6 +289,7 @@ class Hero extends Entity {
   playDeathAnimation() {
     this.anims.play('death');
     this.deleteEntityFromEntitiesMap(this.id);
+    this.sounds.heroDeath.play();
   }
 
   addItemToInventory(itemName: string, item: { src: string; quantity: number }) {

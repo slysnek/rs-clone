@@ -121,6 +121,7 @@ class Game extends Phaser.Scene {
     this.load.audio('enemyDeath', currentLevel.enemySounds.enemyDeath.src);
     console.log(currentLevel.enemySounds.enemyDeath.src);
     // hero sounds
+    this.load.audio('heroDeath', 'assets/sounds/heroSounds/heroDeath.wav');
     this.load.audio('fistsAttack', 'assets/sounds/heroSounds/fistsAttack.wav');
     this.load.audio('pistolAttack', 'assets/sounds/heroSounds/pistolAttack.wav');
     // ui sounds
@@ -177,14 +178,23 @@ class Game extends Phaser.Scene {
 
   private _createSounds() {
     // hero gets damage
-    this.sounds.heroDamageFromEnemy = this.sound.add('heroDamageFromEnemy', { volume: 1 });
+    this.sounds.heroDamageFromEnemy = this.sound.add('heroDamageFromEnemy', {
+      volume: currentLevel.enemySounds.heroDamageFromEnemy.volume
+    });
     // enemy attack sound
-    this.sounds.enemyPunch = this.sound.add('enemyPunch', { volume: 1 });
+    this.sounds.enemyPunch = this.sound.add('enemyPunch', {
+      volume: currentLevel.enemySounds.enemyPunch.volume
+    });
     // enemy gets damage
-    this.sounds.enemyDamage = this.sound.add('enemyDamage', { volume: 1 });
+    this.sounds.enemyDamage = this.sound.add('enemyDamage', {
+      volume: currentLevel.enemySounds.enemyDamage.volume
+    });
     // enemy dies
-    this.sounds.enemyDeath = this.sound.add('enemyDeath', { volume: 1 });
+    this.sounds.enemyDeath = this.sound.add('enemyDeath', {
+      volume: currentLevel.enemySounds.enemyDeath.volume
+    });
     // hero sounds
+    this.sounds.heroDeath = this.sound.add('heroDeath', { volume: 1 });
     this.sounds.fists = this.sound.add('fistsAttack', { volume: 3 });
     this.sounds.pistol = this.sound.add('pistolAttack', { volume: 2 });
     // ui sounds
@@ -332,21 +342,21 @@ class Game extends Phaser.Scene {
             `positionChangeStarted:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
             `enter: (${enterTile.x}, ${enterTile.y})`;
 
-          if (this.hero.currentActionPoints) {
-            this.hero.makeStep();
-          }
           if (this.hero.currentActionPoints <= 0) {
             this.gridEngine.stopMovement(charId);
             this.refreshAllEnemiesActionPoints();
           }
+          if (this.hero.currentActionPoints) {
+            this.hero.makeStep();
+          }
         }
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
-          if (enemy.currentActionPoints) {
-            enemy.makeStep();
-          }
           if (enemy.currentActionPoints <= 0) {
             this.gridEngine.stopMovement(charId);
+          }
+          if (enemy.currentActionPoints) {
+            enemy.makeStep();
           }
           if (this.isAllEnemiesLostActionPoints()) {
             this.hero.refreshActionPoints();
@@ -385,8 +395,8 @@ class Game extends Phaser.Scene {
           if (!this.gridEngine.isMoving(charId) && enemy.currentActionPoints > 0 && enemy.fightMode) {
             if (this.isEnemyStaysNearHero(enemy)) {
               enemy.attackHero(this.hero);
-              this.hero.drawBattleTiles();
               this.hero.refreshActionPoints();
+              this.hero.drawBattleTiles();
             } else {
               this.moveEnemiesToHero(this.gridEngine.getPosition(this.hero.id));
             }
@@ -415,8 +425,8 @@ class Game extends Phaser.Scene {
         if (!this.gridEngine.isMoving(enemyKey) && enemyObj.currentActionPoints > 0 && enemyObj.fightMode) {
           if (this.isEnemyStaysNearHero(enemyObj)) {
             enemyObj.attackHero(this.hero);
-            this.hero.drawBattleTiles();
             this.hero.refreshActionPoints();
+            this.hero.drawBattleTiles();
           } else {
             this.gridEngine.moveTo(enemyKey, emptyTilesAroundHero[index]);
           }
@@ -429,10 +439,10 @@ class Game extends Phaser.Scene {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
         if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
           && !this.gridEngine.isMoving(enemyKey) && enemyObj.fightMode) {
-          enemyObj.attackHero(this.hero);
-          this.hero.drawBattleTiles();
           this.gridEngine.stopMovement(enemyKey);
+          enemyObj.attackHero(this.hero);
           this.hero.refreshActionPoints();
+          this.hero.drawBattleTiles();
         }
         enemyObj.clearTimer();
         enemyObj.currentActionPoints = 0;

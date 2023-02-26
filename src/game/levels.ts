@@ -27,10 +27,22 @@ export type level = {
   tiles: string,
   heroStartCoords: { x: number, y: number },
   enemySounds: {
-    heroDamageFromEnemy: { src: string; };
-    enemyPunch: { src: string; },
-    enemyDamage: { src: string; },
-    enemyDeath: { src: string; },
+    heroDamageFromEnemy: {
+      volume: number;
+      src: string;
+    };
+    enemyPunch: {
+      volume: number;
+      src: string;
+    },
+    enemyDamage: {
+      volume: number;
+      src: string;
+    },
+    enemyDeath: {
+      volume: number;
+      src: string;
+    },
   }
 }
 
