@@ -57,8 +57,8 @@ class Hero extends Entity {
     this.map = map;
     this.cursor = cursor;
     this.getEntitiesMap = getEntitiesMap;
-    this.mainWeapon = new Weapon('fists', './assets/weapons/fist.png', 5, 75, 85, 1);
-    this.secondaryWeapon = new Weapon('pistol', './assets/weapons/pistol-03.png', 12, 65, 80, 3);
+    this.mainWeapon = new Weapon('fists', './assets/weapons/fist.png', damageFromHero.fists, 75, 85, 1);
+    this.secondaryWeapon = new Weapon('pistol', './assets/weapons/pistol-03.png', damageFromHero.pistol, 65, 80, 3);
     this.currentWeapon = this.mainWeapon;
     this.id = 'hero';
     this.deleteEntityFromEntitiesMap = deleteEntityFromEntitiesMap;
