@@ -33,6 +33,7 @@ const womanInArmorGifSrc = 'assets/ui-elements/gifs/in-armor.gif'
 export default class UI {
   scene: Phaser.Scene;
   inventoryPanel: HTMLElement | null;
+  deathPanel: HTMLImageElement | null;
   exchangePanel: HTMLElement | null;
   heroThingsBlock: HTMLElement | null;
   inventoryContainerThingsBlock: HTMLElement | null;
@@ -63,6 +64,8 @@ export default class UI {
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
   restoredActionPoints: () => boolean;
   throwAwayPistol: () => void
+  loadMenuButton: HTMLButtonElement | null;
+
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number, description: string }) => void,
@@ -87,6 +90,7 @@ export default class UI {
     this.takeOffArmor = takeOffArmor;
     this.changeArmorAnimations = changeArmorAnimations;
     this.inventoryPanel = null;
+    this.deathPanel = null;
     this.exchangePanel = null;
     this.heroThingsBlock = null;
     this.inventoryContainerThingsBlock = null;
@@ -103,6 +107,7 @@ export default class UI {
     this.inventoryGif = null;
     this.exchangeGif = null;
     this.nextLevelButton = null;
+    this.loadMenuButton = null;
     this.pistolImg = null;
     this.storageItemsImageSrc = currentLevel.storage.src;
     this.getHeroHealthPoints = getHeroHealthPoints;
@@ -118,6 +123,7 @@ export default class UI {
 
   findElementsForInventoryLogic() {
     this.inventoryPanel = document.querySelector('.inventory-panel') as HTMLElement;
+    this.deathPanel = document.querySelector('.death-panel') as HTMLImageElement;
     this.exchangePanel = document.querySelector('.exchange-items-panel') as HTMLElement;
     this.heroThingsBlock = document.querySelector('.hero-things') as HTMLElement;
     this.inventoryContainerThingsBlock = document.querySelector('.inventory-container-things') as HTMLElement;
@@ -130,6 +136,7 @@ export default class UI {
     this.inventoryGif = document.querySelector('.inventory-gif') as HTMLImageElement;
     this.exchangeGif = document.querySelector('.exchange-gif') as HTMLImageElement;
     this.nextLevelButton = document.querySelector('.next-level-button') as HTMLButtonElement;
+    this.loadMenuButton = document.querySelector('.load-menu-button') as HTMLButtonElement;
     this.pistolImg = document.querySelector('.pistol-img') as HTMLImageElement;
     this.description = document.querySelector('.description') as HTMLElement;
   }
@@ -145,6 +152,8 @@ export default class UI {
     (this.exchangePanel as HTMLElement).style.left = `${left}px`;
     (this.inventoryPanel as HTMLElement).style.top = `${top}px`;
     (this.inventoryPanel as HTMLElement).style.left = `${left}px`;
+    (this.deathPanel as HTMLElement).style.top = `${top}px`;
+    (this.deathPanel as HTMLElement).style.left = `${left}px`;
     const storageItemsImageContainer = document.querySelector('.storage-img-container');
     const storageItemsImage = document.createElement('img');
     storageItemsImage.src = this.storageItemsImageSrc;
@@ -182,6 +191,18 @@ export default class UI {
           new Phaser.Game(dialogueConfig);
         }
       }
+    })
+  }
+
+  makeDeathPanelAvailable() {
+    this.deathPanel?.classList.remove('hide');
+  }
+
+  setDeathPanelListener() {
+    this.loadMenuButton?.addEventListener('click', () => {
+      this.scene.sys.plugins.removeScenePlugin('gridEngine');
+      this.scene.sys.game.destroy(true);
+      appView.showMenu();
     })
   }
 

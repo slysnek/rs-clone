@@ -182,6 +182,28 @@ class Hero extends Entity {
 
     }, this);
   }
+  
+  moveHeroByArrows() {
+    if (this.fightMode) {
+      if (this.currentActionPoints > 0 && this.isAllEnemiesIdle()) {
+        this._moveOnArrows();
+      }
+    } else {
+      this._moveOnArrows();
+    }
+  }
+
+  private _moveOnArrows() {
+    if (this.cursor.left.isDown) {
+      this.gridEngine.move("hero", Direction.UP_LEFT);
+    } else if (this.cursor.right.isDown) {
+      this.gridEngine.move("hero", Direction.DOWN_RIGHT);
+    } else if (this.cursor.up.isDown) {
+      this.gridEngine.move("hero", Direction.UP_RIGHT);
+    } else if (this.cursor.down.isDown) {
+      this.gridEngine.move("hero", Direction.DOWN_LEFT);
+    }
+  }
 
   changeWeapon() {
     if (this.currentWeapon.name === this.mainWeapon.name) this.currentWeapon = this.secondaryWeapon;
@@ -311,7 +333,7 @@ class Hero extends Entity {
         this.isAllEnemiesDead();
       } else {
         this.sounds.misfire.play();
-        this.ui.putMessageToConsole('You don`t have enough ammo');
+        this.ui.putMessageToConsole(`Your ${this.currentWeapon.name} is out of ammo`);
       }
     }
   }
@@ -387,18 +409,6 @@ class Hero extends Entity {
       this.updateActionPoints(lostPoints);
       this.ui.updateAP(this);
       this.isAllEnemiesDead();
-    }
-  }
-
-  moveHeroByArrows() {
-    if (this.cursor.left.isDown) {
-      this.gridEngine.move("hero", Direction.UP_LEFT);
-    } else if (this.cursor.right.isDown) {
-      this.gridEngine.move("hero", Direction.DOWN_RIGHT);
-    } else if (this.cursor.up.isDown) {
-      this.gridEngine.move("hero", Direction.UP_RIGHT);
-    } else if (this.cursor.down.isDown) {
-      this.gridEngine.move("hero", Direction.DOWN_LEFT);
     }
   }
 
