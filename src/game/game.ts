@@ -330,19 +330,10 @@ class Game extends Phaser.Scene {
       entity.setFrame(entity.getStopFrame(direction, charId));
     });
 
-    const positionChangeText = this.add.text(this.hero.x, this.hero.y - 50, "");
-    positionChangeText.depth = 100;
-    const positionChangeFinishedText = this.add.text(this.hero.x, this.hero.y, "");
-    positionChangeFinishedText.depth = 100;
-
     this.gridEngine
       .positionChangeStarted()
-      .subscribe(({ charId, exitTile, enterTile }) => {
+      .subscribe(({ charId }) => {
         if (charId.match(/^hero/i)) {
-          positionChangeText.text =
-            `positionChangeStarted:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
-            `enter: (${enterTile.x}, ${enterTile.y})`;
-
           if (this.hero.currentActionPoints) {
             this.hero.makeStep();
           }
@@ -374,17 +365,8 @@ class Game extends Phaser.Scene {
 
     this.gridEngine
       .positionChangeFinished()
-      .subscribe(({ charId, exitTile, enterTile }) => {
+      .subscribe(({ charId, enterTile }) => {
         if (charId.match(/^hero/i)) {
-          positionChangeText.setX(this.hero.x);
-          positionChangeText.setY(this.hero.y - 50);
-          positionChangeFinishedText.setX(this.hero.x);
-          positionChangeFinishedText.setY(this.hero.y);
-
-          positionChangeFinishedText.text =
-            `positionChangeFinished:\n exit: (${exitTile.x}, ${exitTile.y})\n` +
-            `enter: (${enterTile.x}, ${enterTile.y})`;
-
           if (this.isHeroSteppedOnEnemyRadius() || this.hero.fightMode) {
             this.enableFightMode();
             this.moveEnemiesToHero(enterTile);
