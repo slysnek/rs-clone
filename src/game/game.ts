@@ -131,7 +131,10 @@ class Game extends Phaser.Scene {
     this.load.audio('itemMove', 'assets/sounds/uiSounds/itemMove.wav');
     this.load.audio('openChest', 'assets/sounds/uiSounds/openChest.wav');
     this.load.audio('stimpak', 'assets/sounds/uiSounds/stimpak.wav');
+    this.load.audio('healPowder', 'assets/sounds/uiSounds/healPowder.wav');
     this.load.audio('beer', 'assets/sounds/uiSounds/beer.wav');
+    this.load.audio('dice', 'assets/sounds/uiSounds/DICE.wav');
+    this.load.audio('elvis', 'assets/sounds/uiSounds/Elvis_Presley_-_Comon_Comon.mp3');
   }
 
   create() {
@@ -141,22 +144,22 @@ class Game extends Phaser.Scene {
     // this.tintTiles(map);
     this._createSounds();
     this.createHero(map);
-    this.ui = new UI(
-      this,
-      this.hero.addItemToInventory,
-      this.hero.inventory,
-      this.hero.deleteItemFromInventory,
-      this.hero.putOnArmor,
-      this.hero.takeOffArmor,
-      this.hero.changeArmorAnimations,
-      this.hero.getHeroHealthPoints,
-      this.hero.getHeroArmorState,
-      this.hero.getHeroAnims,
-      this.hero.addArmorHealthPoints,
-      this.hero.deleteArmorHealthPoints,
-      this.hero.addHealthPointsFromHeals,
-      this.sounds
-    );
+    this.ui = new UI(this,
+    this.hero.addItemToInventory,
+    this.hero.inventory,
+    this.hero.deleteItemFromInventory,
+    this.hero.putOnArmor,
+    this.hero.takeOffArmor,
+    this.hero.changeArmorAnimations,
+    this.hero.getHeroHealthPoints,
+    this.hero.getHeroArmorState,
+    this.hero.getHeroAnims,
+    this.hero.addArmorHealthPoints,
+    this.hero.deleteArmorHealthPoints,
+    this.hero.addHealthPointsFromHeals,
+    this.sounds,
+    this.hero.restoredActionPoints,
+    this.hero.throwAwayPistol);
 
     this.hero.setUiProperty(this.ui);
 
@@ -216,9 +219,12 @@ class Game extends Phaser.Scene {
     this.sounds.buttonClick = this.sound.add('buttonClick', { volume: 2 });
     this.sounds.itemMove = this.sound.add('itemMove', { volume: 2 });
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });
-    this.sounds.stimpak = this.sound.add('stimpak', { volume: 0.75 });
+    this.sounds.stimulant = this.sound.add('stimpak', { volume: 0.75 });
+    this.sounds.healPowder = this.sound.add('healPowder', { volume: 0.75 });
     this.sounds.beer = this.sound.add('beer', { volume: 4 });
-    this.sounds.misfire = this.sound.add('misfire', { volume: 2 });
+    this.sounds.misfire = this.sound.add('misfire', {volume: 2});
+    this.sounds.dice = this.sound.add('dice', {volume: 2});
+    this.sounds.elvis = this.sound.add('elvis', {volume: 1});
   }
 
   private _createUI() {
@@ -595,9 +601,9 @@ class Game extends Phaser.Scene {
       const inventoryContainerPosition = this.gridEngine.getPosition(currentLevel.storage.key);
       const isXPositionRight = ((inventoryContainerPosition.x - 1) <= heroPosition.x && (inventoryContainerPosition.x + 1) >= heroPosition.x);
       const iYPositionRight = ((inventoryContainerPosition.y - 1) <= heroPosition.y && (inventoryContainerPosition.y + 1) >= heroPosition.y);
-      this.sounds.openChest.play();
       if (iYPositionRight && isXPositionRight) {
         this.ui.showExchangePanel();
+        this.sounds.openChest.play();
       }
     }, this);
   }

@@ -77,10 +77,30 @@ class Hero extends Entity {
     this.addArmorHealthPoints = this.addArmorHealthPoints.bind(this);
     this.deleteArmorHealthPoints = this.deleteArmorHealthPoints.bind(this);
     this.addHealthPointsFromHeals = this.addHealthPointsFromHeals.bind(this);
+    this.restoredActionPoints = this.restoredActionPoints.bind(this);
+    this.throwAwayPistol = this.throwAwayPistol.bind(this);
     this.isHeroInArmor = currentLevel.isHeroInArmor;
   }
 
-  isPistolInInventory() {
+  restoredActionPoints(){
+    if(this.fightMode && this.currentActionPoints > 0 && this.isAllEnemiesIdle()){
+      this.refreshActionPoints();
+      this.ui.updateAP(this);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  throwAwayPistol(){
+    if(this.currentWeapon === this.secondaryWeapon){
+      this.changeWeapon();
+      this.ui.updateWeapon(this);
+      this.ui.putMessageToConsole(`Your current weapon: ${this.currentWeapon.name}`);
+    }
+  }
+
+  isPistolInInventory(){
     // eslint-disable-next-line no-prototype-builtins
     return this.inventory.hasOwnProperty('pistol');
   }
@@ -398,8 +418,8 @@ class Hero extends Entity {
     this.sounds.heroDeath.play();
   }
 
-  addItemToInventory(itemName: string, item: { src: string; quantity: number }) {
-    if (this.inventory[itemName]) {
+  addItemToInventory(itemName: string, item: { src: string; quantity: number; description: string }) {
+    if(this.inventory[itemName]){
       this.inventory[itemName].quantity = this.inventory[itemName].quantity + item.quantity;
     } else {
       this.inventory[itemName] = item;

@@ -14,18 +14,20 @@ import {
   startPositionsForHeroMap3
 } from "./constants";
 import { DialogueKey } from './dialogue';
-import inventory from "./inventory";
+import { inventoryInfo, thingsForRandom } from "./inventory";
 import { Animations, thingsContainerItemsType } from './types';
 import { damageFromGhoul, damageFromScorpion, damageFromDeathClaw, ghoulHealthPoints, scorpionHealthPoints, deathClawHealthPoints } from './battlePoints';
 
 const defaultInventory = {
   pistol: {
-    src: inventory.pistol.src,
-    quantity: 1
+    src: inventoryInfo.pistol.src,
+    quantity: 1,
+    description: 'Ordinary pistol.',
   },
   bullets: {
-    src: inventory.bullets.src,
-    quantity: 3
+    src: inventoryInfo.bullets.src,
+    quantity: 3,
+    description: 'Bullets for your pistol. If you haven`t enough bullets you cannot shoot.',
   },
 }
 
@@ -67,9 +69,9 @@ export type level = {
       src: string;
     },
   },
-  thingsInStorage: { [key: string]: { src: string, quantity: number } },
+  thingsInStorage: { [key: string]: { src: string, quantity: number, description: string } },
   storage: { key: string, src: string, position: { x: number, y: number } },
-  heroInventory: { [key: string]: { src: string, quantity: number } },
+  heroInventory: { [key: string]: { src: string, quantity: number, description: string } },
   heroAnims: Animations,
   heroHealthPoints: number,
   isHeroInArmor: boolean
@@ -111,20 +113,7 @@ export const level1 = {
       volume: 1,
     }
   },
-  thingsInStorage: {
-    armor: {
-      src: inventory.armor.src,
-      quantity: 1
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 3
-    },
-    beer: {
-      src: inventory.beer.src,
-      quantity: 2
-    },
-  },
+  thingsInStorage: {},
   storage: {
     key: 'barrel',
     src: 'assets/maps/barrel.png',
@@ -172,16 +161,7 @@ export const level2 = {
       volume: 1,
     }
   },
-  thingsInStorage: {
-    healPowder: {
-      src: inventory.healPowder.src,
-      quantity: 1
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 4
-    },
-  },
+  thingsInStorage: {},
   storage: {
     key: 'fridge',
     src: 'assets/maps/fridge.png',
@@ -229,16 +209,7 @@ export const level3 = {
       volume: 1,
     }
   },
-  thingsInStorage: {
-    stimulant: {
-      src: inventory.stimulant.src,
-      quantity: 1
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 4
-    },
-  },
+  thingsInStorage: {},
   storage: {
     key: 'wash-machine',
     src: 'assets/maps/wash-machine.png',
@@ -297,6 +268,61 @@ export function setDefaultValuesForHero() {
     level.heroHealthPoints = defaultHeroHealthPoints;
     level.isHeroInArmor = defaultIsHeroInArmor;
   })
+}
+
+export function setRandomThingsForStorage(){
+  const thingsQuantity = Math.ceil((Math.random() * 10) / 3);
+  for(let i = thingsQuantity; i > 0; i--){
+    let randomIndex = Math.floor(Math.random() * 10);
+    if(randomIndex === 9){
+      randomIndex = 8;
+    }
+    const thingsKey = thingsForRandom[randomIndex];
+    currentLevel.thingsInStorage[thingsKey] = inventoryInfo[thingsKey];
+  }
+}
+
+export function clearStorages(){
+  levels.forEach((level) => {
+    level.thingsInStorage = {};
+  })
+}
+
+export function setThingsInStorage(){
+  level1.thingsInStorage = {
+    armor: {
+      src: inventoryInfo.armor.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventoryInfo.bullets.src,
+      quantity: 3
+    },
+    beer: {
+      src: inventoryInfo.beer.src,
+      quantity: 2
+    },
+  };
+  level2.thingsInStorage = {
+    healPowder: {
+      src: inventoryInfo.healPowder.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventoryInfo.bullets.src,
+      quantity: 4
+    },
+  };
+  level3.thingsInStorage = {
+    stimulant: {
+      src: inventoryInfo.stimulant.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventoryInfo.bullets.src,
+      quantity: 4
+    },
+  };
 }
 
 const levels: level[] = [level1, level2, level3];

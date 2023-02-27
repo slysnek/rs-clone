@@ -11,6 +11,9 @@ import {
   setCurrentMode,
   levelMode,
   gameMode,
+  setRandomThingsForStorage,
+  setDefaultValuesForHero,
+  setThingsInStorage
 } from '../game/levels';
 import dialogueConfig from '../game/dialogue-config';
 import { footer } from '../assets/components/footer';
@@ -87,6 +90,8 @@ class AppView {
     });
     this.newGameButton.addEventListener('click', () => {
       this.hideMenu();
+      setDefaultValuesForHero();
+      setThingsInStorage();
       setCurrentLevel(level1);
       setCurrentDialogue('dialogue-1');
       setCurrentMode(gameMode);
@@ -109,8 +114,10 @@ class AppView {
   }
 
   setLevelButtonsListener(currentLevel: level) {
-    this.hideMenu();
     setCurrentLevel(currentLevel);
+    setDefaultValuesForHero();
+    setRandomThingsForStorage();
+    this.hideMenu();
     setCurrentMode(levelMode);
     this.game = new Phaser.Game(config);
   }
