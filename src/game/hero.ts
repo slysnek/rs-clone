@@ -80,26 +80,26 @@ class Hero extends Entity {
     this.isHeroInArmor = currentLevel.isHeroInArmor;
   }
 
-  isPistolInInventory(){
+  isPistolInInventory() {
     // eslint-disable-next-line no-prototype-builtins
     return this.inventory.hasOwnProperty('pistol');
   }
 
-  isItEnoughBullets(){
-     // eslint-disable-next-line no-prototype-builtins
-    if(this.inventory.hasOwnProperty('bullets')){
+  isItEnoughBullets() {
+    // eslint-disable-next-line no-prototype-builtins
+    if (this.inventory.hasOwnProperty('bullets')) {
       return this.inventory.bullets.quantity > 0;
     }
   }
 
-  deleteBulletFromInventory(){
+  deleteBulletFromInventory() {
     this.inventory.bullets.quantity -= 1;
-    if(this.inventory.bullets.quantity === 0){
+    if (this.inventory.bullets.quantity === 0) {
       this.deleteItemFromInventory('bullets');
     }
   }
 
-  isPistolAttackAvailable(){
+  isPistolAttackAvailable() {
     return this.isPistolInInventory() && this.isItEnoughBullets();
   }
 
@@ -107,23 +107,26 @@ class Hero extends Entity {
     this.ui = ui;
   }
 
-  addHealthPointsFromHeals(healthPointsFromHeal: number){
+  addHealthPointsFromHeals(healthPointsFromHeal: number) {
     this.healthPoints += healthPointsFromHeal;
     this.ui.updateHP(this);
   }
 
-  addArmorHealthPoints(){
+  addArmorHealthPoints() {
     this.healthPoints += armorHealthPoints;
     this.ui.updateHP;
   }
 
-  deleteArmorHealthPoints(){
+  deleteArmorHealthPoints() {
     this.healthPoints -= armorHealthPoints;
   }
 
   setPointerDownListener(map: Tilemaps.Tilemap) {
     // Moving on mouse click
     this.scene.input.on('pointerdown', () => {
+      if (this.healthPoints <= 0) {
+        return;
+      }
       // Converting world coords into tile coords
       const gridMouseCoords = map.worldToTileXY(this.scene.input.activePointer.worldX, this.scene.input.activePointer.worldY);
       gridMouseCoords.x = Math.round(gridMouseCoords.x) - 1;
@@ -227,7 +230,7 @@ class Hero extends Entity {
     this.behavior === 'walk' ? this.anims.play(`hidePistol_${currentDirection}`) : this.anims.play(`getPistol_${currentDirection}`);
   }
 
-  changeArmorAnimations(currentAnims: Animations){
+  changeArmorAnimations(currentAnims: Animations) {
     this.currentAnims = currentAnims;
     this.removeAllAnims();
     this.setFramesForEntityAnimations(this, 'hero', currentAnims, 'walk');
@@ -238,7 +241,7 @@ class Hero extends Entity {
     this.setDeathAnimation(currentAnims);
   }
 
-  removeAllAnims(){
+  removeAllAnims() {
     this.anims.remove('up-right');
     this.anims.remove('down-right');
     this.anims.remove('down-left');
@@ -277,8 +280,8 @@ class Hero extends Entity {
     if (!HeroAnimationDirection) {
       return;
     } else {
-      if((this.currentWeapon.name === 'pistol' && this.isPistolAttackAvailable()) || this.currentWeapon.name === 'fists'){
-        if(this.currentWeapon.name === 'pistol'){
+      if ((this.currentWeapon.name === 'pistol' && this.isPistolAttackAvailable()) || this.currentWeapon.name === 'fists') {
+        if (this.currentWeapon.name === 'pistol') {
           this.deleteBulletFromInventory();
         }
         this._attackEnemyAnimation(enemy, HeroAnimationDirection);
@@ -386,7 +389,7 @@ class Hero extends Entity {
   }
 
   addItemToInventory(itemName: string, item: { src: string; quantity: number }) {
-    if(this.inventory[itemName]){
+    if (this.inventory[itemName]) {
       this.inventory[itemName].quantity = this.inventory[itemName].quantity + item.quantity;
     } else {
       this.inventory[itemName] = item;
@@ -404,11 +407,11 @@ class Hero extends Entity {
   takeOffArmor() {
     this.isHeroInArmor = false;
   }
-  getHeroHealthPoints(){
+  getHeroHealthPoints() {
     return this.healthPoints;
   }
 
-  getHeroArmorState(){
+  getHeroArmorState() {
     return this.isHeroInArmor;
   }
   drawBattleTiles() {
