@@ -142,22 +142,21 @@ class Game extends Phaser.Scene {
     // this.tintTiles(map);
     this._createSounds();
     this.createHero(map);
-    this.ui = new UI(
-      this,
-      this.hero.addItemToInventory,
-      this.hero.inventory,
-      this.hero.deleteItemFromInventory,
-      this.hero.putOnArmor,
-      this.hero.takeOffArmor,
-      this.hero.changeArmorAnimations,
-      this.hero.getHeroHealthPoints,
-      this.hero.getHeroArmorState,
-      this.hero.getHeroAnims,
-      this.hero.addArmorHealthPoints,
-      this.hero.deleteArmorHealthPoints,
-      this.hero.addHealthPointsFromHeals,
-      this.sounds
-    );
+    this.ui = new UI(this,
+    this.hero.addItemToInventory,
+    this.hero.inventory,
+    this.hero.deleteItemFromInventory,
+    this.hero.putOnArmor,
+    this.hero.takeOffArmor,
+    this.hero.changeArmorAnimations,
+    this.hero.getHeroHealthPoints,
+    this.hero.getHeroArmorState,
+    this.hero.getHeroAnims,
+    this.hero.addArmorHealthPoints,
+    this.hero.deleteArmorHealthPoints,
+    this.hero.addHealthPointsFromHeals,
+    this.sounds,
+    this.hero.restoredActionPoints);
 
     this.hero.setUiProperty(this.ui);
 

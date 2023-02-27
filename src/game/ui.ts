@@ -59,7 +59,8 @@ export default class UI {
   addArmorHealthPoints: () => void;
   deleteArmorHealthPoints: () => void;
   addHealthPointsFromHeals: (healthPointsFromHeal: number) => void;
-  sounds: { [soundName: string]: Phaser.Sound.BaseSound }
+  sounds: { [soundName: string]: Phaser.Sound.BaseSound };
+  restoredActionPoints: () => boolean
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number, description: string }) => void,
@@ -74,7 +75,8 @@ export default class UI {
     addArmorHealthPoints: () => void,
     deleteArmorHealthPoints: () => void,
     addHealthPointsFromHeals: (healthPointsFromHeal: number) => void,
-    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound },
+    restoredActionPoints: () => boolean) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
@@ -107,6 +109,7 @@ export default class UI {
     this.deleteArmorHealthPoints = deleteArmorHealthPoints;
     this.addHealthPointsFromHeals = addHealthPointsFromHeals;
     this.sounds = sounds;
+    this.restoredActionPoints = restoredActionPoints;
   }
 
   findElementsForInventoryLogic() {
@@ -332,6 +335,15 @@ export default class UI {
         this.changeArmorAnimations(heroAnimsInArmor);
       } else if (itemName === 'bullets') {
         this.sounds.itemMove.play();
+      } else if(itemName === 'dice'){
+        if(this.restoredActionPoints()){
+          this.heroInventory[itemName].quantity -= 1;
+          if(this.heroInventory[itemName].quantity === 0){
+            this.deleteItemFromInventory(itemName);
+          }
+          (this.inventoryThingContainer as HTMLElement).innerHTML = '';
+          this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
+        }
       } else if (itemName === 'beer' || itemName === 'healPowder' || itemName === 'stimulant') {
         this.sounds[itemName].play();
         this.addHealthPointsFromHeals(healsHealthPoints[itemName]);

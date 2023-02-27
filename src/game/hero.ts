@@ -77,10 +77,21 @@ class Hero extends Entity {
     this.addArmorHealthPoints = this.addArmorHealthPoints.bind(this);
     this.deleteArmorHealthPoints = this.deleteArmorHealthPoints.bind(this);
     this.addHealthPointsFromHeals = this.addHealthPointsFromHeals.bind(this);
+    this.restoredActionPoints = this.restoredActionPoints.bind(this);
     this.isHeroInArmor = currentLevel.isHeroInArmor;
   }
 
-  isPistolInInventory() {
+  restoredActionPoints(){
+    if(this.fightMode && this.currentActionPoints > 0 && this.isAllEnemiesIdle()){
+      this.refreshActionPoints();
+      this.ui.updateAP(this);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isPistolInInventory(){
     // eslint-disable-next-line no-prototype-builtins
     return this.inventory.hasOwnProperty('pistol');
   }
