@@ -233,7 +233,7 @@ class Game extends Phaser.Scene {
     this.ui.setCloseExchangePanelButtonListener();
     this.ui.setCloseInventoryPanelButtonListener();
     this.ui.setArmorContainerListener();
-    this.ui.setEndTurnListener(this.hero);
+    this.ui.setEndTurnListener(this.hero, this);
   }
 
   deleteEntityFromEntitiesMap(entityKey: string) {

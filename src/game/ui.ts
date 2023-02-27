@@ -197,10 +197,18 @@ export default class UI {
     }
   }
 
-  setEndTurnListener(hero: Hero) {
+  setEndTurnListener(hero: Hero, scene: Game) {
     const endTurnButton = document.querySelector('.end-turn') as HTMLElement;
     endTurnButton.addEventListener('click', () => {
-      console.log('hello,', hero.id);
+      if (hero.fightMode && hero.healthPoints > 0) {
+        hero.currentActionPoints = 0;
+        hero.gridEngine.stopMovement(hero.id);
+        scene.refreshAllEnemiesActionPoints();
+        scene.moveEnemiesToHero(hero.gridEngine.getPosition(hero.id));
+        
+        this.updateHP(hero);
+        this.sounds.buttonClick.play();
+      }
     })
   }
 
