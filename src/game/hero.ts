@@ -154,9 +154,6 @@ class Hero extends Entity {
 
       const clickedTile = map.getTileAt(gridMouseCoords.x, gridMouseCoords.y, false, 0);
 
-      // clickedTile.alpha = 0.85;
-      // clickedTile.tint = 0xff7a4a;
-
       // attack if fight mode and enough AP
       if (this.fightMode) {
         const entitiesMap = this.getEntitiesMap();
@@ -345,7 +342,6 @@ class Hero extends Entity {
   }
 
   private _dealDamageToEnemy(enemy: Enemy) {
-    // changing accuracy. Is enough to attack?
     if (this.currentWeapon.getRandomAccuracy >= randomIntFromInterval(0, 100)) {
       const damage = damageFromHero[this.currentWeapon.name];
       enemy.updateHealthPoints(damage);

@@ -279,7 +279,6 @@ export default class UI {
   }
 
   deleteLastMessage() {
-    //delete messages if > 20
     const allMessages = document.querySelectorAll('.console-message');
     if (allMessages.length > 20) {
       const lastMessage = allMessages[allMessages.length - 1];

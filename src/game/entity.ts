@@ -9,7 +9,6 @@ const defaultBehavior = 'walk';
 class Entity extends Phaser.GameObjects.Sprite {
   key: string;
   healthPoints: number;
-  // fightMode: boolean;
   _fightMode: boolean;
   currentActionPoints: number;
   totalActionPoints: number;

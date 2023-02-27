@@ -54,7 +54,6 @@ class Game extends Phaser.Scene {
   }
 
   private _preloadLoadBar() {
-    //loading screen
     const progressBar = this.add.graphics();
     const progressBox = this.add.graphics();
     progressBox.fillStyle(0x222222, 0.8);
@@ -110,21 +109,14 @@ class Game extends Phaser.Scene {
   }
 
   private _preloadSounds() {
-    // hero gets damage
     this.load.audio('heroDamageFromEnemy', currentLevel.enemySounds.heroDamageFromEnemy.src);
-    // enemy attack sound
     this.load.audio('enemyPunch', currentLevel.enemySounds.enemyPunch.src);
-    // enemy gets damage
     this.load.audio('enemyDamage', currentLevel.enemySounds.enemyDamage.src);
-    // enemy dies
     this.load.audio('enemyDeath', currentLevel.enemySounds.enemyDeath.src);
-    console.log(currentLevel.enemySounds.enemyDeath.src);
-    // hero sounds
     this.load.audio('heroDeath', 'assets/sounds/heroSounds/heroDeath.wav');
     this.load.audio('fistsAttack', 'assets/sounds/heroSounds/fistsAttack.wav');
     this.load.audio('pistolAttack', 'assets/sounds/heroSounds/pistolAttack.wav');
     this.load.audio('misfire', 'assets/sounds/heroSounds/misfire.mp3');
-    // ui sounds
     this.load.audio('changeWeapon', 'assets/sounds/uiSounds/changeWeapon.wav');
     this.load.audio('startFight', 'assets/sounds/uiSounds/startFight.wav');
     this.load.audio('buttonClick', 'assets/sounds/uiSounds/buttonClick1.wav');
@@ -140,7 +132,6 @@ class Game extends Phaser.Scene {
   create() {
     this.cursors = this.input.keyboard.createCursorKeys();
     const map = this.buildMap();
-    // this.tintTiles(map);
     this._createSounds();
     this.createHero(map);
     this.ui = new UI(this,
@@ -161,8 +152,6 @@ class Game extends Phaser.Scene {
       this.hero.throwAwayPistol);
 
     this.hero.setUiProperty(this.ui);
-
-    // hero anims
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', currentLevel.heroAnims, defaultBehavior);
     this.hero.setPunchAnimation(currentLevel.heroAnims);
     this.hero.setShootAnimation(currentLevel.heroAnims);
@@ -192,27 +181,21 @@ class Game extends Phaser.Scene {
   }
 
   private _createSounds() {
-    // hero gets damage
     this.sounds.heroDamageFromEnemy = this.sound.add('heroDamageFromEnemy', {
       volume: currentLevel.enemySounds.heroDamageFromEnemy.volume
     });
-    // enemy attack sound
     this.sounds.enemyPunch = this.sound.add('enemyPunch', {
       volume: currentLevel.enemySounds.enemyPunch.volume
     });
-    // enemy gets damage
     this.sounds.enemyDamage = this.sound.add('enemyDamage', {
       volume: currentLevel.enemySounds.enemyDamage.volume
     });
-    // enemy dies
     this.sounds.enemyDeath = this.sound.add('enemyDeath', {
       volume: currentLevel.enemySounds.enemyDeath.volume
     });
-    // hero sounds
     this.sounds.heroDeath = this.sound.add('heroDeath', { volume: 1 });
     this.sounds.fists = this.sound.add('fistsAttack', { volume: 3 });
     this.sounds.pistol = this.sound.add('pistolAttack', { volume: 2 });
-    // ui sounds
     this.sounds.changeWeapon = this.sound.add('changeWeapon', { volume: 2 });
     this.sounds.startFight = this.sound.add('startFight', { volume: 3 });
     this.sounds.buttonClick = this.sound.add('buttonClick', { volume: 2 });
@@ -263,8 +246,6 @@ class Game extends Phaser.Scene {
   buildMap() {
     const map = this.make.tilemap({ key: 'map' });
     const tilesets = map.addTilesetImage(`${currentLevel.tiles}`, 'tiles');
-
-    // Layers creation based on tilemap's layers
     for (let i = 0; i < map.layers.length; i++) {
       map.createLayer(i, tilesets, 0, 0);
     }
@@ -299,7 +280,7 @@ class Game extends Phaser.Scene {
           offsetX: 0,
           offsetY: 42,
           walkingAnimationEnabled: false,
-          speed: 7,
+          speed: 4.5,
         },
         {
           id: currentLevel.storage.key,
@@ -458,7 +439,6 @@ class Game extends Phaser.Scene {
       });
     }
     catch (e) {
-      // console.log('TypeError: Cannot read properties of undefined (reading x)');
       closestEnemiesAroundHero.forEach((enemyKey) => {
         const enemyObj = (this.entitiesMap.get(enemyKey) as Enemy);
         if (enemyObj.currentActionPoints > 0 && this.isEnemyStaysNearHero(enemyObj)
@@ -549,44 +529,6 @@ class Game extends Phaser.Scene {
       }
     });
     return true;
-  }
-
-  tintTile(tilemap: Phaser.Tilemaps.Tilemap, col: number, row: number, color: number) {
-    for (const element of tilemap.layers) {
-      element.tilemapLayer.layer.data[row][col].tint = color;
-    }
-  }
-
-  tintTiles(map: Tilemaps.Tilemap) {
-    this.tintTile(map, 30, 35, 0xff7a4a); // orange
-    this.tintTile(map, 35, 28, 0xffff0a); // yellow
-    this.tintTile(map, 35, 25, 0x4a4aff); // blue
-    this.tintTile(map, 15, 18, 0x4aff4a); // green
-    this.tintTile(map, 20, 28, 0xaf2462); // red
-    this.tintTile(map, 40, 48, 0xaf22ff); // magenta
-    this.tintTile(map, 0, 0, 0xaf2462); // red
-    this.tintTile(map, 48, 53, 0xaf2462); // red
-    // this.tintTile(map, currentLevel.enemyStartPositions.ghoul1.x, currentLevel.enemyStartPositions.ghoul1.y, 0xaf2462); // red (unreachable)
-    // this.tintTile(map, currentLevel.enemyStartPositions.ghoul2.x, currentLevel.enemyStartPositions.ghoul2.y, 0xaf2462);
-  }
-
-  tintRadius(tilemap: Tilemaps.Tilemap, posX: number, posY: number, radius: number, color: number) {
-    for (let x = 0; x <= radius; x++) {
-      for (let y = 0; y <= radius; y++) {
-        if (manhattanDist(posX, posY, posX + x, posY + y) <= radius) {
-          this.tintTile(tilemap, posX + x, posY + y, color);
-        }
-        if (manhattanDist(posX, posY, posX - x, posY + y) <= radius) {
-          this.tintTile(tilemap, posX - x, posY + y, color);
-        }
-        if (manhattanDist(posX, posY, posX + x, posY - y) <= radius) {
-          this.tintTile(tilemap, posX + x, posY - y, color);
-        }
-        if (manhattanDist(posX, posY, posX - x, posY - y) <= radius) {
-          this.tintTile(tilemap, posX - x, posY - y, color);
-        }
-      }
-    }
   }
 
   placeObject() {

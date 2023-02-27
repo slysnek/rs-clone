@@ -9,7 +9,6 @@ volumeInput.min = '0';
 volumeInput.max = '100';
 volumeInput.value = '30';
 volumeInput.step = '10';
-console.log(volumeInput.value);
 musicSetting.textContent = 'Music';
 audioWrapper.classList.add('audio-wrapper');
 playButton.classList.add('play');
