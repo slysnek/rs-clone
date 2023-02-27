@@ -1,5 +1,8 @@
 // import { Tilemaps } from "phaser";
-import { heroAnimsWithoutArmor, heroAnimsInArmor, windowSize } from "./constants";
+import { heroAnimsWithoutArmor,
+  heroAnimsInArmor,
+  windowSize,
+  healsHealthPoints } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
 import { Animations, thingsContainerItemsType } from './types';
@@ -17,17 +20,6 @@ import {
   setCurrentHeroAnims,
   setDefaultValuesForHero } from '../game/levels';
 import appView from "..";
-
-// const storageItems: thingsContainerItemsType = {
-//   armor: {
-//     src: '../assets/ui-elements/inventory/armor.png',
-//     quantity: 1
-//   },
-//   bullets: {
-//     src: '../assets/ui-elements/inventory/bullets.png',
-//     quantity: 10
-//   },
-// };
 
 const womanInVaultSuitGifSrc = 'assets/ui-elements/gifs/in-vault-suit.gif';
 const womanInArmorGifSrc = 'assets/ui-elements/gifs/in-armor.gif'
@@ -58,7 +50,8 @@ export default class UI {
   getHeroArmorState: () => boolean;
   getHeroAnims: () => Animations;
   addArmorHealthPoints: () => void;
-  deleteArmorHealthPoints: () => void
+  deleteArmorHealthPoints: () => void;
+  addHealthPointsFromHeals: (healthPointsFromHeal: number) => void
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -71,7 +64,8 @@ export default class UI {
     getHeroArmorState: () => boolean,
     getHeroAnims: () => Animations,
     addArmorHealthPoints: () => void,
-    deleteArmorHealthPoints: () => void) {
+    deleteArmorHealthPoints: () => void,
+    addHealthPointsFromHeals: (healthPointsFromHeal: number) => void) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
@@ -100,6 +94,7 @@ export default class UI {
     this.getHeroAnims = getHeroAnims;
     this.addArmorHealthPoints = addArmorHealthPoints;
     this.deleteArmorHealthPoints = deleteArmorHealthPoints;
+    this.addHealthPointsFromHeals = addHealthPointsFromHeals;
   }
 
   findElementsForInventoryLogic() {
@@ -305,13 +300,16 @@ export default class UI {
         this.changeArmorAnimations(heroAnimsInArmor);
       } else if (itemName === 'bullets') {
         console.log(itemName);
-      } else if (itemName === 'cookie') {
-        console.log(itemName);
-      } else if (itemName === 'healPowder') {
-        console.log(itemName);
-      } else if (itemName === 'stimulant') {
-        console.log(itemName);
-      }
+      } else if (itemName === 'beer' || itemName === 'healPowder' || itemName === 'stimulant') {
+        this.addHealthPointsFromHeals(healsHealthPoints[itemName]);
+        this.updateHP;
+        this.heroInventory[itemName].quantity -= 1;
+        if(this.heroInventory[itemName].quantity === 0){
+          this.deleteItemFromInventory(itemName);
+        }
+        (this.inventoryThingContainer as HTMLElement).innerHTML = '';
+        this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
+      } 
     })
   }
 

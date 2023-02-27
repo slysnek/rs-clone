@@ -76,11 +76,16 @@ class Hero extends Entity {
     this.getHeroAnims = this.getHeroAnims.bind(this);
     this.addArmorHealthPoints = this.addArmorHealthPoints.bind(this);
     this.deleteArmorHealthPoints = this.deleteArmorHealthPoints.bind(this);
+    this.addHealthPointsFromHeals = this.addHealthPointsFromHeals.bind(this);
     this.isHeroInArmor = currentLevel.isHeroInArmor;
   }
 
   setUiProperty(ui: UI) {
     this.ui = ui;
+  }
+
+  addHealthPointsFromHeals(healthPointsFromHeal: number){
+    this.healthPoints += healthPointsFromHeal
   }
 
   addArmorHealthPoints(){

@@ -120,8 +120,8 @@ export const level1 = {
       src: inventory.bullets.src,
       quantity: 3
     },
-    cookie: {
-      src: inventory.cookie.src,
+    beer: {
+      src: inventory.beer.src,
       quantity: 2
     },
   },

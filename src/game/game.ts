@@ -151,7 +151,8 @@ class Game extends Phaser.Scene {
     this.hero.getHeroArmorState,
     this.hero.getHeroAnims,
     this.hero.addArmorHealthPoints,
-    this.hero.deleteArmorHealthPoints);
+    this.hero.deleteArmorHealthPoints,
+    this.hero.addHealthPointsFromHeals);
 
     this.hero.setUiProperty(this.ui);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', currentLevel.heroAnims, defaultBehavior);

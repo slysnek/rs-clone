@@ -7,8 +7,8 @@ const inventory = {
     src: '../assets/ui-elements/inventory/bullets.png',
     quantity: 10
   },
-  cookie: {
-    src: '../assets/ui-elements/inventory/cookie.png',
+  beer: {
+    src: '../assets/ui-elements/inventory/beer.png',
     quantity: 10
   },
   healPowder: {
