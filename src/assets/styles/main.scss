@@ -101,11 +101,12 @@ body {
 }
 
 .github-photo-0 {
-  width: 65px;
+  width: 75px;
   height: 100%;
   background-image: url('../img/footer-img/git-pic-1.png');
   background-repeat: no-repeat;
   background-position: center;
+  background-size: contain;
 }
 
 .github-photo-1 {
