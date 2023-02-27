@@ -273,7 +273,10 @@ export function setDefaultValuesForHero() {
 export function setRandomThingsForStorage(){
   const thingsQuantity = Math.ceil((Math.random() * 10) / 3);
   for(let i = thingsQuantity; i > 0; i--){
-    const randomIndex = Math.floor(Math.random() * 10);
+    let randomIndex = Math.floor(Math.random() * 10);
+    if(randomIndex === 9){
+      randomIndex = 8;
+    }
     const thingsKey = thingsForRandom[randomIndex];
     currentLevel.thingsInStorage[thingsKey] = inventoryInfo[thingsKey];
   }
