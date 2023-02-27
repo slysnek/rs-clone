@@ -738,7 +738,7 @@ export const colors: { [key: string]: number } = {
 }
 
 export const healsHealthPoints: { [key: string]: number } = {
-  beer: 2,
+  beer: 3,
   healPowder: 7,
   stimulant: 15 
 }

@@ -64,6 +64,7 @@ export type StopAnimations = {
 export type thingsContainerItemsType = {
   [item: string]: {
     src: string;
-    quantity: number
+    quantity: number,
+    description: string
   }
 }

@@ -291,7 +291,7 @@ class Hero extends Entity {
         this.isAllEnemiesDead();
       } else {
         this.sounds.misfire.play();
-        this.ui.putMessageToConsole('You haven`t enough bullets');
+        this.ui.putMessageToConsole('You don`t enough ammo');
       }
     }
   }
@@ -388,8 +388,8 @@ class Hero extends Entity {
     this.sounds.heroDeath.play();
   }
 
-  addItemToInventory(itemName: string, item: { src: string; quantity: number }) {
-    if (this.inventory[itemName]) {
+  addItemToInventory(itemName: string, item: { src: string; quantity: number; description: string }) {
+    if(this.inventory[itemName]){
       this.inventory[itemName].quantity = this.inventory[itemName].quantity + item.quantity;
     } else {
       this.inventory[itemName] = item;

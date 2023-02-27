@@ -38,7 +38,7 @@ export default class UI {
   takeAllButton: HTMLElement | null;
   closeExchangePanelButton: HTMLElement | null;
   closeInventoryPanelButton: HTMLElement | null;
-  addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void;
+  addItemToInventory: (itemName: string, item: { src: string; quantity: number, description: string }) => void;
   heroInventory: thingsContainerItemsType;
   deleteItemFromInventory: (itemName: string) => void;
   inventoryThingContainer: HTMLElement | null;
@@ -50,6 +50,7 @@ export default class UI {
   exchangeGif: HTMLImageElement | null;
   nextLevelButton: HTMLButtonElement | null;
   pistolImg: HTMLImageElement | null;
+  description: HTMLElement | null;
   storageItemsImageSrc: string;
   changeArmorAnimations: (currentAnims: Animations) => void;
   getHeroHealthPoints: () => number;
@@ -61,7 +62,7 @@ export default class UI {
   sounds: { [soundName: string]: Phaser.Sound.BaseSound }
 
   constructor(scene: Phaser.Scene,
-    addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
+    addItemToInventory: (itemName: string, item: { src: string; quantity: number, description: string }) => void,
     heroInventory: thingsContainerItemsType,
     deleteItemFromInventory: (itemName: string) => void,
     putOnArmor: () => void,
@@ -89,6 +90,7 @@ export default class UI {
     this.closeInventoryPanelButton = null;
     this.deleteItemFromInventory = deleteItemFromInventory;
     this.inventoryThingContainer = null;
+    this.description = null;
     this.addListenerToThingContainerInExchangePanel = this.addListenerToThingContainerInExchangePanel.bind(this);
     this.addListenerToThingContainerInInventory = this.addListenerToThingContainerInInventory.bind(this);
     this.armorFieldContainer = null;
@@ -122,6 +124,7 @@ export default class UI {
     this.exchangeGif = document.querySelector('.exchange-gif') as HTMLImageElement;
     this.nextLevelButton = document.querySelector('.next-level-button') as HTMLButtonElement;
     this.pistolImg = document.querySelector('.pistol-img') as HTMLImageElement;
+    this.description = document.querySelector('.description') as HTMLElement;
   }
 
   createUI(scene: Game) {
@@ -277,7 +280,7 @@ export default class UI {
     }
   }
 
-  addItemsToStorage(itemName: string, item: { src: string; quantity: number }) {
+  addItemsToStorage(itemName: string, item: { src: string; quantity: number, description: string }) {
     currentLevel.thingsInStorage[itemName] = item;
   }
 
@@ -315,6 +318,7 @@ export default class UI {
 
   addListenerToThingContainerInInventory(thingContainer: HTMLElement, itemName: string) {
     thingContainer.addEventListener('click', () => {
+      (this.description as HTMLElement).innerText = inventoryInfo[itemName].description;
       if (itemName === 'armor') {
         this.sounds.itemMove.play();
         const thingContainerParent = thingContainer.parentElement;

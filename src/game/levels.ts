@@ -21,11 +21,13 @@ import { damageFromGhoul, damageFromScorpion, damageFromDeathClaw, ghoulHealthPo
 const defaultInventory = {
   pistol: {
     src: inventoryInfo.pistol.src,
-    quantity: 1
+    quantity: 1,
+    description: 'Ordinary pistol.',
   },
   bullets: {
     src: inventoryInfo.bullets.src,
-    quantity: 3
+    quantity: 3,
+    description: 'Bullets for your pistol. If you haven`t enough bullets you cannot shoot.',
   },
 }
 
@@ -67,9 +69,9 @@ export type level = {
       src: string;
     },
   },
-  thingsInStorage: { [key: string]: { src: string, quantity: number } },
+  thingsInStorage: { [key: string]: { src: string, quantity: number, description: string } },
   storage: { key: string, src: string, position: { x: number, y: number } },
-  heroInventory: { [key: string]: { src: string, quantity: number } },
+  heroInventory: { [key: string]: { src: string, quantity: number, description: string } },
   heroAnims: Animations,
   heroHealthPoints: number,
   isHeroInArmor: boolean
