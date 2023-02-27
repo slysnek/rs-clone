@@ -131,6 +131,7 @@ class Game extends Phaser.Scene {
     this.load.audio('itemMove', 'assets/sounds/uiSounds/itemMove.wav');
     this.load.audio('openChest', 'assets/sounds/uiSounds/openChest.wav');
     this.load.audio('stimpak', 'assets/sounds/uiSounds/stimpak.wav');
+    this.load.audio('healPowder', 'assets/sounds/uiSounds/healPowder.wav');
     this.load.audio('beer', 'assets/sounds/uiSounds/beer.wav');
   }
 
@@ -216,7 +217,8 @@ class Game extends Phaser.Scene {
     this.sounds.buttonClick = this.sound.add('buttonClick', { volume: 2 });
     this.sounds.itemMove = this.sound.add('itemMove', { volume: 2 });
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });
-    this.sounds.stimpak = this.sound.add('stimpak', { volume: 0.75 });
+    this.sounds.stimulant = this.sound.add('stimpak', { volume: 0.75 });
+    this.sounds.healPowder = this.sound.add('healPowder', { volume: 0.75 });
     this.sounds.beer = this.sound.add('beer', { volume: 4 });
     this.sounds.misfire = this.sound.add('misfire', { volume: 2 });
   }
@@ -595,9 +597,9 @@ class Game extends Phaser.Scene {
       const inventoryContainerPosition = this.gridEngine.getPosition(currentLevel.storage.key);
       const isXPositionRight = ((inventoryContainerPosition.x - 1) <= heroPosition.x && (inventoryContainerPosition.x + 1) >= heroPosition.x);
       const iYPositionRight = ((inventoryContainerPosition.y - 1) <= heroPosition.y && (inventoryContainerPosition.y + 1) >= heroPosition.y);
-      this.sounds.openChest.play();
       if (iYPositionRight && isXPositionRight) {
         this.ui.showExchangePanel();
+        this.sounds.openChest.play();
       }
     }, this);
   }

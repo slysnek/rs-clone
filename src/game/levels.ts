@@ -118,11 +118,11 @@ export const level1 = {
     },
     bullets: {
       src: inventory.bullets.src,
-      quantity: 3
+      quantity: 5
     },
     beer: {
       src: inventory.beer.src,
-      quantity: 2
+      quantity: 4
     },
   },
   storage: {
@@ -175,11 +175,11 @@ export const level2 = {
   thingsInStorage: {
     healPowder: {
       src: inventory.healPowder.src,
-      quantity: 1
+      quantity: 2
     },
     bullets: {
       src: inventory.bullets.src,
-      quantity: 4
+      quantity: 7
     },
   },
   storage: {
@@ -236,7 +236,7 @@ export const level3 = {
     },
     bullets: {
       src: inventory.bullets.src,
-      quantity: 4
+      quantity: 8
     },
   },
   storage: {
