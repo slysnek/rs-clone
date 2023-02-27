@@ -332,6 +332,7 @@ export default class UI {
       if (!(this.inventoryPanel?.classList.contains('hide'))) {
         return;
       } else {
+        this.sounds.buttonClick.play();
         (this.inventoryPanel as HTMLElement).classList.remove('hide');
         // eslint-disable-next-line no-prototype-builtins
         if (this.heroInventory.hasOwnProperty('pistol')) {

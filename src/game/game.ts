@@ -139,7 +139,6 @@ class Game extends Phaser.Scene {
 
   create() {
     this.cursors = this.input.keyboard.createCursorKeys();
-
     const map = this.buildMap();
     // this.tintTiles(map);
     this._createSounds();

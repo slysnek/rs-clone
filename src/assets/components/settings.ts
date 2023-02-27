@@ -15,7 +15,7 @@ audioWrapper.classList.add('audio-wrapper');
 playButton.classList.add('play');
 volumeInput.classList.add('volume-input');
 
-const audio = new Audio();
+export const audio = new Audio();
 const menu = document.querySelector('.menu') as HTMLElement;
 menu.appendChild(audio);
 
