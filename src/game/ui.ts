@@ -302,9 +302,11 @@ export default class UI {
     if (!(this.exchangePanel?.classList.contains('hide'))) {
       return;
     } else {
-      (this.exchangePanel as HTMLElement).classList.remove('hide');
-      this.addGif(this.exchangeGif as HTMLImageElement);
-      this.addThingsToInventoryContainer();
+      if(this.inventoryPanel?.classList.contains('hide')){
+        (this.exchangePanel as HTMLElement).classList.remove('hide');
+        this.addGif(this.exchangeGif as HTMLImageElement);
+        this.addThingsToInventoryContainer();
+      }
     }
   }
 
@@ -331,16 +333,18 @@ export default class UI {
       if (!(this.inventoryPanel?.classList.contains('hide'))) {
         return;
       } else {
-        this.sounds.buttonClick.play();
-        (this.inventoryPanel as HTMLElement).classList.remove('hide');
-        // eslint-disable-next-line no-prototype-builtins
-        if (this.heroInventory.hasOwnProperty('pistol')) {
-          (this.pistolImg as HTMLImageElement).src = pistolImageSrc;
-        } else {
-          (this.pistolImg as HTMLImageElement).src = '';
+        if(this.exchangePanel?.classList.contains('hide')){
+          this.sounds.buttonClick.play();
+          (this.inventoryPanel as HTMLElement).classList.remove('hide');
+          // eslint-disable-next-line no-prototype-builtins
+          if (this.heroInventory.hasOwnProperty('pistol')) {
+            (this.pistolImg as HTMLImageElement).src = pistolImageSrc;
+          } else {
+            (this.pistolImg as HTMLImageElement).src = '';
+          }
+          this.addGif(this.inventoryGif as HTMLImageElement);
+          this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
         }
-        this.addGif(this.inventoryGif as HTMLImageElement);
-        this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
       }
     })
   }
