@@ -1,4 +1,3 @@
-import AppController from './appController';
 import Phaser from 'phaser';
 import config from '../game/config';
 import {
@@ -24,7 +23,6 @@ import { settings } from '../assets/components/settings';
 
 class AppView {
   body: HTMLElement;
-  controller: AppController;
   level1Button: HTMLButtonElement;
   level2Button: HTMLButtonElement;
   level3Button: HTMLButtonElement;
@@ -37,7 +35,6 @@ class AppView {
   audio: HTMLAudioElement;
 
   constructor() {
-    this.controller = new AppController();
     this.body = document.querySelector('body') as HTMLElement;
     this.menu = document.querySelector('.menu') as HTMLElement;
     this.title = document.createElement('h1');

@@ -46,7 +46,7 @@ class Game extends Phaser.Scene {
     for (let i = 0; i < currentLevel.enemyQuantity; i++) {
       this.load.spritesheet(`${currentLevel.enemyName}${i + 1}`, `assets/spritesheets/${currentLevel.enemySpriteSheet}.png`, currentLevel.spriteSheetsSizes);
     }
-    this.load.html('ui', '/assets/html/test.html');
+    this.load.html('ui', '/assets/html/ui.html');
 
     this._preloadSounds();
 
@@ -127,7 +127,7 @@ class Game extends Phaser.Scene {
     // ui sounds
     this.load.audio('changeWeapon', 'assets/sounds/uiSounds/changeWeapon.wav');
     this.load.audio('startFight', 'assets/sounds/uiSounds/startFight.wav');
-    this.load.audio('buttonClick', 'assets/sounds/uiSounds/buttonClick1.wav'); // всего их 4
+    this.load.audio('buttonClick', 'assets/sounds/uiSounds/buttonClick1.wav');
     this.load.audio('itemMove', 'assets/sounds/uiSounds/itemMove.wav');
     this.load.audio('openChest', 'assets/sounds/uiSounds/openChest.wav');
     this.load.audio('stimpak', 'assets/sounds/uiSounds/stimpak.wav');
