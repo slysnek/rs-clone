@@ -1,14 +1,16 @@
 // import { Tilemaps } from "phaser";
-import { heroAnimsWithoutArmor,
+import {
+  heroAnimsWithoutArmor,
   heroAnimsInArmor,
   windowSize,
-  healsHealthPoints } from "./constants";
+  healsHealthPoints
+} from "./constants";
 import Game from "./game";
 import Hero from "./hero";
 import { Animations, thingsContainerItemsType } from './types';
 import inventory from './inventory';
 import dialogueConfig from '../game/dialogue-config';
-import { 
+import {
   currentMode,
   levelMode,
   gameMode,
@@ -18,7 +20,8 @@ import {
   setHeroHealthPoints,
   setArmorState,
   setCurrentHeroAnims,
-  setDefaultValuesForHero } from '../game/levels';
+  setDefaultValuesForHero
+} from '../game/levels';
 import appView from "..";
 
 
@@ -137,27 +140,27 @@ export default class UI {
     storageItemsImage.src = this.storageItemsImageSrc;
     storageItemsImage.classList.add('storage-img');
     storageItemsImageContainer?.append(storageItemsImage);
-    if(this.getHeroArmorState()){
+    if (this.getHeroArmorState()) {
       (this.armorImage as HTMLImageElement).src = inventory.armor.src
     }
   }
 
-  makeNextLevelButtonAvailable(){
+  makeNextLevelButtonAvailable() {
     this.nextLevelButton?.classList.remove('unavailable');
     this.nextLevelButton?.classList.add('available');
   }
 
-  setNextLevelButtonListener(){
+  setNextLevelButtonListener() {
     this.nextLevelButton?.addEventListener('click', () => {
-      if(currentMode === levelMode){
+      if (currentMode === levelMode) {
         this.scene.sys.plugins.removeScenePlugin('gridEngine');
         this.scene.sys.game.destroy(true);
         appView.showMenu();
-      } else if(currentMode === gameMode){
+      } else if (currentMode === gameMode) {
         this.scene.sys.plugins.removeScenePlugin('gridEngine');
         this.scene.sys.game.destroy(true);
         const isGameFinished = setNewLevelForGame();
-        if(isGameFinished){
+        if (isGameFinished) {
           setDefaultValuesForHero();
           appView.showMenu();
         } else {
@@ -194,11 +197,18 @@ export default class UI {
     }
   }
 
-  setEndTurnListener(hero: Hero){
+  setEndTurnListener(hero: Hero, scene: Game) {
     const endTurnButton = document.querySelector('.end-turn') as HTMLElement;
     endTurnButton.addEventListener('click', () => {
-      console.log('hello');
-
+      if (hero.fightMode && hero.healthPoints > 0) {
+        hero.currentActionPoints = 0;
+        hero.gridEngine.stopMovement(hero.id);
+        scene.refreshAllEnemiesActionPoints();
+        scene.moveEnemiesToHero(hero.gridEngine.getPosition(hero.id));
+        
+        this.updateAP(hero);
+        this.sounds.buttonClick.play();
+      }
     })
   }
 
@@ -219,7 +229,7 @@ export default class UI {
     const changeWeaponButton = document.querySelector('.cycle-weapons') as HTMLElement;
     changeWeaponButton.addEventListener('click', () => {
       // eslint-disable-next-line no-prototype-builtins
-      if(this.heroInventory.hasOwnProperty('pistol')){
+      if (this.heroInventory.hasOwnProperty('pistol')) {
         hero.changeWeapon();
         this.updateWeapon(hero);
         this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`);
@@ -292,7 +302,7 @@ export default class UI {
       } else {
         (this.inventoryPanel as HTMLElement).classList.remove('hide');
         // eslint-disable-next-line no-prototype-builtins
-        if(this.heroInventory.hasOwnProperty('pistol')){
+        if (this.heroInventory.hasOwnProperty('pistol')) {
           (this.pistolImg as HTMLImageElement).src = pistolImageSrc;
         } else {
           (this.pistolImg as HTMLImageElement).src = '';
@@ -322,12 +332,12 @@ export default class UI {
         this.sounds[itemName].play();
         this.addHealthPointsFromHeals(healsHealthPoints[itemName]);
         this.heroInventory[itemName].quantity -= 1;
-        if(this.heroInventory[itemName].quantity === 0){
+        if (this.heroInventory[itemName].quantity === 0) {
           this.deleteItemFromInventory(itemName);
         }
         (this.inventoryThingContainer as HTMLElement).innerHTML = '';
         this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
-      } 
+      }
     })
   }
 
