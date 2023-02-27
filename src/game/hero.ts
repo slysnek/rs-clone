@@ -93,9 +93,11 @@ class Hero extends Entity {
   }
 
   throwAwayPistol(){
-    this.changeWeapon();
-    this.ui.updateWeapon(this);
-    this.ui.putMessageToConsole(`Your current weapon: ${this.currentWeapon.name}`);
+    if(this.currentWeapon === this.secondaryWeapon){
+      this.changeWeapon();
+      this.ui.updateWeapon(this);
+      this.ui.putMessageToConsole(`Your current weapon: ${this.currentWeapon.name}`);
+    }
   }
 
   isPistolInInventory(){
