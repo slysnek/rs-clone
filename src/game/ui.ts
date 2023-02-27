@@ -206,7 +206,7 @@ export default class UI {
         scene.refreshAllEnemiesActionPoints();
         scene.moveEnemiesToHero(hero.gridEngine.getPosition(hero.id));
         
-        this.updateHP(hero);
+        this.updateAP(hero);
         this.sounds.buttonClick.play();
       }
     })
