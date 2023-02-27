@@ -703,9 +703,9 @@ export const startPositionsForScorpions: { [key: string]: { x: number, y: number
 };
 
 export const startPositionsForGhouls: { [key: string]: { x: number, y: number } } = {
-  ghoul1: { x: 70, y: 70 },
-  ghoul2: { x: 73, y: 74 },
-  ghoul3: { x: 60, y: 60 },
+  ghoul1: { x: 65, y: 70 },
+  ghoul2: { x: 68, y: 74 },
+  ghoul3: { x: 60, y: 65 },
 };
 
 export const startPositionsForDeathClaw: { [key: string]: { x: number, y: number } } = {
