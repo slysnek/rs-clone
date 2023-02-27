@@ -17,7 +17,7 @@ export const damageFromDeathClaw: { [attackType: string]: number } = {
 
 export const lostActionPointsForHero: { [attackType: string]: number } = {
   step: 1,
-  fists: 3,
+  fists: 2,
   pistol: 4,
 }
 
@@ -26,7 +26,7 @@ export const scorpionHealthPoints = 20;
 export const deathClawHealthPoints = 25;
 
 export const damageFromHero: { [attackType: string]: number } = {
-  fists: 3,
+  fists: 2,
   pistol: 8,
 }
 

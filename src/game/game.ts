@@ -267,7 +267,7 @@ class Game extends Phaser.Scene {
 
   createCamera() {
     this.cameras.main.setSize(windowSize.windowWidth, windowSize.windowHeight);
-    this.cameras.main.startFollow(this.hero, true);
+    this.cameras.main.startFollow(this.hero, true, 0.2, 0.2, -100, -100);
   }
 
   gridEngineInit(map: Tilemaps.Tilemap) {
