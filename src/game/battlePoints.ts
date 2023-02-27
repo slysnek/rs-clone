@@ -27,7 +27,7 @@ export const deathClawHealthPoints = 25;
 
 export const damageFromHero: { [attackType: string]: number } = {
   fists: 3,
-  pistol: 10,
+  pistol: 8,
 }
 
 export const entitiesTotalActionPoints: { [attackType: string]: number } = {

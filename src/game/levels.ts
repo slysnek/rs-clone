@@ -296,7 +296,7 @@ export function setThingsInStorage(){
     },
     bullets: {
       src: inventoryInfo.bullets.src,
-      quantity: 3
+      quantity: 4
     },
     beer: {
       src: inventoryInfo.beer.src,
@@ -310,7 +310,7 @@ export function setThingsInStorage(){
     },
     bullets: {
       src: inventoryInfo.bullets.src,
-      quantity: 4
+      quantity: 6
     },
   };
   level3.thingsInStorage = {
@@ -320,7 +320,7 @@ export function setThingsInStorage(){
     },
     bullets: {
       src: inventoryInfo.bullets.src,
-      quantity: 4
+      quantity: 10
     },
   };
 }
