@@ -14,17 +14,17 @@ import {
   startPositionsForHeroMap3
 } from "./constants";
 import { DialogueKey } from './dialogue';
-import inventory from "./inventory";
+import { inventoryInfo, thingsForRandom } from "./inventory";
 import { Animations, thingsContainerItemsType } from './types';
 import { damageFromGhoul, damageFromScorpion, damageFromDeathClaw, ghoulHealthPoints, scorpionHealthPoints, deathClawHealthPoints } from './battlePoints';
 
 const defaultInventory = {
   pistol: {
-    src: inventory.pistol.src,
+    src: inventoryInfo.pistol.src,
     quantity: 1
   },
   bullets: {
-    src: inventory.bullets.src,
+    src: inventoryInfo.bullets.src,
     quantity: 3
   },
 }
@@ -111,20 +111,7 @@ export const level1 = {
       volume: 1,
     }
   },
-  thingsInStorage: {
-    armor: {
-      src: inventory.armor.src,
-      quantity: 1
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 5
-    },
-    beer: {
-      src: inventory.beer.src,
-      quantity: 4
-    },
-  },
+  thingsInStorage: {},
   storage: {
     key: 'barrel',
     src: 'assets/maps/barrel.png',
@@ -172,16 +159,7 @@ export const level2 = {
       volume: 1,
     }
   },
-  thingsInStorage: {
-    healPowder: {
-      src: inventory.healPowder.src,
-      quantity: 2
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 7
-    },
-  },
+  thingsInStorage: {},
   storage: {
     key: 'fridge',
     src: 'assets/maps/fridge.png',
@@ -229,16 +207,7 @@ export const level3 = {
       volume: 1,
     }
   },
-  thingsInStorage: {
-    stimulant: {
-      src: inventory.stimulant.src,
-      quantity: 1
-    },
-    bullets: {
-      src: inventory.bullets.src,
-      quantity: 8
-    },
-  },
+  thingsInStorage: {},
   storage: {
     key: 'wash-machine',
     src: 'assets/maps/wash-machine.png',
@@ -297,6 +266,15 @@ export function setDefaultValuesForHero() {
     level.heroHealthPoints = defaultHeroHealthPoints;
     level.isHeroInArmor = defaultIsHeroInArmor;
   })
+}
+
+export function setRandomThingsForStorage(){
+  const thingsQuantity = Math.ceil((Math.random() * 10) / 3);
+  for(let i = thingsQuantity; i > 0; i--){
+    const randomIndex = Math.floor(Math.random() * 10);
+    const thingsKey = thingsForRandom[randomIndex];
+    currentLevel.thingsInStorage[thingsKey] = inventoryInfo[thingsKey];
+  }
 }
 
 const levels: level[] = [level1, level2, level3];

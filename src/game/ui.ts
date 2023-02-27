@@ -8,7 +8,7 @@ import {
 import Game from "./game";
 import Hero from "./hero";
 import { Animations, thingsContainerItemsType } from './types';
-import inventory from './inventory';
+import { inventoryInfo } from './inventory';
 import dialogueConfig from '../game/dialogue-config';
 import {
   currentMode,
@@ -140,8 +140,8 @@ export default class UI {
     storageItemsImage.src = this.storageItemsImageSrc;
     storageItemsImage.classList.add('storage-img');
     storageItemsImageContainer?.append(storageItemsImage);
-    if (this.getHeroArmorState()) {
-      (this.armorImage as HTMLImageElement).src = inventory.armor.src
+    if(this.getHeroArmorState()){
+      (this.armorImage as HTMLImageElement).src = inventoryInfo.armor.src
     }
   }
 
@@ -319,7 +319,7 @@ export default class UI {
         this.sounds.itemMove.play();
         const thingContainerParent = thingContainer.parentElement;
         thingContainerParent?.removeChild(thingContainer);
-        (this.armorImage as HTMLImageElement).src = inventory.armor.src;
+        (this.armorImage as HTMLImageElement).src = inventoryInfo.armor.src;
         this.putOnArmor();
         this.addArmorHealthPoints();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
@@ -347,14 +347,14 @@ export default class UI {
         return;
       } else {
         this.sounds.itemMove.play();
-        const armorThingContainer = this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
+        const armorThingContainer = this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventoryInfo, 'armor');
         this.addListenerToThingContainerInInventory(armorThingContainer, 'armor');
         (this.armorImage as HTMLImageElement).src = '';
         this.takeOffArmor();
         this.deleteArmorHealthPoints();
         this.deleteGif(this.inventoryGif as HTMLImageElement);
         this.addGif(this.inventoryGif as HTMLImageElement);
-        this.addItemToInventory('armor', inventory.armor);
+        this.addItemToInventory('armor', inventoryInfo.armor);
         this.changeArmorAnimations(heroAnimsWithoutArmor);
       }
     })
