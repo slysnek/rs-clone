@@ -51,7 +51,8 @@ export default class UI {
   getHeroAnims: () => Animations;
   addArmorHealthPoints: () => void;
   deleteArmorHealthPoints: () => void;
-  addHealthPointsFromHeals: (healthPointsFromHeal: number) => void
+  addHealthPointsFromHeals: (healthPointsFromHeal: number) => void;
+  sounds: { [soundName: string]: Phaser.Sound.BaseSound }
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -65,7 +66,8 @@ export default class UI {
     getHeroAnims: () => Animations,
     addArmorHealthPoints: () => void,
     deleteArmorHealthPoints: () => void,
-    addHealthPointsFromHeals: (healthPointsFromHeal: number) => void) {
+    addHealthPointsFromHeals: (healthPointsFromHeal: number) => void,
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
@@ -95,6 +97,7 @@ export default class UI {
     this.addArmorHealthPoints = addArmorHealthPoints;
     this.deleteArmorHealthPoints = deleteArmorHealthPoints;
     this.addHealthPointsFromHeals = addHealthPointsFromHeals;
+    this.sounds = sounds;
   }
 
   findElementsForInventoryLogic() {
@@ -289,6 +292,7 @@ export default class UI {
   addListenerToThingContainerInInventory(thingContainer: HTMLElement, itemName: string) {
     thingContainer.addEventListener('click', () => {
       if (itemName === 'armor') {
+        this.sounds.itemMove.play();
         const thingContainerParent = thingContainer.parentElement;
         thingContainerParent?.removeChild(thingContainer);
         (this.armorImage as HTMLImageElement).src = inventory.armor.src;
@@ -299,8 +303,9 @@ export default class UI {
         this.deleteItemFromInventory('armor');
         this.changeArmorAnimations(heroAnimsInArmor);
       } else if (itemName === 'bullets') {
-        console.log(itemName);
+        this.sounds.itemMove.play();
       } else if (itemName === 'beer' || itemName === 'healPowder' || itemName === 'stimulant') {
+        this.sounds[itemName].play();
         this.addHealthPointsFromHeals(healsHealthPoints[itemName]);
         this.updateHP;
         this.heroInventory[itemName].quantity -= 1;
@@ -318,6 +323,7 @@ export default class UI {
       if (!this.getHeroArmorState()) {
         return;
       } else {
+        this.sounds.itemMove.play();
         const armorThingContainer = this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
         this.addListenerToThingContainerInInventory(armorThingContainer, 'armor');
         (this.armorImage as HTMLImageElement).src = '';
@@ -356,6 +362,7 @@ export default class UI {
 
   addListenerToThingContainerInExchangePanel(thingContainer: HTMLElement, itemName: string) {
     thingContainer.addEventListener('click', () => {
+      this.sounds.itemMove.play();
       const thingContainerParent = thingContainer.parentElement;
       if (thingContainerParent?.classList.contains('inventory-container-things')) {
         this.addItemToInventory(itemName, currentLevel.thingsInStorage[itemName]);
@@ -377,6 +384,7 @@ export default class UI {
 
   setTakeAllButtonListener() {
     this.takeAllButton?.addEventListener('click', () => {
+      this.sounds.buttonClick.play();
       for (const item in currentLevel.thingsInStorage) {
         this.addItemToInventory(item, currentLevel.thingsInStorage[item]);
         this.deleteItemsFromStorage(item);
@@ -389,6 +397,7 @@ export default class UI {
 
   setCloseExchangePanelButtonListener() {
     this.closeExchangePanelButton?.addEventListener('click', () => {
+      this.sounds.buttonClick.play();
       this.exchangePanel?.classList.add('hide');
       this.deleteGif(this.exchangeGif as HTMLImageElement);
       this.cleanExchangeWindowFields();
@@ -397,6 +406,7 @@ export default class UI {
 
   setCloseInventoryPanelButtonListener() {
     this.closeInventoryPanelButton?.addEventListener('click', () => {
+      this.sounds.buttonClick.play();
       this.inventoryPanel?.classList.add('hide');
       this.deleteGif(this.inventoryGif as HTMLImageElement);
       this.cleanInventoryPanelFields();

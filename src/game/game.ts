@@ -152,7 +152,8 @@ class Game extends Phaser.Scene {
     this.hero.getHeroAnims,
     this.hero.addArmorHealthPoints,
     this.hero.deleteArmorHealthPoints,
-    this.hero.addHealthPointsFromHeals);
+    this.hero.addHealthPointsFromHeals,
+    this.sounds);
 
     this.hero.setUiProperty(this.ui);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', currentLevel.heroAnims, defaultBehavior);
@@ -582,7 +583,8 @@ class Game extends Phaser.Scene {
       const heroPosition = this.gridEngine.getPosition('hero');
       const inventoryContainerPosition = this.gridEngine.getPosition(currentLevel.storage.key);
       const isXPositionRight = ((inventoryContainerPosition.x - 1) <= heroPosition.x && (inventoryContainerPosition.x + 1) >= heroPosition.x);
-      const iYPositionRight = ((inventoryContainerPosition.y - 1) <= heroPosition.y && (inventoryContainerPosition.y + 1) >= heroPosition.y)
+      const iYPositionRight = ((inventoryContainerPosition.y - 1) <= heroPosition.y && (inventoryContainerPosition.y + 1) >= heroPosition.y);
+      this.sounds.openChest.play();
       if (iYPositionRight && isXPositionRight) {
         this.ui.showExchangePanel();
       }
