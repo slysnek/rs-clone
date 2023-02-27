@@ -282,6 +282,49 @@ export function setRandomThingsForStorage(){
   }
 }
 
+export function clearStorages(){
+  levels.forEach((level) => {
+    level.thingsInStorage = {};
+  })
+}
+
+export function setThingsInStorage(){
+  level1.thingsInStorage = {
+    armor: {
+      src: inventoryInfo.armor.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventoryInfo.bullets.src,
+      quantity: 3
+    },
+    beer: {
+      src: inventoryInfo.beer.src,
+      quantity: 2
+    },
+  };
+  level2.thingsInStorage = {
+    healPowder: {
+      src: inventoryInfo.healPowder.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventoryInfo.bullets.src,
+      quantity: 4
+    },
+  };
+  level3.thingsInStorage = {
+    stimulant: {
+      src: inventoryInfo.stimulant.src,
+      quantity: 1
+    },
+    bullets: {
+      src: inventoryInfo.bullets.src,
+      quantity: 4
+    },
+  };
+}
+
 const levels: level[] = [level1, level2, level3];
 const dialogues: DialogueKey[] = ["dialogue-1", "dialogue-2", "dialogue-3"];
 

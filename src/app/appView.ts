@@ -12,7 +12,8 @@ import {
   levelMode,
   gameMode,
   setRandomThingsForStorage,
-  setDefaultValuesForHero
+  setDefaultValuesForHero,
+  setThingsInStorage
 } from '../game/levels';
 import dialogueConfig from '../game/dialogue-config';
 import { footer } from '../assets/components/footer';
@@ -89,6 +90,8 @@ class AppView {
     });
     this.newGameButton.addEventListener('click', () => {
       this.hideMenu();
+      setDefaultValuesForHero();
+      setThingsInStorage();
       setCurrentLevel(level1);
       setCurrentDialogue('dialogue-1');
       setCurrentMode(gameMode);
