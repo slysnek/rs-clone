@@ -291,7 +291,7 @@ class Hero extends Entity {
         this.isAllEnemiesDead();
       } else {
         this.sounds.misfire.play();
-        this.ui.putMessageToConsole('You don`t enough ammo');
+        this.ui.putMessageToConsole('You don`t have enough ammo');
       }
     }
   }

@@ -7,7 +7,7 @@ export const inventoryInfo: { [key: string]: { src: string, quantity: number, de
   bullets: {
     src: '../assets/ui-elements/inventory/bullets.png',
     quantity: 10,
-    description: 'Ammo for your pistol. If you donn`t enough ammo you cannot shoot.',
+    description: 'Ammo for your pistol. If you don`t have enough ammo you cannot shoot.',
   },
   beer: {
     src: '../assets/ui-elements/inventory/beer.png',
