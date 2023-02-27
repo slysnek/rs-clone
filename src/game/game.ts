@@ -212,7 +212,7 @@ class Game extends Phaser.Scene {
     this.sounds.pistol = this.sound.add('pistolAttack', { volume: 2 });
     // ui sounds
     this.sounds.changeWeapon = this.sound.add('changeWeapon', { volume: 2 });
-    this.sounds.startFight = this.sound.add('startFight', { volume: 6 });
+    this.sounds.startFight = this.sound.add('startFight', { volume: 3 });
     this.sounds.buttonClick = this.sound.add('buttonClick', { volume: 2 });
     this.sounds.itemMove = this.sound.add('itemMove', { volume: 2 });
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });

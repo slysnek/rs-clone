@@ -123,6 +123,10 @@ class Enemy extends Entity {
 
     if (hero.healthPoints <= 0) {
       hero.playDeathAnimation();
+      setTimeout(() => {
+        this.ui.makeDeathPanelAvailable();
+        this.ui.setDeathPanelListener();
+      }, 1500);
     }
     this.ui.updateHP(hero);
     this.ui.putMessageToConsole(`Enemy attacks hero: -${damage} health`);
