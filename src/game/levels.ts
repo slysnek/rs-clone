@@ -263,7 +263,7 @@ export function setCurrentHeroAnims(currentHeroAnims: Animations) {
 
 export function setDefaultValuesForHero() {
   levels.forEach((level) => {
-    level.heroInventory = defaultInventory;
+    level.heroInventory = structuredClone(defaultInventory);
     level.heroAnims = defaultHeroAnims;
     level.heroHealthPoints = defaultHeroHealthPoints;
     level.isHeroInArmor = defaultIsHeroInArmor;
