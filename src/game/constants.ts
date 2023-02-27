@@ -693,7 +693,7 @@ export const startPositionsForHeroMap2: { x: number, y: number } = {
 };
 
 export const startPositionsForHeroMap3: { x: number, y: number } = {
-  x: 58, y: 48
+  x: 70, y: 95
 };
 
 export const startPositionsForScorpions: { [key: string]: { x: number, y: number } } = {
@@ -709,8 +709,8 @@ export const startPositionsForGhouls: { [key: string]: { x: number, y: number } 
 };
 
 export const startPositionsForDeathClaw: { [key: string]: { x: number, y: number } } = {
-  deathClaw1: { x: 70, y: 70 },
-  deathClaw2: { x: 73, y: 74 },
+  deathClaw1: { x: 50, y: 58 },
+  deathClaw2: { x: 53, y: 62 },
 };
 
 export const offsetCoordForScorpions: { [key: string]: { x: number, y: number } } = {
