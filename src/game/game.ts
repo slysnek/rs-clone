@@ -362,6 +362,10 @@ class Game extends Phaser.Scene {
         }
         if (!charId.match(/^hero/i)) {
           const enemy = this.entitiesMap.get(charId) as Enemy;
+          if (!enemy) {
+            this.gridEngine.stopMovement(charId);
+            return;
+          }
           if (enemy.currentActionPoints) {
             enemy.makeStep();
           }

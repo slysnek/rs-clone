@@ -32,12 +32,12 @@ class Hero extends Entity {
   public set fightMode(v: boolean) {
     if (this._fightMode !== v) {
       if (v) {
+        this.gridEngine.stopMovement(this.id);
         this.sounds.startFight.play();
       }
       this._fightMode = v;
     }
   }
-
 
   constructor(scene: Phaser.Scene,
     texture: string,
