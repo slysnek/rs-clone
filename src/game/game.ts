@@ -123,6 +123,7 @@ class Game extends Phaser.Scene {
     this.load.audio('heroDeath', 'assets/sounds/heroSounds/heroDeath.wav');
     this.load.audio('fistsAttack', 'assets/sounds/heroSounds/fistsAttack.wav');
     this.load.audio('pistolAttack', 'assets/sounds/heroSounds/pistolAttack.wav');
+    this.load.audio('misfire', 'assets/sounds/heroSounds/misfire.mp3');
     // ui sounds
     this.load.audio('changeWeapon', 'assets/sounds/uiSounds/changeWeapon.wav');
     this.load.audio('startFight', 'assets/sounds/uiSounds/startFight.wav');
@@ -151,7 +152,9 @@ class Game extends Phaser.Scene {
     this.hero.getHeroArmorState,
     this.hero.getHeroAnims,
     this.hero.addArmorHealthPoints,
-    this.hero.deleteArmorHealthPoints);
+    this.hero.deleteArmorHealthPoints,
+    this.hero.addHealthPointsFromHeals,
+    this.sounds);
 
     this.hero.setUiProperty(this.ui);
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', currentLevel.heroAnims, defaultBehavior);
@@ -210,6 +213,7 @@ class Game extends Phaser.Scene {
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });
     this.sounds.stimpak = this.sound.add('stimpak', { volume: 0.75 });
     this.sounds.beer = this.sound.add('beer', { volume: 4 });
+    this.sounds.misfire = this.sound.add('misfire', {volume: 2});
   }
 
   private _createUI() {
@@ -581,7 +585,8 @@ class Game extends Phaser.Scene {
       const heroPosition = this.gridEngine.getPosition('hero');
       const inventoryContainerPosition = this.gridEngine.getPosition(currentLevel.storage.key);
       const isXPositionRight = ((inventoryContainerPosition.x - 1) <= heroPosition.x && (inventoryContainerPosition.x + 1) >= heroPosition.x);
-      const iYPositionRight = ((inventoryContainerPosition.y - 1) <= heroPosition.y && (inventoryContainerPosition.y + 1) >= heroPosition.y)
+      const iYPositionRight = ((inventoryContainerPosition.y - 1) <= heroPosition.y && (inventoryContainerPosition.y + 1) >= heroPosition.y);
+      this.sounds.openChest.play();
       if (iYPositionRight && isXPositionRight) {
         this.ui.showExchangePanel();
       }

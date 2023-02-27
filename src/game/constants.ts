@@ -737,3 +737,11 @@ export const colors: { [key: string]: number } = {
   TRANSPARENT: 0xFFFFFF,
 }
 
+export const healsHealthPoints: { [key: string]: number } = {
+  beer: 2,
+  healPowder: 7,
+  stimulant: 15 
+}
+
+
+

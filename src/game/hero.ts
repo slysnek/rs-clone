@@ -76,11 +76,40 @@ class Hero extends Entity {
     this.getHeroAnims = this.getHeroAnims.bind(this);
     this.addArmorHealthPoints = this.addArmorHealthPoints.bind(this);
     this.deleteArmorHealthPoints = this.deleteArmorHealthPoints.bind(this);
+    this.addHealthPointsFromHeals = this.addHealthPointsFromHeals.bind(this);
     this.isHeroInArmor = currentLevel.isHeroInArmor;
+  }
+
+  isPistolInInventory(){
+    // eslint-disable-next-line no-prototype-builtins
+    return this.inventory.hasOwnProperty('pistol');
+  }
+
+  isItEnoughBullets(){
+     // eslint-disable-next-line no-prototype-builtins
+    if(this.inventory.hasOwnProperty('bullets')){
+      return this.inventory.bullets.quantity > 0;
+    }
+  }
+
+  deleteBulletFromInventory(){
+    this.inventory.bullets.quantity -= 1;
+    if(this.inventory.bullets.quantity === 0){
+      this.deleteItemFromInventory('bullets');
+    }
+  }
+
+  isPistolAttackAvailable(){
+    return this.isPistolInInventory() && this.isItEnoughBullets();
   }
 
   setUiProperty(ui: UI) {
     this.ui = ui;
+  }
+
+  addHealthPointsFromHeals(healthPointsFromHeal: number){
+    this.healthPoints += healthPointsFromHeal;
+    this.ui.updateHP(this);
   }
 
   addArmorHealthPoints(){
@@ -248,11 +277,19 @@ class Hero extends Entity {
     if (!HeroAnimationDirection) {
       return;
     } else {
-      this._attackEnemyAnimation(enemy, HeroAnimationDirection);
-      this._dealDamageToEnemy(enemy);
-      this._decreaseHeroAPOnAttack();
-      this._isHeroEndTurn();
-      this.isAllEnemiesDead();
+      if((this.currentWeapon.name === 'pistol' && this.isPistolAttackAvailable()) || this.currentWeapon.name === 'fists'){
+        if(this.currentWeapon.name === 'pistol'){
+          this.deleteBulletFromInventory();
+        }
+        this._attackEnemyAnimation(enemy, HeroAnimationDirection);
+        this._dealDamageToEnemy(enemy);
+        this._decreaseHeroAPOnAttack();
+        this._isHeroEndTurn();
+        this.isAllEnemiesDead();
+      } else {
+        this.sounds.misfire.play();
+        this.ui.putMessageToConsole('You haven`t enough bullets');
+      }
     }
   }
 

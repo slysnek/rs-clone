@@ -1,5 +1,8 @@
 // import { Tilemaps } from "phaser";
-import { heroAnimsWithoutArmor, heroAnimsInArmor, windowSize } from "./constants";
+import { heroAnimsWithoutArmor,
+  heroAnimsInArmor,
+  windowSize,
+  healsHealthPoints } from "./constants";
 import Game from "./game";
 import Hero from "./hero";
 import { Animations, thingsContainerItemsType } from './types';
@@ -18,17 +21,8 @@ import {
   setDefaultValuesForHero } from '../game/levels';
 import appView from "..";
 
-// const storageItems: thingsContainerItemsType = {
-//   armor: {
-//     src: '../assets/ui-elements/inventory/armor.png',
-//     quantity: 1
-//   },
-//   bullets: {
-//     src: '../assets/ui-elements/inventory/bullets.png',
-//     quantity: 10
-//   },
-// };
 
+const pistolImageSrc = '../assets/weapons/pistol-03.png';
 const womanInVaultSuitGifSrc = 'assets/ui-elements/gifs/in-vault-suit.gif';
 const womanInArmorGifSrc = 'assets/ui-elements/gifs/in-armor.gif'
 
@@ -52,13 +46,16 @@ export default class UI {
   inventoryGif: HTMLImageElement | null;
   exchangeGif: HTMLImageElement | null;
   nextLevelButton: HTMLButtonElement | null;
+  pistolImg: HTMLImageElement | null;
   storageItemsImageSrc: string;
   changeArmorAnimations: (currentAnims: Animations) => void;
   getHeroHealthPoints: () => number;
   getHeroArmorState: () => boolean;
   getHeroAnims: () => Animations;
   addArmorHealthPoints: () => void;
-  deleteArmorHealthPoints: () => void
+  deleteArmorHealthPoints: () => void;
+  addHealthPointsFromHeals: (healthPointsFromHeal: number) => void;
+  sounds: { [soundName: string]: Phaser.Sound.BaseSound }
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number }) => void,
@@ -71,7 +68,9 @@ export default class UI {
     getHeroArmorState: () => boolean,
     getHeroAnims: () => Animations,
     addArmorHealthPoints: () => void,
-    deleteArmorHealthPoints: () => void) {
+    deleteArmorHealthPoints: () => void,
+    addHealthPointsFromHeals: (healthPointsFromHeal: number) => void,
+    sounds: { [soundName: string]: Phaser.Sound.BaseSound }) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
@@ -94,12 +93,15 @@ export default class UI {
     this.inventoryGif = null;
     this.exchangeGif = null;
     this.nextLevelButton = null;
+    this.pistolImg = null;
     this.storageItemsImageSrc = currentLevel.storage.src;
     this.getHeroHealthPoints = getHeroHealthPoints;
     this.getHeroArmorState = getHeroArmorState;
     this.getHeroAnims = getHeroAnims;
     this.addArmorHealthPoints = addArmorHealthPoints;
     this.deleteArmorHealthPoints = deleteArmorHealthPoints;
+    this.addHealthPointsFromHeals = addHealthPointsFromHeals;
+    this.sounds = sounds;
   }
 
   findElementsForInventoryLogic() {
@@ -116,6 +118,7 @@ export default class UI {
     this.inventoryGif = document.querySelector('.inventory-gif') as HTMLImageElement;
     this.exchangeGif = document.querySelector('.exchange-gif') as HTMLImageElement;
     this.nextLevelButton = document.querySelector('.next-level-button') as HTMLButtonElement;
+    this.pistolImg = document.querySelector('.pistol-img') as HTMLImageElement;
   }
 
   createUI(scene: Game) {
@@ -215,9 +218,12 @@ export default class UI {
   setChangeWeaponListener(hero: Hero) {
     const changeWeaponButton = document.querySelector('.cycle-weapons') as HTMLElement;
     changeWeaponButton.addEventListener('click', () => {
-      hero.changeWeapon();
-      this.updateWeapon(hero);
-      this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`);
+      // eslint-disable-next-line no-prototype-builtins
+      if(this.heroInventory.hasOwnProperty('pistol')){
+        hero.changeWeapon();
+        this.updateWeapon(hero);
+        this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`);
+      }
     })
   }
 
@@ -285,6 +291,12 @@ export default class UI {
         return;
       } else {
         (this.inventoryPanel as HTMLElement).classList.remove('hide');
+        // eslint-disable-next-line no-prototype-builtins
+        if(this.heroInventory.hasOwnProperty('pistol')){
+          (this.pistolImg as HTMLImageElement).src = pistolImageSrc;
+        } else {
+          (this.pistolImg as HTMLImageElement).src = '';
+        }
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
       }
@@ -294,6 +306,7 @@ export default class UI {
   addListenerToThingContainerInInventory(thingContainer: HTMLElement, itemName: string) {
     thingContainer.addEventListener('click', () => {
       if (itemName === 'armor') {
+        this.sounds.itemMove.play();
         const thingContainerParent = thingContainer.parentElement;
         thingContainerParent?.removeChild(thingContainer);
         (this.armorImage as HTMLImageElement).src = inventory.armor.src;
@@ -304,14 +317,17 @@ export default class UI {
         this.deleteItemFromInventory('armor');
         this.changeArmorAnimations(heroAnimsInArmor);
       } else if (itemName === 'bullets') {
-        console.log(itemName);
-      } else if (itemName === 'cookie') {
-        console.log(itemName);
-      } else if (itemName === 'healPowder') {
-        console.log(itemName);
-      } else if (itemName === 'stimulant') {
-        console.log(itemName);
-      }
+        this.sounds.itemMove.play();
+      } else if (itemName === 'beer' || itemName === 'healPowder' || itemName === 'stimulant') {
+        this.sounds[itemName].play();
+        this.addHealthPointsFromHeals(healsHealthPoints[itemName]);
+        this.heroInventory[itemName].quantity -= 1;
+        if(this.heroInventory[itemName].quantity === 0){
+          this.deleteItemFromInventory(itemName);
+        }
+        (this.inventoryThingContainer as HTMLElement).innerHTML = '';
+        this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
+      } 
     })
   }
 
@@ -320,6 +336,7 @@ export default class UI {
       if (!this.getHeroArmorState()) {
         return;
       } else {
+        this.sounds.itemMove.play();
         const armorThingContainer = this.createThingContainer(this.inventoryThingContainer as HTMLElement, inventory, 'armor');
         this.addListenerToThingContainerInInventory(armorThingContainer, 'armor');
         (this.armorImage as HTMLImageElement).src = '';
@@ -358,6 +375,7 @@ export default class UI {
 
   addListenerToThingContainerInExchangePanel(thingContainer: HTMLElement, itemName: string) {
     thingContainer.addEventListener('click', () => {
+      this.sounds.itemMove.play();
       const thingContainerParent = thingContainer.parentElement;
       if (thingContainerParent?.classList.contains('inventory-container-things')) {
         this.addItemToInventory(itemName, currentLevel.thingsInStorage[itemName]);
@@ -379,6 +397,7 @@ export default class UI {
 
   setTakeAllButtonListener() {
     this.takeAllButton?.addEventListener('click', () => {
+      this.sounds.buttonClick.play();
       for (const item in currentLevel.thingsInStorage) {
         this.addItemToInventory(item, currentLevel.thingsInStorage[item]);
         this.deleteItemsFromStorage(item);
@@ -391,6 +410,7 @@ export default class UI {
 
   setCloseExchangePanelButtonListener() {
     this.closeExchangePanelButton?.addEventListener('click', () => {
+      this.sounds.buttonClick.play();
       this.exchangePanel?.classList.add('hide');
       this.deleteGif(this.exchangeGif as HTMLImageElement);
       this.cleanExchangeWindowFields();
@@ -399,6 +419,7 @@ export default class UI {
 
   setCloseInventoryPanelButtonListener() {
     this.closeInventoryPanelButton?.addEventListener('click', () => {
+      this.sounds.buttonClick.play();
       this.inventoryPanel?.classList.add('hide');
       this.deleteGif(this.inventoryGif as HTMLImageElement);
       this.cleanInventoryPanelFields();
