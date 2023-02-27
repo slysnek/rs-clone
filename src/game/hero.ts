@@ -108,7 +108,8 @@ class Hero extends Entity {
   }
 
   addHealthPointsFromHeals(healthPointsFromHeal: number){
-    this.healthPoints += healthPointsFromHeal
+    this.healthPoints += healthPointsFromHeal;
+    this.ui.updateHP(this);
   }
 
   addArmorHealthPoints(){

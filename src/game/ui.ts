@@ -307,7 +307,6 @@ export default class UI {
       } else if (itemName === 'beer' || itemName === 'healPowder' || itemName === 'stimulant') {
         this.sounds[itemName].play();
         this.addHealthPointsFromHeals(healsHealthPoints[itemName]);
-        this.updateHP;
         this.heroInventory[itemName].quantity -= 1;
         if(this.heroInventory[itemName].quantity === 0){
           this.deleteItemFromInventory(itemName);
