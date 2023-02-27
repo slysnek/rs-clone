@@ -145,21 +145,21 @@ class Game extends Phaser.Scene {
     this._createSounds();
     this.createHero(map);
     this.ui = new UI(this,
-    this.hero.addItemToInventory,
-    this.hero.inventory,
-    this.hero.deleteItemFromInventory,
-    this.hero.putOnArmor,
-    this.hero.takeOffArmor,
-    this.hero.changeArmorAnimations,
-    this.hero.getHeroHealthPoints,
-    this.hero.getHeroArmorState,
-    this.hero.getHeroAnims,
-    this.hero.addArmorHealthPoints,
-    this.hero.deleteArmorHealthPoints,
-    this.hero.addHealthPointsFromHeals,
-    this.sounds,
-    this.hero.restoredActionPoints,
-    this.hero.throwAwayPistol);
+      this.hero.addItemToInventory,
+      this.hero.inventory,
+      this.hero.deleteItemFromInventory,
+      this.hero.putOnArmor,
+      this.hero.takeOffArmor,
+      this.hero.changeArmorAnimations,
+      this.hero.getHeroHealthPoints,
+      this.hero.getHeroArmorState,
+      this.hero.getHeroAnims,
+      this.hero.addArmorHealthPoints,
+      this.hero.deleteArmorHealthPoints,
+      this.hero.addHealthPointsFromHeals,
+      this.sounds,
+      this.hero.restoredActionPoints,
+      this.hero.throwAwayPistol);
 
     this.hero.setUiProperty(this.ui);
 
@@ -222,9 +222,9 @@ class Game extends Phaser.Scene {
     this.sounds.stimulant = this.sound.add('stimpak', { volume: 0.75 });
     this.sounds.healPowder = this.sound.add('healPowder', { volume: 0.75 });
     this.sounds.beer = this.sound.add('beer', { volume: 4 });
-    this.sounds.misfire = this.sound.add('misfire', {volume: 2});
-    this.sounds.dice = this.sound.add('dice', {volume: 2});
-    this.sounds.elvis = this.sound.add('elvis', {volume: 1});
+    this.sounds.misfire = this.sound.add('misfire', { volume: 2 });
+    this.sounds.dice = this.sound.add('dice', { volume: 2 });
+    this.sounds.elvis = this.sound.add('elvis', { volume: 1 });
   }
 
   private _createUI() {

@@ -97,15 +97,15 @@ class AppView {
       setCurrentMode(gameMode);
       this.game = new Phaser.Game(dialogueConfig);
     });
-    this.settings.addEventListener('click', ()=>{
-      if(tutorial){
+    this.settings.addEventListener('click', () => {
+      if (tutorial) {
         tutorial.remove()
       }
       this.menu.append(popUp)
       popUp.appendChild(settings)
     })
-    this.howToPlay.addEventListener('click', ()=>{
-      if(settings){
+    this.howToPlay.addEventListener('click', () => {
+      if (settings) {
         settings.remove()
       }
       this.menu.append(popUp)

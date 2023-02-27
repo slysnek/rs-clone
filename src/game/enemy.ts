@@ -116,7 +116,7 @@ class Enemy extends Entity {
   }
 
   private _dealDamageToHero(hero: Hero) {
-  this.currentActionPoints = 0;
+    this.currentActionPoints = 0;
     const damage = currentLevel.damageFromEnemy['punch'];
     hero.updateHealthPoints(damage);
     this.sounds.heroDamageFromEnemy.play();

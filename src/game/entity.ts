@@ -45,11 +45,11 @@ class Entity extends Phaser.GameObjects.Sprite {
     this._fightMode = true;
   }
 
-  updateAnims(newAnims: Animations){
+  updateAnims(newAnims: Animations) {
     this.currentAnims = newAnims;
   }
 
-  getHeroAnims(){
+  getHeroAnims() {
     return this.currentAnims;
   }
 

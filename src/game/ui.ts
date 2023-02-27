@@ -159,7 +159,7 @@ export default class UI {
     storageItemsImage.src = this.storageItemsImageSrc;
     storageItemsImage.classList.add('storage-img');
     storageItemsImageContainer?.append(storageItemsImage);
-    if(this.getHeroArmorState()){
+    if (this.getHeroArmorState()) {
       (this.armorImage as HTMLImageElement).src = inventoryInfo.armor.src
     }
   }
@@ -237,7 +237,7 @@ export default class UI {
         hero.gridEngine.stopMovement(hero.id);
         scene.refreshAllEnemiesActionPoints();
         scene.moveEnemiesToHero(hero.gridEngine.getPosition(hero.id));
-        
+
         this.updateAP(hero);
         this.sounds.buttonClick.play();
       }
@@ -361,11 +361,11 @@ export default class UI {
         this.changeArmorAnimations(heroAnimsInArmor);
       } else if (itemName === 'bullets') {
         this.sounds.itemMove.play();
-      } else if(itemName === 'dice'){
-        if(this.restoredActionPoints()){
+      } else if (itemName === 'dice') {
+        if (this.restoredActionPoints()) {
           this.sounds.dice.play();
           this.heroInventory[itemName].quantity -= 1;
-          if(this.heroInventory[itemName].quantity === 0){
+          if (this.heroInventory[itemName].quantity === 0) {
             this.deleteItemFromInventory(itemName);
           }
           (this.inventoryThingContainer as HTMLElement).innerHTML = '';
@@ -380,7 +380,7 @@ export default class UI {
         }
         (this.inventoryThingContainer as HTMLElement).innerHTML = '';
         this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
-      } else if (itemName === 'elvis'){
+      } else if (itemName === 'elvis') {
         this.sounds.elvis.play();
       }
     })
@@ -438,7 +438,7 @@ export default class UI {
       } else if (thingContainerParent?.classList.contains('hero-things')) {
         this.addItemsToStorage(itemName, this.heroInventory[itemName]);
         this.deleteItemFromInventory(itemName);
-        if(itemName === 'pistol'){
+        if (itemName === 'pistol') {
           this.throwAwayPistol();
         }
       }
