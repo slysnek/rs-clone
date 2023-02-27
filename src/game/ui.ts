@@ -337,6 +337,7 @@ export default class UI {
         this.sounds.itemMove.play();
       } else if(itemName === 'dice'){
         if(this.restoredActionPoints()){
+          this.sounds.dice.play();
           this.heroInventory[itemName].quantity -= 1;
           if(this.heroInventory[itemName].quantity === 0){
             this.deleteItemFromInventory(itemName);
@@ -353,6 +354,8 @@ export default class UI {
         }
         (this.inventoryThingContainer as HTMLElement).innerHTML = '';
         this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
+      } else if (itemName === 'elvis'){
+        this.sounds.elvis.play();
       }
     })
   }
