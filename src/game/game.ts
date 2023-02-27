@@ -123,6 +123,7 @@ class Game extends Phaser.Scene {
     this.load.audio('heroDeath', 'assets/sounds/heroSounds/heroDeath.wav');
     this.load.audio('fistsAttack', 'assets/sounds/heroSounds/fistsAttack.wav');
     this.load.audio('pistolAttack', 'assets/sounds/heroSounds/pistolAttack.wav');
+    this.load.audio('misfire', 'assets/sounds/heroSounds/misfire.mp3');
     // ui sounds
     this.load.audio('changeWeapon', 'assets/sounds/uiSounds/changeWeapon.wav');
     this.load.audio('startFight', 'assets/sounds/uiSounds/startFight.wav');
@@ -212,6 +213,7 @@ class Game extends Phaser.Scene {
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });
     this.sounds.stimpak = this.sound.add('stimpak', { volume: 0.75 });
     this.sounds.beer = this.sound.add('beer', { volume: 4 });
+    this.sounds.misfire = this.sound.add('misfire', {volume: 2});
   }
 
   private _createUI() {
