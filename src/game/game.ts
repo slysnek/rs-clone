@@ -141,28 +141,33 @@ class Game extends Phaser.Scene {
     // this.tintTiles(map);
     this._createSounds();
     this.createHero(map);
-    this.ui = new UI(this,
-    this.hero.addItemToInventory,
-    this.hero.inventory,
-    this.hero.deleteItemFromInventory,
-    this.hero.putOnArmor,
-    this.hero.takeOffArmor,
-    this.hero.changeArmorAnimations,
-    this.hero.getHeroHealthPoints,
-    this.hero.getHeroArmorState,
-    this.hero.getHeroAnims,
-    this.hero.addArmorHealthPoints,
-    this.hero.deleteArmorHealthPoints,
-    this.hero.addHealthPointsFromHeals,
-    this.sounds);
+    this.ui = new UI(
+      this,
+      this.hero.addItemToInventory,
+      this.hero.inventory,
+      this.hero.deleteItemFromInventory,
+      this.hero.putOnArmor,
+      this.hero.takeOffArmor,
+      this.hero.changeArmorAnimations,
+      this.hero.getHeroHealthPoints,
+      this.hero.getHeroArmorState,
+      this.hero.getHeroAnims,
+      this.hero.addArmorHealthPoints,
+      this.hero.deleteArmorHealthPoints,
+      this.hero.addHealthPointsFromHeals,
+      this.sounds
+    );
 
     this.hero.setUiProperty(this.ui);
+
+    // hero anims
     this.hero.setFramesForEntityAnimations(this.hero, 'hero', currentLevel.heroAnims, defaultBehavior);
     this.hero.setPunchAnimation(currentLevel.heroAnims);
     this.hero.setShootAnimation(currentLevel.heroAnims);
     this.hero.setGetHidePistolAnimation(currentLevel.heroAnims);
     this.hero.setDamageAnimation(currentLevel.heroAnims);
     this.hero.setDeathAnimation(currentLevel.heroAnims);
+
     this.createCamera();
     for (let i = 0; i < currentLevel.enemyQuantity; i++) {
       const name = `${currentLevel.enemyName}${i + 1}`;
@@ -213,7 +218,7 @@ class Game extends Phaser.Scene {
     this.sounds.openChest = this.sound.add('openChest', { volume: 2 });
     this.sounds.stimpak = this.sound.add('stimpak', { volume: 0.75 });
     this.sounds.beer = this.sound.add('beer', { volume: 4 });
-    this.sounds.misfire = this.sound.add('misfire', {volume: 2});
+    this.sounds.misfire = this.sound.add('misfire', { volume: 2 });
   }
 
   private _createUI() {

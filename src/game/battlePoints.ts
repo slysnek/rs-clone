@@ -4,7 +4,7 @@ export const lostActionPointsForScorpion: { [attackType: string]: number } = {
 }
 
 export const damageFromGhoul: { [attackType: string]: number } = {
-  punch: 2,
+  punch: 200,
 }
 
 export const damageFromScorpion: { [attackType: string]: number } = {

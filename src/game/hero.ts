@@ -29,13 +29,13 @@ class Hero extends Entity {
   public get fightMode(): boolean {
     return this._fightMode;
   }
-  public set fightMode(v: boolean) {
-    if (this._fightMode !== v) {
-      if (v) {
+  public set fightMode(value: boolean) {
+    if (this._fightMode !== value) {
+      if (value) {
         this.gridEngine.stopMovement(this.id);
         this.sounds.startFight.play();
       }
-      this._fightMode = v;
+      this._fightMode = value;
     }
   }
 

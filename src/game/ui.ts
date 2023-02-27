@@ -197,8 +197,7 @@ export default class UI {
   setEndTurnListener(hero: Hero){
     const endTurnButton = document.querySelector('.end-turn') as HTMLElement;
     endTurnButton.addEventListener('click', () => {
-      console.log('hello');
-
+      console.log('hello,', hero.id);
     })
   }
 
