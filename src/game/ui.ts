@@ -21,6 +21,8 @@ import {
   setDefaultValuesForHero } from '../game/levels';
 import appView from "..";
 
+
+const pistolImageSrc = '../assets/weapons/pistol-03.png';
 const womanInVaultSuitGifSrc = 'assets/ui-elements/gifs/in-vault-suit.gif';
 const womanInArmorGifSrc = 'assets/ui-elements/gifs/in-armor.gif'
 
@@ -44,6 +46,7 @@ export default class UI {
   inventoryGif: HTMLImageElement | null;
   exchangeGif: HTMLImageElement | null;
   nextLevelButton: HTMLButtonElement | null;
+  pistolImg: HTMLImageElement | null;
   storageItemsImageSrc: string;
   changeArmorAnimations: (currentAnims: Animations) => void;
   getHeroHealthPoints: () => number;
@@ -90,6 +93,7 @@ export default class UI {
     this.inventoryGif = null;
     this.exchangeGif = null;
     this.nextLevelButton = null;
+    this.pistolImg = null;
     this.storageItemsImageSrc = currentLevel.storage.src;
     this.getHeroHealthPoints = getHeroHealthPoints;
     this.getHeroArmorState = getHeroArmorState;
@@ -114,6 +118,7 @@ export default class UI {
     this.inventoryGif = document.querySelector('.inventory-gif') as HTMLImageElement;
     this.exchangeGif = document.querySelector('.exchange-gif') as HTMLImageElement;
     this.nextLevelButton = document.querySelector('.next-level-button') as HTMLButtonElement;
+    this.pistolImg = document.querySelector('.pistol-img') as HTMLImageElement;
   }
 
   createUI(scene: Game) {
@@ -213,9 +218,12 @@ export default class UI {
   setChangeWeaponListener(hero: Hero) {
     const changeWeaponButton = document.querySelector('.cycle-weapons') as HTMLElement;
     changeWeaponButton.addEventListener('click', () => {
-      hero.changeWeapon();
-      this.updateWeapon(hero);
-      this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`);
+      // eslint-disable-next-line no-prototype-builtins
+      if(this.heroInventory.hasOwnProperty('pistol')){
+        hero.changeWeapon();
+        this.updateWeapon(hero);
+        this.putMessageToConsole(`Your current weapon: ${hero.currentWeapon.name}`);
+      }
     })
   }
 
@@ -283,6 +291,12 @@ export default class UI {
         return;
       } else {
         (this.inventoryPanel as HTMLElement).classList.remove('hide');
+        // eslint-disable-next-line no-prototype-builtins
+        if(this.heroInventory.hasOwnProperty('pistol')){
+          (this.pistolImg as HTMLImageElement).src = pistolImageSrc;
+        } else {
+          (this.pistolImg as HTMLImageElement).src = '';
+        }
         this.addGif(this.inventoryGif as HTMLImageElement);
         this.drawThings(this.heroInventory, this.inventoryThingContainer as HTMLElement, this.addListenerToThingContainerInInventory);
       }
