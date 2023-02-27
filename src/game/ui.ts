@@ -60,7 +60,8 @@ export default class UI {
   deleteArmorHealthPoints: () => void;
   addHealthPointsFromHeals: (healthPointsFromHeal: number) => void;
   sounds: { [soundName: string]: Phaser.Sound.BaseSound };
-  restoredActionPoints: () => boolean
+  restoredActionPoints: () => boolean;
+  throwAwayPistol: () => void
 
   constructor(scene: Phaser.Scene,
     addItemToInventory: (itemName: string, item: { src: string; quantity: number, description: string }) => void,
@@ -76,7 +77,8 @@ export default class UI {
     deleteArmorHealthPoints: () => void,
     addHealthPointsFromHeals: (healthPointsFromHeal: number) => void,
     sounds: { [soundName: string]: Phaser.Sound.BaseSound },
-    restoredActionPoints: () => boolean) {
+    restoredActionPoints: () => boolean,
+    throwAwayPistol: () => void) {
     this.scene = scene;
     this.addItemToInventory = addItemToInventory;
     this.heroInventory = heroInventory;
@@ -110,6 +112,7 @@ export default class UI {
     this.addHealthPointsFromHeals = addHealthPointsFromHeals;
     this.sounds = sounds;
     this.restoredActionPoints = restoredActionPoints;
+    this.throwAwayPistol = throwAwayPistol;
   }
 
   findElementsForInventoryLogic() {
@@ -412,6 +415,9 @@ export default class UI {
       } else if (thingContainerParent?.classList.contains('hero-things')) {
         this.addItemsToStorage(itemName, this.heroInventory[itemName]);
         this.deleteItemFromInventory(itemName);
+        if(itemName === 'pistol'){
+          this.throwAwayPistol();
+        }
       }
       this.cleanExchangeWindowFields();
       this.drawThings(this.heroInventory, this.heroThingsBlock as HTMLElement, this.addListenerToThingContainerInExchangePanel);

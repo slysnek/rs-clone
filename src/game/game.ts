@@ -158,7 +158,8 @@ class Game extends Phaser.Scene {
     this.hero.deleteArmorHealthPoints,
     this.hero.addHealthPointsFromHeals,
     this.sounds,
-    this.hero.restoredActionPoints);
+    this.hero.restoredActionPoints,
+    this.hero.throwAwayPistol);
 
     this.hero.setUiProperty(this.ui);
 

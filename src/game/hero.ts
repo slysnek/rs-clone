@@ -78,6 +78,7 @@ class Hero extends Entity {
     this.deleteArmorHealthPoints = this.deleteArmorHealthPoints.bind(this);
     this.addHealthPointsFromHeals = this.addHealthPointsFromHeals.bind(this);
     this.restoredActionPoints = this.restoredActionPoints.bind(this);
+    this.throwAwayPistol = this.throwAwayPistol.bind(this);
     this.isHeroInArmor = currentLevel.isHeroInArmor;
   }
 
@@ -89,6 +90,12 @@ class Hero extends Entity {
     } else {
       return false;
     }
+  }
+
+  throwAwayPistol(){
+    this.changeWeapon();
+    this.ui.updateWeapon(this);
+    this.ui.putMessageToConsole(`Your current weapon: ${this.currentWeapon.name}`);
   }
 
   isPistolInInventory(){
