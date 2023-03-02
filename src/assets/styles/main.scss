@@ -1,0 +1,246 @@
+$font-color: #fac927;
+$font-hover: #ad8910;
+$background-color: #000000;
+$font-button-color: #161b22;
+$footer-background: rgba(78, 164, 210, 0.3);
+$footer-outline: rgb(81 140 171 / 80%);
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Fallout Font 2';
+  color: $font-color;
+}
+
+h1 {
+  text-align: center;
+}
+
+body {
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  background-color: $background-color;
+}
+
+.title {
+  font-size: 72px;
+  padding: 32px;
+  text-shadow: -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000;
+}
+
+.menu {
+  width: 100%;
+  height: 100%;
+  background-color: $background-color;
+  background-image: url(../img/background.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.button-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 32px;
+}
+
+.menu-button {
+  font-size: 48px;
+  font-family: 'Fallout Font 2';
+  color: $font-color;
+  background: none;
+  border: none;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
+.menu-button:hover {
+  cursor: pointer;
+  color: $font-hover;
+}
+
+.hide {
+  display: none;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background-color: $footer-background;
+  backdrop-filter: blur(10px);
+  position: absolute;
+  outline: 2px solid $footer-outline;
+  bottom: 0;
+  width: 100%;
+  height: 150px;
+}
+
+.logo {
+  background-image: url(../img/footer-img/logo.svg);
+  background-repeat: no-repeat;
+  width: 100px;
+  height: 50px;
+}
+
+.year {
+  font-size: 40px;
+}
+
+.github-person {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.github-photo-0 {
+  width: 75px;
+  height: 100%;
+  background-image: url('../img/footer-img/git-pic-1.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.github-photo-1 {
+  width: 65px;
+  height: 100%;
+  background-image: url('../img/footer-img/git-pic-2.png');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.github-photo-2 {
+  width: 65px;
+  height: 100%;
+  background-image: url('../img/footer-img/git-pic-3.png');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.github-link {
+  cursor: pointer;
+  color: $font-color;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.github-link:hover {
+  color: $font-hover;
+}
+
+.pop-up {
+  padding: 20px;
+  position: relative;
+  top: -360px;
+  left: 249px;
+  width: calc(100% - 300px);
+  height: calc(100% - 318px);
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid $font-color;
+  overflow: auto;
+}
+
+.pop-up::-webkit-scrollbar {
+  width: 7px;
+}
+
+.pop-up::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.pop-up::-webkit-scrollbar-thumb {
+  background-color: $font-color;
+}
+
+.cross {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-image: url(../img/cross.svg);
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cross:hover {
+  transform: translateY(-3px);
+}
+
+.main-list {
+  list-style-position: inside;
+}
+
+.main-list-item {
+  font-size: 24px;
+  text-decoration: dotted;
+}
+
+.tutorial-wrapper {
+  font-size: 20px;
+}
+
+.tutorial-wrapper > p {
+  font-size: 24px;
+  margin: 16px;
+}
+
+.audio-wrapper{
+  background-color: $font-color;
+  padding: 8px;
+  width: 250px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.audio-wrapper p {
+  color: black;
+  font-size: 24px;
+}
+
+.play{
+  background-image: url(../img/play.svg);
+  background-size: cover;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pause{
+  background-image: url(../img/pause.svg);
+  background-size: cover;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+input[type="range"] {
+  appearance: none;
+  background: black;
+  cursor: pointer;
+  width: 100px;
+  height: 6px;
+}
+
+input::-webkit-slider-thumb{
+  -webkit-appearance: none; 
+  appearance: none;
+  background-color: $font-color;
+  height: 12px;
+  width: 12px;    
+  border: 1px solid black;
+}

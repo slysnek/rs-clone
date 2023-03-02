@@ -1,0 +1,541 @@
+<div class="ui-container">
+  <div class="left-pan"></div>
+  <div class="console">
+    <ul class="console-messages-list">
+    </ul>
+  </div>
+  <div class="weapon-lights-wrapper">
+    <div class="lights">
+      <div class="light on"></div>
+      <div class="light on"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+    </div>
+    <div class="weapon-slot">
+      <div class="weapon"></div>
+      <div class="cycle-weapons"></div>
+      <span class="weapon-name">Nothing</span>
+    </div>
+  </div>
+  <div class="hp-element">
+    <div class="end-turn"></div>
+    <span class="hp">?</span>
+  </div>
+  <div class="weapon-stats">
+    <p class="weapon-accuracy"></p>
+    <p class="weapon-damage"></p>
+    <p class="weapon-range"></p>
+  </div>
+  <div class="right-pan">
+    <div class="inv-button-container">
+      <div class="inv-button"></div>
+    </div>
+  </div>
+</div>
+<div class="next-level-button unavailable">
+  Next Level
+</div>
+<div class="death-panel hide">
+  <div class="death-panel-img">
+    <div class="death-panel-text">You are dead...</div>
+    <div class="load-menu-button">To main menu</div>
+  </div>
+</div>
+<div class="inventory-panel hide">
+  <div class="woman-image-container inventory-version">
+    <img class="woman-gif inventory-gif">
+  </div>
+  <div class="inventory-panel-img">
+    <div class="inventory-things"></div>
+    <div class="armor-container">
+      <img class="armor-image">
+    </div>
+    <div class="fists-container">
+      <img src="../assets/weapons/fist.png">
+    </div>
+    <div class="pistol-container">
+      <img class="pistol-img" src="../assets/weapons/pistol-03.png">
+    </div>
+    <div class="description"></div>
+    <div class="close-inventory-button"></div>
+  </div>
+</div>
+<div class="exchange-items-panel hide">
+  <div class="woman-image-container exchange-panel-version">
+    <img class="woman-gif exchange-gif">
+  </div>
+  <div class="exchange-items-panel-img">
+    <div class="storage-img-container"></div>
+    <div class="hero-things"></div>
+    <div class="inventory-container-things"></div>
+    <div class="take-all-button"></div>
+    <div class="close-exchange-panel-button"></div>
+  </div>
+</div>
+
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  @font-face {
+    font-family: 'Fallout Font';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../assets/fonts/fallout-font.ttf');
+    /* IE9 Compat Modes */
+  }
+
+  html {
+    font-family: 'Fallout Font';
+    font-weight: 100;
+  }
+
+  .ui-container {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(79, 73, 61);
+    width: 100%;
+    height: 100px;
+  }
+
+  .left-pan {
+    height: 100%;
+    width: 229px;
+    background-image: url(../assets/ui-elements/left-pan.png);
+    background-size: cover;
+  }
+
+  .lights {
+    display: flex;
+    flex-direction: row;
+    padding-left: 56px;
+    padding-top: 12px;
+    gap: 3px;
+  }
+
+  .light {
+    width: 8px;
+    height: 8px;
+    background-image: url(../assets/ui-elements/light-off.png);
+  }
+
+  .on {
+    background-image: url(../assets/ui-elements/light-on.png);
+  }
+
+  .weapon-lights-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .weapon-slot {
+    position: relative;
+    height: 75px;
+    width: 211px;
+    background-image: url(../assets/ui-elements/weapon.png);
+    background-size: cover;
+  }
+
+  .lights {
+    position: relative;
+    height: 23px;
+    width: 211px;
+    background-image: url(../assets/ui-elements/move-points.png);
+    background-size: cover;
+  }
+
+  .weapon {
+    top: 13px;
+    left: 70px;
+    width: 100px;
+    height: 50px;
+    background: black;
+    position: absolute;
+  }
+
+  .weapon-name {
+    top: 44px;
+    left: 90px;
+    color: white;
+    position: absolute;
+  }
+
+  .cycle-weapons {
+    width: 16px;
+    height: 16px;
+    top: 9px;
+    background-image: url(../assets/ui-elements/cycle.svg);
+    background-size: cover;
+    left: 26px;
+    cursor: pointer;
+    position: absolute;
+  }
+
+  .console {
+    position: relative;
+    height: 100%;
+    padding-left: 27px;
+    padding-top: 21px;
+    width: 373px;
+    background-image: url(../assets/ui-elements/console.png);
+    background-size: cover;
+  }
+
+  .console-messages-list {
+    list-style-position: inside;
+    color: #3cf800;
+    margin-right: 15px;
+    overflow-y: scroll;
+    height: 80%;
+    font-size: 12px;
+  }
+
+  .console-messages-list::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .console-messages-list::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  .console-messages-list::-webkit-scrollbar-thumb {
+    background-color: #3cf800;
+  }
+
+  .hp-element {
+    position: relative;
+    height: 100%;
+    width: 52px;
+    background-image: url(../assets/ui-elements/hp-end.png);
+    background-size: cover;
+  }
+
+  .end-turn {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 18px;
+    cursor: pointer;
+    top: 30px;
+  }
+
+  .hp {
+    position: absolute;
+    color: white;
+    left: 20px;
+    top: 76px;
+  }
+
+  .weapon-stats {
+    position: relative;
+    height: 100%;
+    padding-left: 27px;
+    padding-top: 21px;
+    width: 211px;
+    background-image: url(../assets/ui-elements/weapon-stats.png);
+    background-size: cover;
+  }
+
+  .weapon-stats>p {
+    color: #3cf800;
+    font-size: 12px;
+  }
+
+  .console-messages-list {
+    list-style-position: inside;
+    color: #3cf800;
+    margin-right: 15px;
+    overflow-y: scroll;
+    height: 80%;
+    font-size: 12px;
+  }
+
+  .right-pan {
+    position: relative;
+    height: 100%;
+    width: 229px;
+    background-image: url(../assets/ui-elements/right-pan.png);
+    background-size: cover;
+  }
+
+  .inv-button-container {
+    position: absolute;
+    height: 22px;
+    width: 34px;
+    left: 20px;
+    top: 6px;
+    z-index: 20;
+  }
+
+  .inv-button {
+    height: 100%;
+    width: 100%;
+    background-image: url(../assets/ui-elements/inv-button.png);
+    background-size: cover;
+    cursor: pointer;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .exchange-items-panel,
+  .inventory-panel {
+    width: 527px;
+    height: 377px;
+    position: absolute;
+  }
+
+  .exchange-items-panel-img {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background-image: url(../assets/ui-elements/exchange-panel.png);
+    background-size: cover;
+  }
+
+  .inventory-container-things {
+    width: 55px;
+    height: 290px;
+    position: absolute;
+    top: 42px;
+    left: 300px;
+  }
+
+  .hero-things {
+    width: 55px;
+    height: 290px;
+    position: absolute;
+    top: 42px;
+    left: 185px;
+  }
+
+  .thing-container {
+    width: 55px;
+    position: relative;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .thing-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .thing-quantity {
+    position: absolute;
+    color: white;
+    top: 0px;
+    left: 0px;
+  }
+
+  .inventory-panel-img {
+    height: 100%;
+    width: 100%;
+    background-image: url(../assets/ui-elements/inventory-panel.png);
+    background-size: cover;
+  }
+
+  .take-all-button {
+    width: 35px;
+    height: 40px;
+    position: absolute;
+    top: 207px;
+    left: 436px;
+  }
+
+  .close-exchange-panel-button {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 329px;
+    left: 475px;
+  }
+
+  .storage-img-container {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 62px;
+    left: 428px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .storage-img {
+    width: 100%;
+  }
+
+  .inventory-things {
+    width: 60px;
+    height: 307px;
+    position: absolute;
+    top: 48px;
+    left: 51px;
+  }
+
+  .armor-container {
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 196px;
+    left: 166px;
+  }
+
+  .fists-container {
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 307px;
+    left: 166px;
+  }
+
+  .fists-container>img {
+    width: 90%;
+  }
+
+  .pistol-container {
+    width: 86px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 307px;
+    left: 264px;
+  }
+
+  .pistol-container>img {
+    width: 90%;
+  }
+
+  .close-inventory-button {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 344px;
+    left: 460px;
+    cursor: pointer;
+  }
+
+  .woman-image-container {
+    width: 62px;
+    height: 91px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 20;
+  }
+
+  .inventory-version {
+    top: 44px;
+    left: 187px;
+  }
+
+  .exchange-panel-version {
+    top: 41px;
+    left: 46px;
+  }
+
+  .woman-gif {
+    height: 100%;
+  }
+
+  .next-level-button {
+    width: 59px;
+    height: 47px;
+    text-align: center;
+    border-radius: 5px;
+    position: absolute;
+    top: -61px;
+    left: 52%;
+    border: #3cf800 solid 1px;
+    color: #3cf800;
+    background-color: rgb(41, 40, 40);
+    cursor: pointer;
+  }
+
+  .next-level-button:hover {
+    background-color: rgb(108, 108, 108);
+  }
+
+  .unavailable {
+    visibility: hidden;
+  }
+
+  .available {
+    visibility: visible;
+    transition: 0.4s;
+  }
+
+  .description {
+    width: 150px;
+    height: 179px;
+    color: #3cf800;
+    font-size: 12px;
+    position: absolute;
+    top: 60px;
+    left: 318px;
+  }
+
+  .death-panel {
+    width: 527px;
+    height: 377px;
+    position: absolute;
+  }
+
+  .death-panel-img {
+    height: 100%;
+    width: 100%;
+    background-image: url(../assets/img/death-screen.png);
+    background-size: cover;
+  }
+
+  .death-panel-text {
+    position: relative;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 48px;
+    text-shadow: -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000;
+    user-select: none;
+  }
+
+  .load-menu-button {
+    width: 180px;
+    height: 40px;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-size: 20px;
+    padding-top: 5px;
+    border-radius: 5px;
+    border: #3cf800 solid 1px;
+    color: #3cf800;
+    background-color: rgb(41, 40, 40);
+    cursor: pointer;
+    user-select: none;
+  }
+</style>
